@@ -1,4 +1,4 @@
-package net.projet.shematicsinworld;
+package net.projet.schematicsinworld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
