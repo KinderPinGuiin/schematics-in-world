@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Mod(SchematicsInWorld.MOD_ID)
 public class SchematicsInWorld
 {
-    public static final String MOD_ID = "shematicsinworld";
+    public static final String MOD_ID = "siw";
 
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
