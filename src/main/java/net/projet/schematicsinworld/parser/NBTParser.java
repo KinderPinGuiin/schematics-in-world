@@ -60,9 +60,7 @@ class NBTParser {
             );
         }
         // Lire le premier tag
-        for (int i = 0; i < fileContent.length; ++i) {
-            System.out.println(fileContent[i] & 0xFF);
-        }
+        this.buffer.setBytes(fileContent);
         // Parser le reste du fichier
     }
 
