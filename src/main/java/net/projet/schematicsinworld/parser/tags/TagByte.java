@@ -26,8 +26,6 @@ public class TagByte extends Tag {
 
         // Lecture de la valeur associée (1 car Tag_BYTE)
         b = buffer.read(1);
-        wrapped = ByteBuffer.wrap(b);
         value = b[0];
-        //wrapped.getShort();
     }
 }
