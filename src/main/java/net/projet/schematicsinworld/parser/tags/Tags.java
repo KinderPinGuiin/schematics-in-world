@@ -38,7 +38,7 @@ public enum Tags {
      * @param {int} L'ID du tag.
      * @return {Tags} Le tag associé. Retourne null si aucun tag n'a été trouvé.
      */
-    public Tags getTagByOrd(int ord) {
+    public static Tags getTagByOrd(int ord) {
         for (Tags tag : Tags.values()) {
             if (tag.ordinal() == ord) {
                 return tag;
@@ -51,7 +51,7 @@ public enum Tags {
     /**
      * @return {Class} La classe associée au tag.
      */
-    public Class getTagClass() {
+    public Class<Tag> getTagClass() {
         return this.aClass;
     }
 

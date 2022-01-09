@@ -4,6 +4,7 @@ import net.minecraftforge.common.util.Constants;
 import net.projet.schematicsinworld.commons.BlockData;
 import net.projet.schematicsinworld.commons.EntityData;
 import net.projet.schematicsinworld.parser.tags.Tag;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +49,8 @@ public class SchematicsParser {
         NBTParser nbtp = null;
         try {
             nbtp = new NBTParser(filepath);
-            System.out.println(nbtp.getTags().size());
-        } catch (NBTParser.ParserException e) {
+        } catch (ParserException e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
 

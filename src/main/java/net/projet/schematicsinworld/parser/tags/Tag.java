@@ -1,6 +1,7 @@
 package net.projet.schematicsinworld.parser.tags;
 
 import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.nio.ByteBuffer;
 
@@ -37,7 +38,7 @@ public abstract class Tag implements ITag {
      *
      * @param {StringStream} Le buffer contenant les prochaines données à lire.
      */
-    protected abstract void parseBuffer(BytesStream buffer);
+    protected abstract void parseBuffer(BytesStream buffer) throws ParserException;
 
     /**
      * Lit 2 + n octets sur buffer :
@@ -53,6 +54,14 @@ public abstract class Tag implements ITag {
         // Récupère la clé en convertissant les 2 octets obtenus en un short
         b = buffer.read(ByteBuffer.wrap(b).getShort());
         this.key = new String(b);
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "key='" + key + '\'' +
+                ", value=" + value +
+                '}';
     }
 
 }
