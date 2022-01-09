@@ -15,7 +15,10 @@ public abstract class Tag implements ITag {
      * Requêtes
      */
 
+    @Override
     public abstract String getKey();
+
+    @Override
     public abstract Object getValue();
 
     /*
