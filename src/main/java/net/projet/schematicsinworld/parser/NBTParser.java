@@ -2,9 +2,8 @@ package net.projet.schematicsinworld.parser;
 
 import net.projet.schematicsinworld.parser.tags.Tag;
 import net.projet.schematicsinworld.parser.tags.TagCompound;
-import net.projet.schematicsinworld.parser.tags.TagID;
+import net.projet.schematicsinworld.parser.tags.Tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,9 +17,6 @@ class NBTParser extends TagCompound {
      * Attributs
      */
 
-    // Contient la liste des tags du fichier.
-    private ArrayList<Tag> tags;
-
     // Flux d'octets qui sera lu lors du parsing.
     private BytesStream buffer;
 
@@ -31,7 +27,6 @@ class NBTParser extends TagCompound {
     public NBTParser(String filepath) throws ParserException {
         super();
         // Initialisation des attributs
-        this.tags = new ArrayList<Tag>();
         this.buffer = new BytesStream();
         // Décompresse le fichier et stock ses données dans buffer.
         this.extractFile(filepath);
@@ -44,7 +39,7 @@ class NBTParser extends TagCompound {
      */
 
     public ArrayList<Tag> getTags() {
-        return new ArrayList<Tag>(this.tags);
+        return new ArrayList<Tag>((ArrayList<Tag>) this.getValue());
     }
 
     /*
@@ -90,7 +85,7 @@ class NBTParser extends TagCompound {
 
     protected void parseBuffer() throws ParserException {
         // Lit le premier octet
-        if (this.buffer.read(1)[0] != TagID.TAG_COMPOUND.ordinal()) {
+        if (this.buffer.read(1)[0] != Tags.TAG_COMPOUND.ordinal()) {
             // Si celui-ci est différent de TAG_COMPOUND on renvoie une
             // exception
             throw new ParserException("Le fichier NBT est invalide");

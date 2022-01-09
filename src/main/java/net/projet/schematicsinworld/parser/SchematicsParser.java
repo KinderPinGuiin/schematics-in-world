@@ -48,6 +48,7 @@ public class SchematicsParser {
         NBTParser nbtp = null;
         try {
             nbtp = new NBTParser(filepath);
+            System.out.println(nbtp.getTags().size());
         } catch (NBTParser.ParserException e) {
             e.printStackTrace();
         }

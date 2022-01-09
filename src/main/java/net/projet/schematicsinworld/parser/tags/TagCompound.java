@@ -2,7 +2,7 @@ package net.projet.schematicsinworld.parser.tags;
 
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class TagCompound extends Tag {
 
@@ -22,7 +22,15 @@ public class TagCompound extends Tag {
         // Lecture de la clé
         super.setKey(buffer);
         // Lecture des différentes valeurs du dictionnaire
+        this.value = new ArrayList<Tag>();
+        while (true) {
+            byte[] b = buffer.read(1);
+            if (b[0] == Tags.TAG_END.ordinal()) {
+                break;
+            } else {
 
+            }
+        }
     }
 
 }
