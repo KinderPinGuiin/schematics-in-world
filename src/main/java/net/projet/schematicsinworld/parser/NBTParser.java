@@ -5,7 +5,6 @@ import net.projet.schematicsinworld.parser.utils.StringStream;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 

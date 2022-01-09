@@ -33,7 +33,7 @@ public class StringStream {
     }
 
     public void setString(String str) {
-        if (str == NULL) {
+        if (str == null) {
             throw new AssertionError("La chaîne ne doit pas être nulle");
         }
         this.str = str;
