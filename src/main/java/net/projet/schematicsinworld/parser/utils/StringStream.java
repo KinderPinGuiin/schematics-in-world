@@ -2,10 +2,10 @@ package net.projet.schematicsinworld.parser.utils;
 
 public class StringStream {
 
-    private long currIndex;
+    private int currIndex;
     private String str;
 
-    public StringStream(String s, long i) {
+    public StringStream(String s, int i) {
         if (s == null) {
             throw new AssertionError("string is null");
         }
@@ -20,7 +20,7 @@ public class StringStream {
         this(s, 0);
     }
 
-    public long getIndex() {
+    public int getIndex() {
         return currIndex;
     }
 
@@ -28,8 +28,8 @@ public class StringStream {
         return str;
     }
 
-    public String read(long nBytes) {
-        String s = str.substring((int)currIndex, (int)(currIndex + nBytes));
+    public String read(int nBytes) {
+        String s = str.substring(currIndex, currIndex + nBytes);
         currIndex += nBytes;
         return s;
     }
