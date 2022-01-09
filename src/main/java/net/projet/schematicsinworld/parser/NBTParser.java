@@ -1,6 +1,7 @@
 package net.projet.schematicsinworld.parser;
 
 import net.projet.schematicsinworld.parser.tags.Tag;
+import net.projet.schematicsinworld.parser.tags.TagID;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -59,9 +60,15 @@ class NBTParser {
                 "Une erreur est survenue lors de la décompression du fichier"
             );
         }
-        // Lire le premier tag
+        // Stocke les octets lu dans le flux d'octets
         this.buffer.setBytes(fileContent);
-        // Parser le reste du fichier
+        // Lit le premier octet
+        if (this.buffer.read(1)[0] != TagID.TAG_COMPOUND.ordinal()) {
+            // Si celui-ci est différent de TAG_COMPOUND on renvoie une
+            // exception
+            throw new ParserException("Le fichier NBT est invalide");
+        }
+        // Parsing du reste du fichier
     }
 
     /*
