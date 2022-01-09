@@ -4,6 +4,7 @@ import net.projet.schematicsinworld.parser.tags.Tag;
 import net.projet.schematicsinworld.parser.tags.TagCompound;
 import net.projet.schematicsinworld.parser.tags.Tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -92,21 +93,6 @@ class NBTParser extends TagCompound {
         }
         // Parsing du reste du fichier
         super.parseBuffer(this.buffer);
-    }
-
-    /*
-     * Classe interne
-     */
-
-    /**
-     * Exception lancée en cas d'erreur lors du parsing du fichier.
-     */
-    public class ParserException extends Exception {
-
-        public ParserException(String msg) {
-            super(msg);
-        }
-
     }
 
 }
