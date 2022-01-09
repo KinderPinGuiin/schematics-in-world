@@ -2,6 +2,7 @@ package net.projet.schematicsinworld.parser.tags;
 
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 public class TagCompound extends Tag {

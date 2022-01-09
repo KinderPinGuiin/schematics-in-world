@@ -1,23 +1,23 @@
 package net.projet.schematicsinworld.parser.tags;
 
 public enum Tags {
-    TAG_END(""),
-    TAG_BYTE("TagByte"),
-    TAG_SHORT("TagShort"),
-    TAG_INT("TagInt"),
-    TAG_LONG("TagLong"),
-    TAG_FLOAT("TagFloat"),
-    TAG_DOUBLE("TagDouble"),
-    TAG_BYTE_ARRAY(""),
-    TAG_STRING(""),
-    TAG_LIST(""),
-    TAG_COMPOUND("TagCompound"),
-    TAG_INT_ARRAY(""),
-    TAG_LONG_ARRAY("");
+    TAG_END(null),
+    TAG_BYTE(TagByte.class),
+    TAG_SHORT(TagShort.class),
+    TAG_INT(TagInt.class),
+    TAG_LONG(TagLong.class),
+    TAG_FLOAT(TagFloat.class),
+    TAG_DOUBLE(TagDouble.class),
+    TAG_BYTE_ARRAY(null),
+    TAG_STRING(null),
+    TAG_LIST(null),
+    TAG_COMPOUND(TagCompound.class),
+    TAG_INT_ARRAY(null),
+    TAG_LONG_ARRAY(null);
 
-    private String className;
+    private Class className;
 
-    private Tags(String className) {
-        this.className = className;
+    private Tags(Class aClass) {
+        this.className = aClass;
     }
 }
