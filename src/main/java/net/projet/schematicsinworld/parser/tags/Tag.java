@@ -1,6 +1,6 @@
 package net.projet.schematicsinworld.parser.tags;
 
-import net.projet.schematicsinworld.parser.utils.StringStream;
+import net.projet.schematicsinworld.parser.utils.ByteStream;
 
 public abstract class Tag implements ITag {
 
@@ -31,6 +31,6 @@ public abstract class Tag implements ITag {
      *
      * @param {StringStream} Le buffer contenant les prochaines données à lire.
      */
-    protected abstract void parseBuffer(StringStream buffer);
+    protected abstract void parseBuffer(ByteStream buffer);
 
 }
