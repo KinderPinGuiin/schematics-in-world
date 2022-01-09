@@ -14,9 +14,11 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.projet.schematicsinworld.parser.SchematicsParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.file.FileSystems;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -31,6 +33,8 @@ public class SchematicsInWorld
     public SchematicsInWorld() {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
 
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
