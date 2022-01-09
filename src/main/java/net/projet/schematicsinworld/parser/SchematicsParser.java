@@ -48,7 +48,7 @@ public class SchematicsParser {
         NBTParser nbtp = null;
         try {
             nbtp = new NBTParser(filepath);
-        } catch (IOException e) {
+        } catch (NBTParser.ParserException e) {
             e.printStackTrace();
         }
 
