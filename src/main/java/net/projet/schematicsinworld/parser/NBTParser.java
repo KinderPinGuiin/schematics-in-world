@@ -1,13 +1,11 @@
 package net.projet.schematicsinworld.parser;
 
 import net.projet.schematicsinworld.parser.tags.Tag;
-import net.projet.schematicsinworld.parser.utils.ByteStream;
-import net.projet.schematicsinworld.parser.utils.ByteStream;
+import net.projet.schematicsinworld.parser.utils.BytesStream;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
@@ -18,7 +16,7 @@ class NBTParser {
      */
 
     private ArrayList<Tag> tags;
-    private ByteStream buffer;
+    private BytesStream buffer;
 
     /*
      * Constructeur
@@ -27,7 +25,7 @@ class NBTParser {
     public NBTParser(String filepath) throws ParserException {
         // Initialisation des attributs
         this.tags = new ArrayList<Tag>();
-        this.buffer = new ByteStream();
+        this.buffer = new BytesStream();
         // Décompression du fichier
         try {
             GZIPInputStream gis = new GZIPInputStream(

@@ -2,12 +2,12 @@ package net.projet.schematicsinworld.parser.utils;
 
 import java.util.Arrays;
 
-public class ByteStream {
+public class BytesStream {
 
     private int currIndex;
     private byte[] bytes;
 
-    public ByteStream(byte[] b, int i) {
+    public BytesStream(byte[] b, int i) {
         if (b == null) {
             throw new AssertionError("string is null");
         }
@@ -18,11 +18,11 @@ public class ByteStream {
         currIndex = i;
     }
 
-    public ByteStream(byte[] b) {
+    public BytesStream(byte[] b) {
         this(b, 0);
     }
 
-    public ByteStream() {
+    public BytesStream() {
         this(new byte[] {}, 0);
     }
 
