@@ -9,6 +9,7 @@ public enum TagID {
     TAG_FLOAT,
     TAG_DOUBLE,
     TAG_BYTE_ARRAY,
+    TAG_STRING,
     TAG_LIST,
     TAG_COMPOUND,
     TAG_INT_ARRAY,

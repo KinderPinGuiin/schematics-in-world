@@ -1,6 +1,7 @@
 package net.projet.schematicsinworld.parser;
 
 import net.projet.schematicsinworld.parser.tags.Tag;
+import net.projet.schematicsinworld.parser.tags.TagCompound;
 import net.projet.schematicsinworld.parser.tags.TagID;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,13 +12,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
-class NBTParser {
+class NBTParser extends TagCompound {
 
     /*
      * Attributs
      */
 
+    // Contient la liste des tags du fichier.
     private ArrayList<Tag> tags;
+
+    // Flux d'octets qui sera lu lors du parsing.
     private BytesStream buffer;
 
     /*
@@ -25,9 +29,29 @@ class NBTParser {
      */
 
     public NBTParser(String filepath) throws ParserException {
+        super();
         // Initialisation des attributs
         this.tags = new ArrayList<Tag>();
         this.buffer = new BytesStream();
+        // Décompresse le fichier et stock ses données dans buffer.
+        this.extractFile(filepath);
+        // Parse le fichier
+        this.parseBuffer();
+    }
+
+    /*
+     * Requêtes
+     */
+
+    public ArrayList<Tag> getTags() {
+        return new ArrayList<Tag>(this.tags);
+    }
+
+    /*
+     * Commandes
+     */
+
+    private void extractFile(String filepath) throws ParserException {
         // Décompression du fichier
         byte[] fileContent;
         try {
@@ -62,6 +86,9 @@ class NBTParser {
         }
         // Stocke les octets lu dans le flux d'octets
         this.buffer.setBytes(fileContent);
+    }
+
+    protected void parseBuffer() throws ParserException {
         // Lit le premier octet
         if (this.buffer.read(1)[0] != TagID.TAG_COMPOUND.ordinal()) {
             // Si celui-ci est différent de TAG_COMPOUND on renvoie une
@@ -69,19 +96,8 @@ class NBTParser {
             throw new ParserException("Le fichier NBT est invalide");
         }
         // Parsing du reste du fichier
+        super.parseBuffer(this.buffer);
     }
-
-    /*
-     * Requêtes
-     */
-
-    public ArrayList<Tag> getTags() {
-        return new ArrayList<Tag>(this.tags);
-    }
-
-    /*
-     * Commandes
-     */
 
     /*
      * Classe interne

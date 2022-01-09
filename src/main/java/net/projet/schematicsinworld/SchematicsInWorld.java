@@ -34,7 +34,7 @@ public class SchematicsInWorld
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
 
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
