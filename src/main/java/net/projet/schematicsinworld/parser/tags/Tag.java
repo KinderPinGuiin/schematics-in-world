@@ -4,6 +4,7 @@ import net.projet.schematicsinworld.parser.utils.StringStream;
 
 public abstract class Tag implements ITag {
 
+
     /*
      * Attributs
      */
