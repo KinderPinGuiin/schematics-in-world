@@ -4,7 +4,6 @@ import net.projet.schematicsinworld.parser.utils.BytesStream;
 
 public abstract class Tag implements ITag {
 
-
     /*
      * Attributs
      */
@@ -17,10 +16,14 @@ public abstract class Tag implements ITag {
      */
 
     @Override
-    public abstract String getKey();
+    public String getKey() {
+        return this.key;
+    }
 
     @Override
-    public abstract Object getValue();
+    public Object getValue() {
+        return this.value;
+    }
 
     /*
      * Commandes
