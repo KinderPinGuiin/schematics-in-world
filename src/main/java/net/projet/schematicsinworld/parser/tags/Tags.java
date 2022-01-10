@@ -15,12 +15,12 @@ public enum Tags {
     TAG_LONG(TagLong.class),
     TAG_FLOAT(TagFloat.class),
     TAG_DOUBLE(TagDouble.class),
-    TAG_BYTE_ARRAY(null),
-    TAG_STRING(null),
+    TAG_BYTE_ARRAY(TagByteArray.class),
+    TAG_STRING(TagString.class),
     TAG_LIST(null),
     TAG_COMPOUND(TagCompound.class),
-    TAG_INT_ARRAY(null),
-    TAG_LONG_ARRAY(null);
+    TAG_INT_ARRAY(TagIntArray.class),
+    TAG_LONG_ARRAY(TagLongArray.class);
 
     private Class aClass;
 

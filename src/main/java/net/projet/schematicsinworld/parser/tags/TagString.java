@@ -4,9 +4,9 @@ import net.projet.schematicsinworld.parser.utils.BytesStream;
 
 import java.nio.ByteBuffer;
 
-public class TagLong extends Tag {
+public class TagString extends Tag {
 
-    public TagLong(BytesStream buffer) {
+    public TagString(BytesStream buffer) {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
@@ -17,9 +17,12 @@ public class TagLong extends Tag {
     protected void parseBuffer(BytesStream buffer) {
         // Lecture de la clé
         super.setKey(buffer);
-        // Lecture de la valeur associée (8 car Tag_LONG)
-        byte[] b = buffer.read(8);
+        // Lecture de la longueur de la chaîne
+        byte[] b = buffer.read(2);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
-        value = wrapped.getLong();
+        short lenInBytes = wrapped.getShort();
+        // Lecture de la chaîne
+        b = buffer.read(lenInBytes);
+        this.value = new String(b);
     }
 }
