@@ -37,6 +37,7 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+<<<<<<< HEAD
         // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
         new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
 
@@ -61,6 +62,9 @@ public class SchematicsInWorld {
         LOGGER.info(tf.getKey() + " " + tf.getValue());
         */
 
+=======
+        new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+>>>>>>> 3c38d75ce846e6e5e629ba55f5591b9de70e0a1a
 
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading

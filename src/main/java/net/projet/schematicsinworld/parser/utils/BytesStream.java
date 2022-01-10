@@ -43,7 +43,7 @@ public class BytesStream {
     }
 
     public byte[] read(int nBytes) {
-        if (this.currIndex + nBytes > this.bytes.length - this.currIndex) {
+        if (this.currIndex + nBytes > this.bytes.length) {
             throw new AssertionError("Nombre de bytes à lire trop grand");
         }
         byte[] b = Arrays.copyOfRange(

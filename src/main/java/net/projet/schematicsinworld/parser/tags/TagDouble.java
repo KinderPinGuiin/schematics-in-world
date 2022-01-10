@@ -22,4 +22,5 @@ public class TagDouble extends Tag {
         ByteBuffer wrapped = ByteBuffer.wrap(b);
         value = wrapped.getDouble();
     }
+
 }
