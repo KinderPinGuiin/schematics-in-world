@@ -15,16 +15,19 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.projet.schematicsinworld.parser.SchematicsParser;
+import net.projet.schematicsinworld.parser.tags.TagFloat;
+import net.projet.schematicsinworld.parser.utils.BytesStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SchematicsInWorld.MOD_ID)
-public class SchematicsInWorld
-{
+public class SchematicsInWorld {
     public static final String MOD_ID = "siw";
 
     // Directly reference a log4j logger.
@@ -35,6 +38,29 @@ public class SchematicsInWorld
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
+
+        /* Test de la classe TagFloat
+        byte buffer[] = new byte[] {64, 73, -103, -102};
+        String s = "pain";
+        byte[] name = s.getBytes(StandardCharsets.UTF_8);
+        byte[] len = new byte[] {0, (byte)name.length};//BigInteger.valueOf(name.length).toByteArray();
+
+        byte[] all = new byte[len.length + name.length + buffer.length + 10];
+        all[0] = len[0];
+        all[1] = len[1];
+
+        for (int i = 0; i < name.length; ++i) {
+            all[i + 2] = name[i];
+        }
+        for (int i = 0; i < buffer.length; ++i) {
+            all[i + 2 + name.length] = buffer[i];
+        }
+        BytesStream bs = new BytesStream(all);
+        TagFloat tf = new TagFloat(bs);
+        LOGGER.info(tf.getKey() + " " + tf.getValue());
+        */
+
 
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
