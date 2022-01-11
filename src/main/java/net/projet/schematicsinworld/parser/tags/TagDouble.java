@@ -10,7 +10,7 @@ public class TagDouble extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class TagDouble extends Tag {
         // Lecture de la valeur associée (8 car Tag_DOUBLE)
         byte[] b = buffer.read(8);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
-        value = wrapped.getDouble();
+        this.value = wrapped.getDouble();
     }
 
 }

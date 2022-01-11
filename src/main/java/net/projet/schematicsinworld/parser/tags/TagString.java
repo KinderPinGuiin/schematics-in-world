@@ -10,7 +10,7 @@ public class TagString extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override

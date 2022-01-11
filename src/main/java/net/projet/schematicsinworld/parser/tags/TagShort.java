@@ -10,7 +10,7 @@ public class TagShort extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
@@ -20,6 +20,6 @@ public class TagShort extends Tag {
         // Lecture de la valeur associée (2 car Tag_SHORT)
         byte[] b = buffer.read(2);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
-        value = wrapped.getShort();
+        this.value = wrapped.getShort();
     }
 }

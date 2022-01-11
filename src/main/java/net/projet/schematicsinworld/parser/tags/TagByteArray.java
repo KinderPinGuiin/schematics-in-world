@@ -9,7 +9,7 @@ public class TagByteArray extends TagArray {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override

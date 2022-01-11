@@ -11,13 +11,16 @@ public class TagLongArray extends TagArray {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
         super.setKey(buffer);
+        // Récupère le nombre d'éléments du tableau
         int n = this.getNbElems(buffer);
+        // Lit les éléments et les stocks
+        // TODO : à optimiser
         byte[] b = buffer.read(this.getNbElems(buffer) * 8);
         byte[] restrict = new byte[8];
         long[] longArray = new long[n];

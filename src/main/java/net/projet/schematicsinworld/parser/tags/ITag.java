@@ -9,14 +9,14 @@ public interface ITag {
     /**
      * Renvoie la clé correspondante au tag.
      *
-     * @return {String} La clé.
+     * @return La clé.
      */
     String getKey();
 
     /**
      * Renvoie la valeur correspondante au tag.
      *
-     * @return {Object} La valeur.
+     * @return La valeur.
      */
     Object getValue();
 

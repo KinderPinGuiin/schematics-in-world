@@ -13,7 +13,7 @@ public class TagCompound extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     public TagCompound() {
@@ -50,7 +50,6 @@ public class TagCompound extends Tag {
                     // Instancie le tag afin de le parser
                     Tag tag = c.newInstance(buffer);
                     // Ajoute le tag parsé à la liste
-                    System.out.println(tag.getKey() + " " + tag.getValue());
                     ((ArrayList<Tag>) this.value).add(tag);
                 } catch (NoSuchMethodException | ParserException |
                     InvocationTargetException | IllegalAccessException

@@ -2,7 +2,8 @@ package net.projet.schematicsinworld.parser.tags;
 
 /**
  * Liste des tags disponibles dans un fichier NBT. Les tags seront associés à
- * leur classe.
+ * leur classe. Tags.ordinal() représentera leur identifiant dans un fichier
+ * NBT.
  *
  * @see <a href="https://wiki.vg/NBT">Spécification des fichiers NBT</a>
  */
@@ -35,8 +36,8 @@ public enum Tags {
     /**
      * Renvoie le tag associée à l'identifiant ord.
      *
-     * @param {int} L'ID du tag.
-     * @return {Tags} Le tag associé. Retourne null si aucun tag n'a été trouvé.
+     * @param ord L'ID du tag.
+     * @return Le tag associé. Retourne null si aucun tag n'a été trouvé.
      */
     public static Tags getTagByOrd(int ord) {
         for (Tags tag : Tags.values()) {
@@ -49,7 +50,7 @@ public enum Tags {
     }
 
     /**
-     * @return {Class} La classe associée au tag.
+     * @return La classe associée au tag.
      */
     public Class<Tag> getTagClass() {
         return this.aClass;

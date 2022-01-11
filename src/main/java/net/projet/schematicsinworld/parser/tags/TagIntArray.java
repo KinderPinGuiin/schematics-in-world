@@ -11,17 +11,20 @@ public class TagIntArray extends TagArray {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
         super.setKey(buffer);
+        // Récupère le nombre d'éléments du tableau
         int n = this.getNbElems(buffer);
+        // Lis tous les élements du tableau
         byte[] b = buffer.read(n * 4);
         byte[] restrict = new byte[4];
         int[] intArray = new int[n];
-
+        // Copie les bytes dans un tableau de int
+        // TODO : à optimiser
         int ind = 0;
         for (int i = 0; i < n; i += 4) {
             for (int j = 0; j < 4; ++j) {

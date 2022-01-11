@@ -37,8 +37,8 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
-        new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
+        new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        // new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
 
         /* Test de la classe TagFloat
         byte buffer[] = new byte[] {64, 73, -103, -102};

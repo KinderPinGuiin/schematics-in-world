@@ -10,7 +10,7 @@ public class TagByte extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
@@ -19,6 +19,6 @@ public class TagByte extends Tag {
         super.setKey(buffer);
         // Lecture de la valeur associée (1 car Tag_BYTE)
         byte[] b = buffer.read(1);
-        value = b[0];
+        this.value = b[0];
     }
 }

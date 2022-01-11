@@ -36,7 +36,7 @@ public abstract class Tag implements ITag {
      * Lit le bon nombre de données sur la chaîne contenu dans buffer afin de
      * définir les différentes données du tag.
      *
-     * @param {StringStream} Le buffer contenant les prochaines données à lire.
+     * @param buffer Le buffer contenant les prochaines données à lire.
      */
     protected abstract void parseBuffer(BytesStream buffer) throws ParserException;
 
@@ -45,8 +45,7 @@ public abstract class Tag implements ITag {
      * - 2 octet représentant la longueur de la clé.
      * - n octet représentant les n caractères du nom.
      *
-     * @param {BytesStream} Le buffer.
-     * @return {void} Le vide.
+     * @param buffer Le buffer.
      */
     protected void setKey(BytesStream buffer) {
         // 2 octets contenant la longueur du nom

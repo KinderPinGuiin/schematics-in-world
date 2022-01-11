@@ -10,7 +10,7 @@ public class TagInt extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
@@ -20,6 +20,6 @@ public class TagInt extends Tag {
         // Lecture de la valeur associée (4 car Tag_INT)
         byte[] b = buffer.read(4);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
-        value = wrapped.getInt();
+        this.value = wrapped.getInt();
     }
 }

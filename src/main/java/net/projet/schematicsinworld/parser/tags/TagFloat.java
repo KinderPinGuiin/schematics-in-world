@@ -10,7 +10,7 @@ public class TagFloat extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
@@ -20,6 +20,6 @@ public class TagFloat extends Tag {
         // Lecture de la valeur associée (4 car Tag_FLOAT)
         byte[] b = buffer.read(4);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
-        value = wrapped.getFloat();
+        this.value = wrapped.getFloat();
     }
 }
