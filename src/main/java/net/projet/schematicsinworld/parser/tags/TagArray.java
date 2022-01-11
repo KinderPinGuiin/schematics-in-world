@@ -3,6 +3,7 @@ package net.projet.schematicsinworld.parser.tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Classe mère des tags de type tableau :
