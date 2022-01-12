@@ -4,10 +4,14 @@ import net.minecraftforge.common.util.Constants;
 import net.projet.schematicsinworld.commons.BlockData;
 import net.projet.schematicsinworld.commons.EntityData;
 import net.projet.schematicsinworld.parser.tags.Tag;
+import net.projet.schematicsinworld.parser.utils.ParserException;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 public class SchematicsParser {
 
@@ -48,7 +52,8 @@ public class SchematicsParser {
         NBTParser nbtp = null;
         try {
             nbtp = new NBTParser(filepath);
-        } catch (NBTParser.ParserException e) {
+        } catch (ParserException e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
 

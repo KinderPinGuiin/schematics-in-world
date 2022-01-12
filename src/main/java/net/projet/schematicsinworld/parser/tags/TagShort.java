@@ -10,23 +10,16 @@ public class TagShort extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        parseBuffer(buffer);
+        this.parseBuffer(buffer);
     }
 
     @Override
     protected void parseBuffer(BytesStream buffer) {
-        // Lecture de la longueur de la chaîne de caractères (key)
+        // Lecture de la clé
+        super.setKey(buffer);
+        // Lecture de la valeur associée (2 car Tag_SHORT)
         byte[] b = buffer.read(2);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
-        short length = wrapped.getShort();
-
-        // Lecture de la chaîne de caractères (num octets)
-        b = buffer.read(length);
-        key = b.toString();
-
-        // Lecture de la valeur associée (2 car Tag_SHORT)
-        b = buffer.read(2);
-        wrapped = ByteBuffer.wrap(b);
-        value = wrapped.getShort();
+        this.value = wrapped.getShort();
     }
 }
