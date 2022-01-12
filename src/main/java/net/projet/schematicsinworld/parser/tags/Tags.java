@@ -18,7 +18,7 @@ public enum Tags {
     TAG_DOUBLE(TagDouble.class),
     TAG_BYTE_ARRAY(TagByteArray.class),
     TAG_STRING(TagString.class),
-    TAG_LIST(null),
+    TAG_LIST(TagList.class),
     TAG_COMPOUND(TagCompound.class),
     TAG_INT_ARRAY(TagIntArray.class),
     TAG_LONG_ARRAY(TagLongArray.class);

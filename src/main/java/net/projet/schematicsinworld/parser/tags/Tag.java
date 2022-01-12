@@ -42,17 +42,34 @@ public abstract class Tag implements ITag {
 
     /**
      * Lit 2 + n octets sur buffer :
-     * - 2 octet représentant la longueur de la clé.
-     * - n octet représentant les n caractères du nom.
+     * - 2 octets représentant la longueur de la clé.
+     * - n octets représentant les n caractères du nom.
      *
      * @param buffer Le buffer.
      */
     protected void setKey(BytesStream buffer) {
+        if (buffer == null) {
+            throw new AssertionError("Le buffer ne doit pas être nul");
+        }
+        if (this.key != null) {
+            return;
+        }
         // 2 octets contenant la longueur du nom
         byte[] b = buffer.read(2);
         // Récupère la clé en convertissant les 2 octets obtenus en un short
         b = buffer.read(ByteBuffer.wrap(b).getShort());
         this.key = new String(b);
+    }
+
+    /**
+     *
+     * @param key
+     */
+    protected void setKey(String key) {
+        if (key == null) {
+            throw new AssertionError("La clé ne doit pas être nulle");
+        }
+        this.key = key;
     }
 
     @Override

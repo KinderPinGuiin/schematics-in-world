@@ -16,6 +16,10 @@ public class TagCompound extends Tag {
         this.parseBuffer(buffer);
     }
 
+    public TagCompound() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
         // Lecture de la clé

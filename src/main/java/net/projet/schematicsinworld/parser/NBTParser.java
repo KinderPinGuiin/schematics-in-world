@@ -26,6 +26,7 @@ class NBTParser extends TagCompound {
      */
 
     public NBTParser(String filepath) throws ParserException {
+        super();
         // Initialisation des attributs
         this.buffer = new BytesStream();
         // Décompresse le fichier et stock ses données dans buffer.
