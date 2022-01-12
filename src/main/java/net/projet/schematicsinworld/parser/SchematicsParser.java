@@ -63,6 +63,7 @@ public class SchematicsParser {
     /*
      * REQUETES
      */
+
     public ArrayList<BlockData> getBlocks() {
         return new ArrayList<>(blocks);
     }
@@ -85,6 +86,14 @@ public class SchematicsParser {
                 Object[] values = (Object[]) t.getValue();
             }
         }
+    }
+
+    private void convertSchematicsToNBT() {
+
+    }
+
+    public void saveToNBT() {
+
     }
 
 }
