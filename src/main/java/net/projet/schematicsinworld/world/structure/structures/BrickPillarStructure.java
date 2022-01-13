@@ -1,2 +1,4 @@
-package net.projet.schematicsinworld.world.structure.structures;public class BrickPillarStructure {
+package net.projet.schematicsinworld.world.structure.structures;
+
+public class BrickPillarStructure {
 }
