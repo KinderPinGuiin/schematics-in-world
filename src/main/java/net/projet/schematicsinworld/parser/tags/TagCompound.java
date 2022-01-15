@@ -60,4 +60,8 @@ public class TagCompound extends Tag {
         }
     }
 
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
+    }
 }

@@ -1,6 +1,7 @@
 package net.projet.schematicsinworld.parser.tags;
 
 import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.nio.ByteBuffer;
 
@@ -20,5 +21,10 @@ public class TagByte extends Tag {
         // Lecture de la valeur associée (1 car Tag_BYTE)
         byte[] b = buffer.read(1);
         this.value = b[0];
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
     }
 }

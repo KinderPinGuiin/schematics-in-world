@@ -1,6 +1,7 @@
 package net.projet.schematicsinworld.parser.tags;
 
 import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.nio.ByteBuffer;
 
@@ -21,6 +22,11 @@ public class TagDouble extends Tag {
         byte[] b = buffer.read(8);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
         this.value = wrapped.getDouble();
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
     }
 
 }

@@ -18,4 +18,9 @@ public class TagByteArray extends TagArray {
         byte[] b = buffer.read(this.getNbElems(buffer));
         this.value = b;
     }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
+    }
 }

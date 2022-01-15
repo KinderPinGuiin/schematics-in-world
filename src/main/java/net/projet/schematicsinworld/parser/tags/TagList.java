@@ -58,4 +58,9 @@ public class TagList extends Tag {
             }
         }
     }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
+    }
 }

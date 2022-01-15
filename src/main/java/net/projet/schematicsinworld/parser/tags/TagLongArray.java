@@ -32,4 +32,9 @@ public class TagLongArray extends TagArray {
         }
         this.value = longArray;
     }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
+    }
 }

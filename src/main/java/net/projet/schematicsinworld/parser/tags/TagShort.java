@@ -1,6 +1,7 @@
 package net.projet.schematicsinworld.parser.tags;
 
 import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.nio.ByteBuffer;
 
@@ -21,5 +22,10 @@ public class TagShort extends Tag {
         byte[] b = buffer.read(2);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
         this.value = wrapped.getShort();
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
     }
 }
