@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class TagString extends Tag {
 
@@ -42,13 +43,13 @@ public class TagString extends Tag {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             DataOutputStream dstream = new DataOutputStream(stream);
             dstream.writeShort((short) ((String) this.value).length());
-            dstream.writeUTF((String) this.value);
             dstream.flush();
-            // Ecrit la valeur
+            // Ecrit la longueur
             buffer.write(stream.toByteArray());
+            buffer.write(((String) this.value).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            throw new ParserException("Impossible de parser le double "
-                    + this.value);
+            throw new ParserException("Impossible de parser la valeur \""
+                    + this.value + "\"");
         }
     }
 }

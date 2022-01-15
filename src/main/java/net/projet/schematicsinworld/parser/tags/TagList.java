@@ -18,7 +18,7 @@ public class TagList extends Tag {
      * Attributs
      */
 
-    private int type;
+    private int type = 10;
 
     /*
      * Constructeurs
@@ -39,7 +39,6 @@ public class TagList extends Tag {
      * Commandes
      */
 
-    @Override
     public void setValue(ArrayList<Tag> value, int type) throws ParserException {
         super.setValue(value);
         this.type = type;
@@ -88,7 +87,25 @@ public class TagList extends Tag {
 
     @Override
     protected void renderBuffer(BytesStream buffer) throws ParserException {
-
+        super.renderKey(buffer);
+        try {
+            // Convertit le type et la longueur de la liste en tableau de byte
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            DataOutputStream dstream = new DataOutputStream(stream);
+            dstream.writeByte((byte) this.type);
+            dstream.writeInt(((ArrayList<Tag>) this.value).size());
+            dstream.flush();
+            // Ecrit la valeur complète dans le buffer
+            buffer.write(stream.toByteArray());
+            // Ecrit chacune des valeurs du tableau dans le buffer
+            for (Tag tag : (ArrayList<Tag>) this.value) {
+                tag.setKeyNoRender();
+                tag.renderBuffer(buffer);
+            }
+        } catch (IOException e) {
+            throw new ParserException("Impossible de parser la valeur "
+                    + this.value);
+        }
     }
 
 }

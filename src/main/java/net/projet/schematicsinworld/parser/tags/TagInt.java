@@ -43,7 +43,7 @@ public class TagInt extends Tag {
             // Ecrit la valeur
             buffer.write(stream.toByteArray());
         } catch (IOException e) {
-            throw new ParserException("Impossible de parser le double "
+            throw new ParserException("Impossible de parser la valeur "
                     + this.value);
         }
     }

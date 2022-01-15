@@ -14,6 +14,7 @@ public abstract class Tag implements ITag {
      */
 
     protected String key;
+    private boolean keyNoRender = false;
     protected Object value;
 
     /*
@@ -84,7 +85,14 @@ public abstract class Tag implements ITag {
         this.value = value;
     }
 
+    protected void setKeyNoRender() {
+        this.keyNoRender = true;
+    }
+
     protected void renderKey(BytesStream buffer) throws ParserException {
+        if (this.keyNoRender) {
+            return;
+        }
         byte[] len;
         if (this.key.length() > Math.pow(16, 4) - 1) {
             throw new ParserException("La longueur de la clé " + this.key

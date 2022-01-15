@@ -57,7 +57,7 @@ public class SchematicsParser {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-        tags = nbtp.getTags();
+        this.tags = nbtp.getTags();
 
         // TODO : à retirer après tests
         this.convertSchematicsToNBT();
@@ -101,7 +101,7 @@ public class SchematicsParser {
 
     private void convertSchematicsToNBT() {
         try {
-            new NBTParser("E:\\Jordan\\Python\\base64_decode_nbt\\test.txt", 'w', new ArrayList<Tag>());
+            new NBTParser("E:\\Jordan\\Python\\base64_decode_nbt\\test.nbt", 'w', this.tags);
         } catch (ParserException e) {
             e.printStackTrace();
         }
