@@ -6,9 +6,7 @@ import net.projet.schematicsinworld.parser.tags.Tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
@@ -25,14 +23,41 @@ class NBTParser extends TagCompound {
      * Constructeur
      */
 
-    public NBTParser(String filepath) throws ParserException {
+    public NBTParser(String filepath, char mode, ArrayList<Tag> tags) throws ParserException {
         super();
-        // Initialisation des attributs
-        this.buffer = new BytesStream();
-        // Décompresse le fichier et stock ses données dans buffer.
-        this.extractFile(filepath);
-        // Parse le fichier
-        this.parseBuffer();
+        if (mode == 'r') {
+            // Initialisation du buffer en mode lecture
+            this.buffer = new BytesStream(BytesStream.READ_MODE);
+            // Décompresse le fichier et stock ses données dans buffer.
+            this.extractFile(filepath);
+            // Parse le fichier
+            this.parseBuffer();
+        } else {
+            // Initialisation du buffer en mode écriture
+            this.buffer = new BytesStream(BytesStream.WRITE_MODE);
+            // Dans le cas où l'utilisateur souhaite écrire un fichier NBT,
+            // on prend ses tags passés en paramètres afin de créer le fichier
+            if (tags == null) {
+                throw new ParserException("Les tags fournis sont nuls");
+            }
+            this.setKey("NBT");
+            this.setValue(tags);
+            // Parse les tags et les écrit dans le buffer
+            super.renderBuffer(this.buffer);
+            // Création du fichier
+            /*
+            try {
+                FileOutputStream output = new FileOutputStream(filepath);
+                output.write(this.buffer.getContent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+            // Compresse le fichier
+        }
+    }
+
+    public NBTParser(String filepath) throws ParserException {
+        this(filepath, 'r', null);
     }
 
     /*

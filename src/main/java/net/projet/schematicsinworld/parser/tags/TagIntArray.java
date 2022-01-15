@@ -15,6 +15,10 @@ public class TagIntArray extends TagArray {
         this.parseBuffer(buffer);
     }
 
+    public TagIntArray() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
         super.setKey(buffer);
@@ -31,5 +35,10 @@ public class TagIntArray extends TagArray {
             intArray[i] = wrapped.getInt();
         }
         this.value = intArray;
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
     }
 }

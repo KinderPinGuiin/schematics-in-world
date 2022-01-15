@@ -1,5 +1,6 @@
 package net.projet.schematicsinworld.parser.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -8,26 +9,43 @@ import java.util.Arrays;
  */
 public class BytesStream {
 
-    private int currIndex;
-    private byte[] bytes;
+    /*
+     * Constantes
+     */
 
-    public BytesStream(byte[] b, int i) {
-        if (b == null) {
+    public static final char READ_MODE = 'r';
+    public static final char WRITE_MODE = 'w';
+
+    /*
+     * Attributs
+     */
+
+    private char mode;
+    private int currIndex;
+    private ArrayList<Byte> bytes;
+
+    /*
+     * Constructeurs
+     */
+
+    public BytesStream(byte[] ba, int i, char mode) {
+        if (ba == null) {
             throw new AssertionError("string is null");
         }
-        if (i < 0 || i > b.length) {
+        if (i < 0 || i > ba.length) {
             throw new AssertionError("invalid index");
         }
-        bytes = b;
-        currIndex = i;
+        this.fillList(ba);
+        this.currIndex = i;
+        this.mode = mode;
     }
 
     public BytesStream(byte[] b) {
-        this(b, 0);
+        this(b, 0 , READ_MODE);
     }
 
-    public BytesStream() {
-        this(new byte[] {}, 0);
+    public BytesStream(char mode) {
+        this(new byte[] {}, 0, mode);
     }
 
     /**
@@ -38,23 +56,41 @@ public class BytesStream {
     }
 
     /**
-     * @return Le contenu initial du flux.
+     * @return Le contenu flux (Même la partie déjà lue).
      */
-    public byte[] getString() {
+    public byte[] getContent() {
+        byte[] bytes = new byte[this.bytes.size()];
+        int i = 0;
+        for (Byte b : this.bytes) {
+            bytes[i] = b;
+            ++i;
+        }
         return bytes;
     }
 
     /**
-     * Définit le nouveau contenu du flux et replace le curseur à 0.
+     * Définit le nouveau contenu du flux et replace le curseur à
+     * ou à bytes.length si le mode du flux est WRITE_MODE.
+     *
+     * @param bytes Le tableau d'octets contenant le nouveau flux.
+     * @param index Le nouveau curseur.
+     */
+    public void setBytes(byte[] bytes, int index) {
+        if (bytes == null) {
+            throw new AssertionError("La chaîne ne doit pas être nulle");
+        }
+        this.fillList(bytes);
+        this.currIndex = this.mode == READ_MODE ? index : bytes.length;
+    }
+
+    /**
+     * Définit le nouveau contenu du flux et replace le curseur à 0 ou à
+     * bytes.length si le mode du flux est WRITE_MODE.
      *
      * @param bytes Le tableau d'octets contenant le nouveau flux.
      */
     public void setBytes(byte[] bytes) {
-        if (bytes == null) {
-            throw new AssertionError("La chaîne ne doit pas être nulle");
-        }
-        this.bytes = bytes;
-        this.currIndex = 0;
+        this.setBytes(bytes, this.mode == READ_MODE ? 0 : bytes.length);
     }
 
     /**
@@ -64,14 +100,43 @@ public class BytesStream {
      * @return Une copie des octets lus sur le flux.
      */
     public byte[] read(int nBytes) {
-        if (this.currIndex + nBytes > this.bytes.length) {
+        if (this.currIndex + nBytes > this.bytes.size()) {
             throw new AssertionError("Nombre de bytes à lire trop grand");
         }
-        byte[] b = Arrays.copyOfRange(
-            this.bytes, this.currIndex, this.currIndex + nBytes
-        );
+        if (this.mode == WRITE_MODE) {
+            throw new AssertionError("Le flux est en mode écriture");
+        }
+        byte[] b = new byte[nBytes];
+        for (int i = 0; i < nBytes; ++i) {
+            b[i] = this.bytes.get(this.currIndex + i);
+        }
         currIndex += nBytes;
         return b;
+    }
+
+    /**
+     * Ecrit les octets contenu dans le tableau bytes dans le flux.
+     *
+     * @param bytes Les octets à écrire
+     */
+    public void write(byte[] bytes) {
+        if (this.mode == READ_MODE) {
+            throw new AssertionError("Le flux est en mode lecture");
+        }
+        for (int i = 0; i < bytes.length; ++i) {
+            this.bytes.add(bytes[i]);
+        }
+    }
+
+    /*
+     * Outils
+     */
+
+    private void fillList(byte[] ba) {
+        this.bytes = new ArrayList<Byte>();
+        for (byte b : ba) {
+            this.bytes.add(b);
+        }
     }
 
 }

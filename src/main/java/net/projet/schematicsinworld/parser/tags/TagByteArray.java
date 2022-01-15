@@ -12,10 +12,19 @@ public class TagByteArray extends TagArray {
         this.parseBuffer(buffer);
     }
 
+    public TagByteArray() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
         super.setKey(buffer);
         byte[] b = buffer.read(this.getNbElems(buffer));
         this.value = b;
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
     }
 }

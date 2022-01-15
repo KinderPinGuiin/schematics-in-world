@@ -18,6 +18,10 @@ public class TagList extends Tag {
         this.parseBuffer(buffer);
     }
 
+    public TagList() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
         super.setKey(buffer);
@@ -57,5 +61,10 @@ public class TagList extends Tag {
                 throw new ParserException(e.getMessage());
             }
         }
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
     }
 }

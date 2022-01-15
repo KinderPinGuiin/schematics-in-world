@@ -29,6 +29,7 @@ public class SchematicsParser {
     private ArrayList<BlockData> blocks;
     private ArrayList<EntityData> entities;
     private ArrayList<Tag> tags;
+    private NBTParser renderedNBT;
 
     // à voir
     private File file;
@@ -56,8 +57,10 @@ public class SchematicsParser {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-
         tags = nbtp.getTags();
+
+        // TODO : à retirer après tests
+        this.convertSchematicsToNBT();
     }
 
     /*
@@ -88,12 +91,20 @@ public class SchematicsParser {
         }
     }
 
-    private void convertSchematicsToNBT() {
+    public void saveToNBT() {
 
     }
 
-    public void saveToNBT() {
+    /*
+     * Outils
+     */
 
+    private void convertSchematicsToNBT() {
+        try {
+            new NBTParser("E:\\Jordan\\Python\\base64_decode_nbt\\test.txt", 'w', new ArrayList<Tag>());
+        } catch (ParserException e) {
+            e.printStackTrace();
+        }
     }
 
 }

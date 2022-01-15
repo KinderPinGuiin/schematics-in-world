@@ -3,7 +3,9 @@ package net.projet.schematicsinworld.parser.tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public abstract class Tag implements ITag {
 
@@ -40,6 +42,8 @@ public abstract class Tag implements ITag {
      */
     protected abstract void parseBuffer(BytesStream buffer) throws ParserException;
 
+    protected abstract void renderBuffer(BytesStream buffer) throws ParserException;
+
     /**
      * Lit 2 + n octets sur buffer :
      * - 2 octets représentant la longueur de la clé.
@@ -62,8 +66,9 @@ public abstract class Tag implements ITag {
     }
 
     /**
+     * Met à jour manuellement la clé d'un tag.
      *
-     * @param key
+     * @param key La nouvelle clé
      */
     protected void setKey(String key) {
         if (key == null) {
@@ -72,12 +77,33 @@ public abstract class Tag implements ITag {
         this.key = key;
     }
 
+    public void setValue(Object value) throws ParserException {
+        if (value == null) {
+            throw new ParserException("La valeur ne doit pas être nulle");
+        }
+        this.value = value;
+    }
+
+    protected void renderKey(BytesStream buffer) throws ParserException {
+        byte[] len;
+        if (this.key.length() > Math.pow(16, 4) - 1) {
+            throw new ParserException("La longueur de la clé " + this.key
+                    + " est trop grande");
+        } else if (this.key.length() > 16 * 16 - 1) {
+            len = BigInteger.valueOf(this.key.length()).toByteArray();
+        } else {
+            len = new byte[] {0, (byte) this.key.length()};
+        }
+        buffer.write(len);
+        buffer.write(this.key.getBytes(StandardCharsets.UTF_8));
+    }
+
     @Override
     public String toString() {
-        return "Tag{" +
-                "key='" + key + '\'' +
-                ", value=" + value +
-                '}';
+        return "\nTag{\n" +
+                "\tkey='" + key + "',\n" +
+                "\tvalue=" + value + "\n" +
+                "}";
     }
 
 }

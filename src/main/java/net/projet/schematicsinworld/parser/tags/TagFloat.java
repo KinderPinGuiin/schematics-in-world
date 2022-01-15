@@ -1,6 +1,7 @@
 package net.projet.schematicsinworld.parser.tags;
 
 import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.nio.ByteBuffer;
 
@@ -13,6 +14,10 @@ public class TagFloat extends Tag {
         this.parseBuffer(buffer);
     }
 
+    public TagFloat() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) {
         // Lecture de la clé
@@ -21,5 +26,10 @@ public class TagFloat extends Tag {
         byte[] b = buffer.read(4);
         ByteBuffer wrapped = ByteBuffer.wrap(b);
         this.value = wrapped.getFloat();
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+
     }
 }
