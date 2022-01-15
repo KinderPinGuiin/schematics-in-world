@@ -1,5 +1,6 @@
 package net.projet.schematicsinworld.parser.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -9,16 +10,16 @@ import java.util.Arrays;
 public class BytesStream {
 
     private int currIndex;
-    private byte[] bytes;
+    private ArrayList<Byte> bytes;
 
-    public BytesStream(byte[] b, int i) {
-        if (b == null) {
+    public BytesStream(byte[] ba, int i) {
+        if (ba == null) {
             throw new AssertionError("string is null");
         }
-        if (i < 0 || i > b.length) {
+        if (i < 0 || i > ba.length) {
             throw new AssertionError("invalid index");
         }
-        bytes = b;
+        this.fillList(ba);
         currIndex = i;
     }
 
@@ -38,10 +39,30 @@ public class BytesStream {
     }
 
     /**
-     * @return Le contenu initial du flux.
+     * @return Le contenu flux (Même la partie déjà lue).
      */
-    public byte[] getString() {
+    public byte[] getContent() {
+        byte[] bytes = new byte[this.bytes.size()];
+        int i = 0;
+        for (Byte b : this.bytes) {
+            bytes[i] = b;
+            ++i;
+        }
         return bytes;
+    }
+
+    /**
+     * Définit le nouveau contenu du flux et replace le curseur à index.
+     *
+     * @param bytes Le tableau d'octets contenant le nouveau flux.
+     * @param index Le nouveau curseur.
+     */
+    public void setBytes(byte[] bytes, int index) {
+        if (bytes == null) {
+            throw new AssertionError("La chaîne ne doit pas être nulle");
+        }
+        this.fillList(bytes);
+        this.currIndex = index;
     }
 
     /**
@@ -50,11 +71,7 @@ public class BytesStream {
      * @param bytes Le tableau d'octets contenant le nouveau flux.
      */
     public void setBytes(byte[] bytes) {
-        if (bytes == null) {
-            throw new AssertionError("La chaîne ne doit pas être nulle");
-        }
-        this.bytes = bytes;
-        this.currIndex = 0;
+        this.setBytes(bytes, 0);
     }
 
     /**
@@ -64,14 +81,35 @@ public class BytesStream {
      * @return Une copie des octets lus sur le flux.
      */
     public byte[] read(int nBytes) {
-        if (this.currIndex + nBytes > this.bytes.length) {
+        if (this.currIndex + nBytes > this.bytes.size()) {
             throw new AssertionError("Nombre de bytes à lire trop grand");
         }
-        byte[] b = Arrays.copyOfRange(
-            this.bytes, this.currIndex, this.currIndex + nBytes
-        );
+        byte[] b = new byte[nBytes];
+        for (int i = 0; i < nBytes; ++i) {
+            b[i] = this.bytes.get(this.currIndex + i);
+        }
         currIndex += nBytes;
         return b;
+    }
+
+    /**
+     * Ecrit les octets contenu dans le tableau bytes dans le flux.
+     *
+     * @param bytes Les octets à écrire
+     */
+    public void write(byte[] bytes) {
+
+    }
+
+    /*
+     * Outils
+     */
+
+    private void fillList(byte[] ba) {
+        this.bytes = new ArrayList<Byte>();
+        for (byte b : ba) {
+            this.bytes.add(b);
+        }
     }
 
 }
