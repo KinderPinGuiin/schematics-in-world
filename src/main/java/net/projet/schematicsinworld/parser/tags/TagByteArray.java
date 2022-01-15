@@ -25,6 +25,7 @@ public class TagByteArray extends TagArray {
 
     @Override
     protected void renderBuffer(BytesStream buffer) throws ParserException {
-
+        super.renderKey(buffer);
+        buffer.write((byte[]) this.value);
     }
 }
