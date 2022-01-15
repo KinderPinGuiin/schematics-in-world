@@ -59,6 +59,7 @@ public class SchematicsParser {
         }
         tags = nbtp.getTags();
 
+        // TODO : à retirer après tests
         this.convertSchematicsToNBT();
     }
 
@@ -90,16 +91,20 @@ public class SchematicsParser {
         }
     }
 
+    public void saveToNBT() {
+
+    }
+
+    /*
+     * Outils
+     */
+
     private void convertSchematicsToNBT() {
         try {
             new NBTParser("E:\\Jordan\\Python\\base64_decode_nbt\\test.txt", 'w', new ArrayList<Tag>());
         } catch (ParserException e) {
             e.printStackTrace();
         }
-    }
-
-    public void saveToNBT() {
-
     }
 
 }
