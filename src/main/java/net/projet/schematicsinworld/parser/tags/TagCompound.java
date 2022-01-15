@@ -62,6 +62,11 @@ public class TagCompound extends Tag {
 
     @Override
     protected void renderBuffer(BytesStream buffer) throws ParserException {
-
+        buffer.write(new byte[] {(byte) Tags.TAG_COMPOUND.ordinal()});
+        for (Tag tag : (ArrayList<Tag>) this.getValue()) {
+            tag.renderBuffer(buffer);
+        }
+        buffer.write(new byte[] {(byte) Tags.TAG_END.ordinal()});
     }
+
 }

@@ -90,12 +90,12 @@ public class SchematicsParser {
         }
     }
 
-    private void convertSchematicsToNBT() {/*
+    private void convertSchematicsToNBT() {
         try {
             new NBTParser("E:\\Jordan\\Python\\base64_decode_nbt\\test.txt", 'w', new ArrayList<Tag>());
         } catch (ParserException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     public void saveToNBT() {

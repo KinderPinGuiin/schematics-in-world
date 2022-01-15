@@ -19,9 +19,6 @@ class NBTParser extends TagCompound {
     // Flux d'octets qui sera lu lors du parsing.
     private BytesStream buffer;
 
-    // Tag en cas d'écriture d'un fichier
-    private ArrayList<Tag> tags;
-
     /*
      * Constructeur
      */
@@ -29,30 +26,31 @@ class NBTParser extends TagCompound {
     public NBTParser(String filepath, char mode, ArrayList<Tag> tags) throws ParserException {
         super();
         if (mode == 'r') {
-            // Initialisation du buffer
+            // Initialisation du buffer en mode lecture
             this.buffer = new BytesStream(BytesStream.READ_MODE);
             // Décompresse le fichier et stock ses données dans buffer.
             this.extractFile(filepath);
             // Parse le fichier
             this.parseBuffer();
         } else {
-            // Initialisation du buffer
+            // Initialisation du buffer en mode écriture
             this.buffer = new BytesStream(BytesStream.WRITE_MODE);
             // Dans le cas où l'utilisateur souhaite écrire un fichier NBT,
             // on prend ses tags passés en paramètres afin de créer le fichier
             if (tags == null) {
                 throw new ParserException("Les tags fournis sont nuls");
             }
-            this.tags = tags;
+            this.setValue(tags);
             // Parse les tags et les écrit dans le buffer
             super.renderBuffer(this.buffer);
             // Création du fichier
+            /*
             try {
                 FileOutputStream output = new FileOutputStream(filepath);
                 output.write(this.buffer.getContent());
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             // Compresse le fichier
         }
     }

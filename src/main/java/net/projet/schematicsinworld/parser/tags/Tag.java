@@ -64,8 +64,9 @@ public abstract class Tag implements ITag {
     }
 
     /**
+     * Met à jour manuellement la clé d'un tag.
      *
-     * @param key
+     * @param key La nouvelle clé
      */
     protected void setKey(String key) {
         if (key == null) {
@@ -74,12 +75,19 @@ public abstract class Tag implements ITag {
         this.key = key;
     }
 
+    public void setValue(Object value) throws ParserException {
+        if (value == null) {
+            throw new ParserException("La valeur ne doit pas être nulle");
+        }
+        this.value = value;
+    }
+
     @Override
     public String toString() {
-        return "Tag{" +
-                "key='" + key + '\'' +
-                ", value=" + value +
-                '}';
+        return "\nTag{\n" +
+                "\tkey='" + key + "',\n" +
+                "\tvalue=" + value + "\n" +
+                "}";
     }
 
 }
