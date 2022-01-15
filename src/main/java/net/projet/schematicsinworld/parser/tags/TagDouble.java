@@ -14,6 +14,10 @@ public class TagDouble extends Tag {
         this.parseBuffer(buffer);
     }
 
+    public TagDouble() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) {
         // Lecture de la clé

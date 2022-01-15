@@ -15,6 +15,10 @@ public class TagLongArray extends TagArray {
         this.parseBuffer(buffer);
     }
 
+    public TagLongArray() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
         super.setKey(buffer);

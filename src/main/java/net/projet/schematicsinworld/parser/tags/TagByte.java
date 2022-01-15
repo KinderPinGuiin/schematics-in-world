@@ -14,6 +14,10 @@ public class TagByte extends Tag {
         this.parseBuffer(buffer);
     }
 
+    public TagByte() {
+        // Ne fait rien.
+    }
+
     @Override
     protected void parseBuffer(BytesStream buffer) {
         // Lecture de la clé
