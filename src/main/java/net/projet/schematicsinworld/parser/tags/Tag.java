@@ -40,6 +40,8 @@ public abstract class Tag implements ITag {
      */
     protected abstract void parseBuffer(BytesStream buffer) throws ParserException;
 
+    protected abstract void renderBuffer(BytesStream buffer) throws ParserException;
+
     /**
      * Lit 2 + n octets sur buffer :
      * - 2 octets représentant la longueur de la clé.
