@@ -40,6 +40,7 @@ class NBTParser extends TagCompound {
             if (tags == null) {
                 throw new ParserException("Les tags fournis sont nuls");
             }
+            this.setKey("NBT");
             this.setValue(tags);
             // Parse les tags et les écrit dans le buffer
             super.renderBuffer(this.buffer);

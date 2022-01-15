@@ -3,7 +3,9 @@ package net.projet.schematicsinworld.parser.tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public abstract class Tag implements ITag {
 
@@ -80,6 +82,20 @@ public abstract class Tag implements ITag {
             throw new ParserException("La valeur ne doit pas être nulle");
         }
         this.value = value;
+    }
+
+    protected void renderKey(BytesStream buffer) throws ParserException {
+        byte[] len;
+        if (this.key.length() > Math.pow(16, 4) - 1) {
+            throw new ParserException("La longueur de la clé " + this.key
+                    + " est trop grande");
+        } else if (this.key.length() > 16 * 16 - 1) {
+            len = BigInteger.valueOf(this.key.length()).toByteArray();
+        } else {
+            len = new byte[] {0, (byte) this.key.length()};
+        }
+        buffer.write(len);
+        buffer.write(this.key.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
