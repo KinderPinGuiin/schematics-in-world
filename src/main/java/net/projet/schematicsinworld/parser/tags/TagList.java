@@ -3,6 +3,9 @@ package net.projet.schematicsinworld.parser.tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
@@ -10,6 +13,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TagList extends Tag {
+
+    /*
+     * Attributs
+     */
+
+    private int type;
+
+    /*
+     * Constructeurs
+     */
 
     public TagList(BytesStream buffer) throws ParserException, NoSuchMethodException {
         if (buffer == null) {
@@ -20,6 +33,16 @@ public class TagList extends Tag {
 
     public TagList() {
         // Ne fait rien.
+    }
+
+    /*
+     * Commandes
+     */
+
+    @Override
+    public void setValue(ArrayList<Tag> value, int type) throws ParserException {
+        super.setValue(value);
+        this.type = type;
     }
 
     @Override
@@ -67,4 +90,5 @@ public class TagList extends Tag {
     protected void renderBuffer(BytesStream buffer) throws ParserException {
 
     }
+
 }
