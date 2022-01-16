@@ -18,6 +18,10 @@ public class TagList extends Tag {
      * Attributs
      */
 
+    /*
+     * TODO : Trouver dynamiquement le type en cherchant le type dynamique du
+     *        premier tag de la liste.
+     */
     private int type = 10;
 
     /*
@@ -92,7 +96,15 @@ public class TagList extends Tag {
             // Convertit le type et la longueur de la liste en tableau de byte
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             DataOutputStream dstream = new DataOutputStream(stream);
-            dstream.writeByte((byte) this.type);
+            int type;
+            if (((ArrayList<Tag>) this.value).size() > 0) {
+                type = Tags.getOrdByClass(
+                    ((ArrayList<Tag>) this.value).get(0).getClass()
+                );
+            } else {
+                type = 0;
+            }
+            dstream.writeByte((byte) type);
             dstream.writeInt(((ArrayList<Tag>) this.value).size());
             dstream.flush();
             // Ecrit la valeur complète dans le buffer
