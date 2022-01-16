@@ -1,18 +1,15 @@
 package net.projet.schematicsinworld.parser;
 
-import net.minecraftforge.common.util.Constants;
-import net.projet.schematicsinworld.commons.BlockData;
-import net.projet.schematicsinworld.commons.EntityData;
 import net.projet.schematicsinworld.parser.tags.Tag;
 import net.projet.schematicsinworld.parser.utils.ParserException;
-import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.logging.Logger;
 
+/**
+ * Convertit des fichiers .schem générés par WorldEdit en fichier .nbt
+ * générés par des structures blocs.
+ */
 public class SchematicsParser {
 
     /*
@@ -26,13 +23,10 @@ public class SchematicsParser {
      * ATTRIBUTS
      */
 
-    private ArrayList<BlockData> blocks;
-    private ArrayList<EntityData> entities;
-    private ArrayList<Tag> tags;
-    private NBTParser renderedNBT;
-
-    // à voir
-    private File file;
+    // Les tags parsés dans le fichier passé dans le constructeur
+    private ArrayList<Tag> tags = null;
+    // Le fichier schematic source
+    private final File file;
 
     /*
      * CONSTRUCTEURS
@@ -47,33 +41,18 @@ public class SchematicsParser {
             throw new AssertionError("cannot open file");
         }
 
-        blocks = new ArrayList<>();
-        entities = new ArrayList<>();
-
-        NBTParser nbtp = null;
         try {
-            nbtp = new NBTParser(filepath);
+            NBTParser nbtp = new NBTParser(filepath);
+            this.tags = nbtp.getTags();
         } catch (ParserException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
-        this.tags = nbtp.getTags();
-
-        // TODO : à retirer après tests
-        this.convertSchematicsToNBT();
     }
 
     /*
      * REQUETES
      */
-
-    public ArrayList<BlockData> getBlocks() {
-        return new ArrayList<>(blocks);
-    }
-
-    public ArrayList<EntityData> getEntities() {
-        return new ArrayList<>(entities);
-    }
 
     public File getFile() {
         return file;
@@ -91,20 +70,23 @@ public class SchematicsParser {
         }
     }
 
-    public void saveToNBT() {
-
+    public void saveToNBT(String filepath) {
+        // Convertit le fichier .schem en NBT de structure bloc
+        ArrayList<Tag> tags = this.convertSchematicsToNBT();
+        // Enregistre le fichier
+        try {
+            new NBTParser(filepath, 'w', tags);
+        } catch (ParserException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
      * Outils
      */
 
-    private void convertSchematicsToNBT() {
-        try {
-            new NBTParser("E:\\Jordan\\Python\\base64_decode_nbt\\test.nbt", 'w', this.tags);
-        } catch (ParserException e) {
-            e.printStackTrace();
-        }
+    private ArrayList<Tag> convertSchematicsToNBT() {
+        return null;
     }
 
 }
