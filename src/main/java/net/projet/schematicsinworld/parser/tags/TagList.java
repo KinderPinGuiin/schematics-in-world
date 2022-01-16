@@ -15,16 +15,6 @@ import java.util.Arrays;
 public class TagList extends Tag {
 
     /*
-     * Attributs
-     */
-
-    /*
-     * TODO : Trouver dynamiquement le type en cherchant le type dynamique du
-     *        premier tag de la liste.
-     */
-    private int type = 10;
-
-    /*
      * Constructeurs
      */
 
@@ -42,11 +32,6 @@ public class TagList extends Tag {
     /*
      * Commandes
      */
-
-    public void setValue(ArrayList<Tag> value, int type) throws ParserException {
-        super.setValue(value);
-        this.type = type;
-    }
 
     @Override
     protected void parseBuffer(BytesStream buffer) throws ParserException {
