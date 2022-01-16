@@ -18,7 +18,7 @@ public class TagList extends Tag {
      * Constructeurs
      */
 
-    public TagList(BytesStream buffer) throws ParserException, NoSuchMethodException {
+    public TagList(BytesStream buffer) throws ParserException {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
