@@ -1,6 +1,9 @@
 package net.projet.schematicsinworld.parser;
 
 import net.projet.schematicsinworld.parser.tags.Tag;
+import net.projet.schematicsinworld.parser.tags.TagList;
+import net.projet.schematicsinworld.parser.tags.TagListExtended;
+import net.projet.schematicsinworld.parser.tags.Tags;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.io.File;
@@ -86,7 +89,43 @@ public class SchematicsParser {
      */
 
     private ArrayList<Tag> convertSchematicsToNBT() {
-        return null;
+        ArrayList<Tag> res = new ArrayList<>();
+        // DataVersion
+        for (Tag t : this.tags) {
+            if (t.getKey().equals("DataVersion")) {
+                res.add(t);
+                break;
+            }
+        }
+
+        // size
+        TagListExtended<Integer> tl = new TagListExtended<Integer>((byte)Tags.TAG_INT.ordinal(), 3);
+        int width = 0;
+        int length = 0;
+        int height = 0;
+        int toFind = 3;
+        for (Tag t : this.tags) {
+            if (toFind == 0) {
+                break;
+            }
+            if (t.getKey().equals("Height")) {
+                height = (Integer)t.getValue();
+                --toFind;
+            } else if (t.getKey().equals("Length")) {
+                length = (Integer)t.getValue();
+                --toFind;
+            } else if (t.getKey().equals("Width")) {
+                width = (Integer)t.getValue();
+                --toFind;
+            }
+        }
+        // pas sûr de l'ordre
+        tl.add(length);
+        tl.add(height);
+        tl.add(width);
+        res.add(tl);
+        return res;
     }
+
 
 }
