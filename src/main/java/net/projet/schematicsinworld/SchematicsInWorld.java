@@ -17,6 +17,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.projet.schematicsinworld.parser.SchematicsParser;
 import net.projet.schematicsinworld.parser.tags.TagFloat;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +38,13 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        try {
+            s.saveToNBT("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\test.nbt");
+        } catch (ParserException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
         // new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
 
         /* Test de la classe TagFloat

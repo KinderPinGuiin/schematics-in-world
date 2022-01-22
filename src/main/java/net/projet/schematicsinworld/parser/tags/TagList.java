@@ -75,6 +75,7 @@ public class TagList extends Tag {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void renderBuffer(BytesStream buffer) throws ParserException {
         super.renderKey(buffer);
         try {

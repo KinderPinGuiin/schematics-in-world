@@ -1,13 +1,12 @@
 package net.projet.schematicsinworld.parser;
 
-import net.projet.schematicsinworld.parser.tags.Tag;
-import net.projet.schematicsinworld.parser.tags.TagList;
-import net.projet.schematicsinworld.parser.tags.TagListExtended;
-import net.projet.schematicsinworld.parser.tags.Tags;
+import net.minecraft.entity.monster.AbstractRaiderEntity;
+import net.projet.schematicsinworld.parser.tags.*;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Convertit des fichiers .schem générés par WorldEdit en fichier .nbt
@@ -73,7 +72,7 @@ public class SchematicsParser {
         }
     }
 
-    public void saveToNBT(String filepath) {
+    public void saveToNBT(String filepath) throws ParserException {
         // Convertit le fichier .schem en NBT de structure bloc
         ArrayList<Tag> tags = this.convertSchematicsToNBT();
         // Enregistre le fichier
@@ -88,16 +87,22 @@ public class SchematicsParser {
      * Outils
      */
 
-    private ArrayList<Tag> convertSchematicsToNBT() {
+    private ArrayList<Tag> convertSchematicsToNBT() throws ParserException {
         ArrayList<Tag> res = new ArrayList<>();
-        // DataVersion
         for (Tag t : this.tags) {
-            if (t.getKey().equals("DataVersion")) {
-                res.add(t);
-                break;
+            switch (t.getKey()) {
+                case "DataVersion":
+                    TagInt dataVersion = new TagInt();
+                    dataVersion.setKey("DataVersion");
+                    dataVersion.setValue(t.getValue());
+                    res.add(dataVersion);
+                    break;
+                case "Palette":
+                    this.convertPalette(res, (TagCompound) t);
+                    break;
             }
         }
-
+        /*
         // size
         TagListExtended<Integer> tl = new TagListExtended<Integer>((byte)Tags.TAG_INT.ordinal(), 3);
         int width = 0;
@@ -123,9 +128,53 @@ public class SchematicsParser {
         tl.add(length);
         tl.add(height);
         tl.add(width);
-        res.add(tl);
+        res.add(tl);*/
         return res;
     }
 
+    @SuppressWarnings("unchecked")
+    private void convertPalette(ArrayList<Tag> res, TagCompound schemPalette) throws ParserException {
+        TagList palette = new TagList();
+        ArrayList<Tag> paletteVal = new ArrayList<>();
+        // Transforme le dictionnaire schemPalette en TagList de TagCompound
+        ((ArrayList<Tag>) schemPalette.getValue()).sort(
+            Comparator.comparingInt(o -> ((Integer) o.getValue()))
+        );
+        for (Tag t : (ArrayList<Tag>) schemPalette.getValue()) {
+            // Sépare la clé du NBT et ses propriétés
+            String[] key_prop = t.getKey().split("\\[");
+
+            TagCompound tagCompound = new TagCompound();
+
+            ArrayList<Tag> compoundVal = new ArrayList<>();
+            TagString compoundValName = new TagString();
+            compoundValName.setKey("Name");
+            compoundValName.setValue(key_prop[0]);
+            compoundVal.add(compoundValName);
+
+            if (key_prop.length > 1) {
+                key_prop[1] = key_prop[1].substring(0, key_prop[1].length() - 1);
+                TagCompound props = new TagCompound();
+                ArrayList<Tag> propsVal = new ArrayList<>();
+                for (String prop : key_prop[1].split(",")) {
+                    String[] prop_name_val = prop.split("=");
+                    TagString propTagString = new TagString();
+                    propTagString.setKey(prop_name_val[0]);
+                    propTagString.setValue(prop_name_val[1]);
+                    propsVal.add(propTagString);
+                }
+                props.setKey("Properties");
+                props.setValue(propsVal);
+                compoundVal.add(props);
+            }
+
+            tagCompound.setValue(compoundVal);
+            paletteVal.add(tagCompound);
+        }
+        // Ajoute la liste au résultat
+        palette.setKey("palette");
+        palette.setValue(paletteVal);
+        res.add(palette);
+    }
 
 }

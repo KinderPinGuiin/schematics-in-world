@@ -71,7 +71,7 @@ public abstract class Tag implements ITag {
      *
      * @param key La nouvelle clé
      */
-    protected void setKey(String key) {
+    public void setKey(String key) {
         if (key == null) {
             throw new AssertionError("La clé ne doit pas être nulle");
         }
@@ -85,7 +85,7 @@ public abstract class Tag implements ITag {
         this.value = value;
     }
 
-    protected void setKeyNoRender() {
+    public void setKeyNoRender() {
         this.keyNoRender = true;
     }
 
