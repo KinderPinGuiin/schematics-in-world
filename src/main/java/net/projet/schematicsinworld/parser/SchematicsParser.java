@@ -103,19 +103,13 @@ public class SchematicsParser {
                     this.convertPalette(res, (TagCompound) t);
                     break;
                 case "Length":
-                    TagInt length = new TagInt();
-                    length.setValue(((Short) t.getValue()).intValue());
-                    size.set(0, length);
+                    size.get(0).setValue(((Short) t.getValue()).intValue());
                     break;
                 case "Height":
-                    TagInt height = new TagInt();
-                    height.setValue(((Short) t.getValue()).intValue());
-                    size.set(1, height);
+                    size.get(1).setValue(((Short) t.getValue()).intValue());
                     break;
                 case "Width":
-                    TagInt width = new TagInt();
-                    width.setValue(((Short) t.getValue()).intValue());
-                    size.set(2, width);
+                    size.get(2).setValue(((Short) t.getValue()).intValue());
                     break;
             }
         }
