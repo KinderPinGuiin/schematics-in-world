@@ -89,6 +89,8 @@ public class SchematicsParser {
 
     private ArrayList<Tag> convertSchematicsToNBT() throws ParserException {
         ArrayList<Tag> res = new ArrayList<>();
+        ArrayList<Tag> size = new ArrayList<>();
+        for (int i = 0; i < 3; ++i) { size.add(new TagInt()); }
         for (Tag t : this.tags) {
             switch (t.getKey()) {
                 case "DataVersion":
@@ -100,8 +102,28 @@ public class SchematicsParser {
                 case "Palette":
                     this.convertPalette(res, (TagCompound) t);
                     break;
+                case "Length":
+                    TagInt length = new TagInt();
+                    length.setValue(((Short) t.getValue()).intValue());
+                    size.set(0, length);
+                    break;
+                case "Height":
+                    TagInt height = new TagInt();
+                    height.setValue(((Short) t.getValue()).intValue());
+                    size.set(1, height);
+                    break;
+                case "Width":
+                    TagInt width = new TagInt();
+                    width.setValue(((Short) t.getValue()).intValue());
+                    size.set(2, width);
+                    break;
             }
         }
+        // size
+        TagList sizeTag = new TagList();
+        sizeTag.setKey("size");
+        sizeTag.setValue(size);
+        res.add(sizeTag);
         /*
         // size
         TagListExtended<Integer> tl = new TagListExtended<Integer>((byte)Tags.TAG_INT.ordinal(), 3);
