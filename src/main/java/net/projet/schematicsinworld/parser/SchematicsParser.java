@@ -193,4 +193,6 @@ public class SchematicsParser {
         res.add(palette);
     }
 
+    private void convertEntities(ArrayList<Tag> res, TagCompound schemEntities) throws ParserException {}
+
 }

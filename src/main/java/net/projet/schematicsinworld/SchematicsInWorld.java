@@ -38,35 +38,20 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        /*SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
         try {
             s.saveToNBT("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\test.nbt");
         } catch (ParserException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
+        }*/
+        SchematicsParser s = new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
+        try {
+            s.saveToNBT("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\test.nbt");
+        } catch (ParserException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
-        // new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
-
-        /* Test de la classe TagFloat
-        byte buffer[] = new byte[] {64, 73, -103, -102};
-        String s = "pain";
-        byte[] name = s.getBytes(StandardCharsets.UTF_8);
-        byte[] len = new byte[] {0, (byte)name.length};//BigInteger.valueOf(name.length).toByteArray();
-
-        byte[] all = new byte[len.length + name.length + buffer.length + 10];
-        all[0] = len[0];
-        all[1] = len[1];
-
-        for (int i = 0; i < name.length; ++i) {
-            all[i + 2] = name[i];
-        }
-        for (int i = 0; i < buffer.length; ++i) {
-            all[i + 2 + name.length] = buffer[i];
-        }
-        BytesStream bs = new BytesStream(all);
-        TagFloat tf = new TagFloat(bs);
-        LOGGER.info(tf.getKey() + " " + tf.getValue());
-        */
 
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
