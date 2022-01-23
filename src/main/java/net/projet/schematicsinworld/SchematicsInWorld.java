@@ -38,20 +38,21 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        /*
         SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
         try {
             s.saveToNBT("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\test.nbt");
         } catch (ParserException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-        }/*
+        }*/
         SchematicsParser s = new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
         try {
             s.saveToNBT("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\test.nbt");
         } catch (ParserException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-        }*/
+        }
 
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading

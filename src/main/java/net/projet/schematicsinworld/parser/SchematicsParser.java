@@ -1,12 +1,16 @@
 package net.projet.schematicsinworld.parser;
 
+import jdk.nashorn.internal.ir.Block;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.projet.schematicsinworld.parser.tags.*;
+import net.projet.schematicsinworld.parser.utils.BlockData;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Convertit des fichiers .schem générés par WorldEdit en fichier .nbt
@@ -87,10 +91,13 @@ public class SchematicsParser {
      * Outils
      */
 
+    @SuppressWarnings("unchecked")
     private ArrayList<Tag> convertSchematicsToNBT() throws ParserException {
         ArrayList<Tag> res = new ArrayList<>();
         ArrayList<Tag> size = new ArrayList<>();
         for (int i = 0; i < 3; ++i) { size.add(new TagInt()); }
+        byte[] blocks = new byte[] {};
+        ArrayList<TagCompound> blockEntities = null;
         for (Tag t : this.tags) {
             switch (t.getKey()) {
                 case "DataVersion":
@@ -111,41 +118,65 @@ public class SchematicsParser {
                 case "Width":
                     size.get(2).setValue(((Short) t.getValue()).intValue());
                     break;
+                case "BlockData":
+                    blocks = (byte[]) t.getValue();
+                    break;
+                case "BlockEntities":
+                    blockEntities = (ArrayList<TagCompound>) t.getValue();
+                    break;
             }
         }
-        this.convertEntities(res);
+        // TODO
+        //this.convertEntities(res);
+
+        // blocks
+        ArrayList<BlockData> blockData = this.convertBlocks(blocks, blockEntities, size);
+        TagList blocksTag = new TagList();
+        ArrayList<TagCompound> blocksList = new ArrayList<>();
+        for (BlockData bd : blockData) {
+            TagCompound tc = new TagCompound();
+            ArrayList<Tag> tcList = new ArrayList<>();
+            // state
+            TagInt state = new TagInt();
+            state.setKey("state");
+            state.setValue(bd.getState());
+            tcList.add(state);
+            // pos
+            TagList tl = new TagList();
+            tl.setKey("pos");
+            ArrayList<TagInt> coords = new ArrayList<>();
+            for(Integer i : bd.getCoords()) {
+                TagInt ti = new TagInt();
+                ti.setValue(i);
+                coords.add(ti);
+            }
+            tl.setValue(coords);
+            tcList.add(tl);
+            // nbt
+            if (bd.getNbt().size() > 0) {
+                TagCompound nbt = new TagCompound();
+                ArrayList<TagString> nbtValues = new ArrayList<>();
+                nbt.setKey("nbt");
+                for (String key : bd.getNbt().keySet()) {
+                    TagString ts = new TagString();
+                    ts.setKey(key);
+                    ts.setValue(bd.getNbt().get(key));
+                }
+                nbt.setValue(nbtValues);
+                tcList.add(nbt);
+            }
+            // fin
+            tc.setValue(tcList);
+            blocksList.add(tc);
+        }
+        blocksTag.setValue(blocksList);
+        res.add(blocksTag);
         // size
         TagList sizeTag = new TagList();
         sizeTag.setKey("size");
         sizeTag.setValue(size);
         res.add(sizeTag);
-        /*
-        // size
-        TagListExtended<Integer> tl = new TagListExtended<Integer>((byte)Tags.TAG_INT.ordinal(), 3);
-        int width = 0;
-        int length = 0;
-        int height = 0;
-        int toFind = 3;
-        for (Tag t : this.tags) {
-            if (toFind == 0) {
-                break;
-            }
-            if (t.getKey().equals("Height")) {
-                height = (Integer)t.getValue();
-                --toFind;
-            } else if (t.getKey().equals("Length")) {
-                length = (Integer)t.getValue();
-                --toFind;
-            } else if (t.getKey().equals("Width")) {
-                width = (Integer)t.getValue();
-                --toFind;
-            }
-        }
-        // pas sûr de l'ordre
-        tl.add(length);
-        tl.add(height);
-        tl.add(width);
-        res.add(tl);*/
+
         return res;
     }
 
@@ -199,8 +230,43 @@ public class SchematicsParser {
         res.add(entities);
     }
 
-    private void convertBlocks(ArrayList<Tag> res, TagCompound schemBlocks) {
-
+    @SuppressWarnings("unchecked")
+    private ArrayList<BlockData> convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities, ArrayList<Tag> size) {
+        TagList blocks = new TagList();
+        ArrayList<BlockData> blocksVal = new ArrayList<>();
+        int nextX = 0;
+        int nextY = 0;
+        int nextZ = 0;
+        for (byte b : blockData) {
+            HashMap<String, String> nbt = new HashMap<>();
+            boolean isHere = false;
+            for (TagCompound tc : blockEntities) {
+                for (Tag t : (ArrayList<Tag>) tc.getValue()) {
+                    if (t.getKey().equals("Pos")) {
+                        int[] tagPos = (int[]) t.getValue();
+                        if (tagPos[0] == nextX && tagPos[1] == nextY && tagPos[2] == nextZ) {
+                            isHere = true;
+                            continue;
+                        }
+                        break;
+                    }
+                    if (t.getKey().equals("Id")) {
+                        nbt.put("id", (String) t.getValue());
+                    } else {
+                        nbt.put(t.getKey(), (String) t.getValue());
+                    }
+                }
+            }
+            BlockData bd = new BlockData(nextX, nextY, nextZ, b, isHere ? nbt : new HashMap<>());
+            blocksVal.add(bd);
+            nextZ = (nextZ + 1) % (int) size.get(2).getValue();
+            if (nextZ == 0) {
+                nextX = (nextX + 1) % (int) size.get(0).getValue();
+                if (nextX == 0) {
+                    nextY = (nextY + 1) % (int) size.get(1).getValue();
+                }
+            }
+        }
+        return blocksVal;
     }
-
 }
