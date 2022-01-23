@@ -126,8 +126,8 @@ public class SchematicsParser {
                     break;
             }
         }
-        // TODO
-        //this.convertEntities(res);
+        // entities
+        this.convertEntities(res);
 
         // blocks
         ArrayList<BlockData> blockData = this.convertBlocks(blocks, blockEntities, size);
@@ -170,6 +170,7 @@ public class SchematicsParser {
         }
         blocksTag.setValue(blocksList);
         res.add(blocksTag);
+
         // size
         TagList sizeTag = new TagList();
         sizeTag.setKey("size");
@@ -224,8 +225,10 @@ public class SchematicsParser {
         res.add(palette);
     }
 
-    private void convertEntities(ArrayList<Tag> res) {
+    private void convertEntities(ArrayList<Tag> res) throws ParserException {
         TagList entities = new TagList();
+        entities.setKey("entities");
+        entities.setValue(new ArrayList<Tag>());
         res.add(entities);
     }
 
