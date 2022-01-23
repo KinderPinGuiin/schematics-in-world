@@ -1,5 +1,6 @@
 package net.projet.schematicsinworld.parser.utils;
 
+import net.projet.schematicsinworld.parser.tags.Tag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -15,13 +16,13 @@ public class BlockData {
     private int y;
     private int z;
     private int state;
-    private HashMap<String, String> nbt;
+    private HashMap<String, Tag> nbt;
 
     /*
      * Constructeur
      */
 
-    public BlockData(int x, int y, int z, int state, @NotNull HashMap<String, String> nbt) {
+    public BlockData(int x, int y, int z, int state, @NotNull HashMap<String, Tag> nbt) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -58,8 +59,18 @@ public class BlockData {
         return this.state;
     }
 
-    public HashMap<String, String> getNbt() {
+    public HashMap<String, Tag> getNbt() {
         return new HashMap<>(this.nbt);
     }
 
+    @Override
+    public String toString() {
+        return "BlockData{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                ", state=" + state +
+                ", nbt=" + nbt +
+                '}';
+    }
 }

@@ -132,6 +132,7 @@ public class SchematicsParser {
         // blocks
         ArrayList<BlockData> blockData = this.convertBlocks(blocks, blockEntities, size);
         TagList blocksTag = new TagList();
+        blocksTag.setKey("blocks");
         ArrayList<TagCompound> blocksList = new ArrayList<>();
         for (BlockData bd : blockData) {
             TagCompound tc = new TagCompound();
@@ -155,12 +156,10 @@ public class SchematicsParser {
             // nbt
             if (bd.getNbt().size() > 0) {
                 TagCompound nbt = new TagCompound();
-                ArrayList<TagString> nbtValues = new ArrayList<>();
+                ArrayList<Tag> nbtValues = new ArrayList<>();
                 nbt.setKey("nbt");
                 for (String key : bd.getNbt().keySet()) {
-                    TagString ts = new TagString();
-                    ts.setKey(key);
-                    ts.setValue(bd.getNbt().get(key));
+                    nbtValues.add(bd.getNbt().get(key));
                 }
                 nbt.setValue(nbtValues);
                 tcList.add(nbt);
@@ -238,7 +237,7 @@ public class SchematicsParser {
         int nextY = 0;
         int nextZ = 0;
         for (byte b : blockData) {
-            HashMap<String, String> nbt = new HashMap<>();
+            HashMap<String, Tag> nbt = new HashMap<>();
             boolean isHere = false;
             for (TagCompound tc : blockEntities) {
                 for (Tag t : (ArrayList<Tag>) tc.getValue()) {
@@ -251,9 +250,10 @@ public class SchematicsParser {
                         break;
                     }
                     if (t.getKey().equals("Id")) {
-                        nbt.put("id", (String) t.getValue());
+                        t.setKey("id");
+                        nbt.put("id", t);
                     } else {
-                        nbt.put(t.getKey(), (String) t.getValue());
+                        nbt.put(t.getKey(), t);
                     }
                 }
             }
