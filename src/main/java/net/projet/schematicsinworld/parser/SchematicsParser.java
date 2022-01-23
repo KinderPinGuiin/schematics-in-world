@@ -113,6 +113,7 @@ public class SchematicsParser {
                     break;
             }
         }
+        this.convertEntities(res);
         // size
         TagList sizeTag = new TagList();
         sizeTag.setKey("size");
@@ -193,6 +194,13 @@ public class SchematicsParser {
         res.add(palette);
     }
 
-    private void convertEntities(ArrayList<Tag> res, TagCompound schemEntities) throws ParserException {}
+    private void convertEntities(ArrayList<Tag> res) {
+        TagList entities = new TagList();
+        res.add(entities);
+    }
+
+    private void convertBlocks(ArrayList<Tag> res, TagCompound schemBlocks) {
+
+    }
 
 }
