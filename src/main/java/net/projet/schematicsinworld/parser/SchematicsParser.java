@@ -240,6 +240,10 @@ public class SchematicsParser {
             HashMap<String, Tag> nbt = new HashMap<>();
             boolean isHere = false;
             for (TagCompound tc : blockEntities) {
+                if (isHere) {
+                    break;
+                }
+                nbt = new HashMap<>();
                 for (Tag t : (ArrayList<Tag>) tc.getValue()) {
                     if (t.getKey().equals("Pos")) {
                         int[] tagPos = (int[]) t.getValue();

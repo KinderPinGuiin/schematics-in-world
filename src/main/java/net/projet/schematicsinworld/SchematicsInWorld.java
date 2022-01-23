@@ -38,7 +38,7 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison_test.schem");
         try {
             s.saveToNBT("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\test.nbt");
         } catch (ParserException e) {
