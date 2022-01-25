@@ -13,25 +13,51 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.world.structures.BrickPillarStructure;
+import net.projet.schematicsinworld.world.structures.SiwStructureProvider;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class ModStructures {
     public static final DeferredRegister<Structure<?>> STRUCTURES =
             DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SchematicsInWorld.MOD_ID);
 
-    public static final RegistryObject<Structure<NoFeatureConfig>> BRICK_PILLAR =
-            STRUCTURES.register("brick_pillar", BrickPillarStructure::new);
+    private static final List<SiwStructureProvider> providerList = new LinkedList<SiwStructureProvider>();
+
+    static {
+        providerList.add(new SiwStructureProvider("brick_pillar"));
+        providerList.add(new SiwStructureProvider("dummy_same_structure"));
+    }
+    // Notre liste des RegistryObject.
+    public static final List<RegistryObject<Structure<NoFeatureConfig>>> SIW_STRUCTURES_LIST =
+            new LinkedList<RegistryObject<Structure<NoFeatureConfig>>>();
+
+    // Pour chaque structure, on enregistre !
+    static {
+        for(SiwStructureProvider s : providerList) {
+            SIW_STRUCTURES_LIST.add(STRUCTURES.register(s.name(), s::provide));
+        }
+    }
+    //public static final RegistryObject<Structure<NoFeatureConfig>> BRICK_PILLAR =
+    //                STRUCTURES.register(brick.name(), brick::provide);
+         //   STRUCTURES.register("brick_pillar", BrickPillarStructure::new);
 
     /* average distance apart in chunks between spawn attempts */
     /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/
     /* this modifies the seed of the structure so no two structures always spawn over each-other.
     Make this large and unique. */
     public static void setupStructures() {
-        setupMapSpacingAndLand(BRICK_PILLAR.get(),
-                new StructureSeparationSettings(100, 50, 475658536),
-                true);
+        for(int i = 0; i < providerList.size(); i++) {
+            SiwStructureProvider p = providerList.get(i);
+            setupMapSpacingAndLand(SIW_STRUCTURES_LIST.get(i).get(),
+                    new StructureSeparationSettings(p.maxDist(), p.minDist(), p.randseed()),
+                    true);
+        }
+        //setupMapSpacingAndLand(BRICK_PILLAR.get(),
+        //        new StructureSeparationSettings(100, 50, 475658536),
+        //        true);
     }
 
     public static void register(IEventBus eventBus) {
