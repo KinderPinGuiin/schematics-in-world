@@ -22,7 +22,11 @@ public class ModStructureGeneration {
         if(types.contains(BiomeDictionary.Type.PLAINS)) {
             List<Supplier<StructureFeature<?, ?>>> structures = event.getGeneration().getStructures();
 
-            structures.add(() -> ModStructures.BRICK_PILLAR.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+            for(int i=0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++){
+                int finalI = i;
+                structures.add(() -> ModStructures.SIW_STRUCTURES_LIST.get(finalI).get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+            }
+           // structures.add(() -> ModStructures.BRICK_PILLAR.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         }
     }
 }
