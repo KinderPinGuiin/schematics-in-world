@@ -13,6 +13,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.world.structures.BrickPillarStructure;
+import net.projet.schematicsinworld.world.structures.RoomsStructure;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +25,18 @@ public class ModStructures {
     public static final RegistryObject<Structure<NoFeatureConfig>> BRICK_PILLAR =
             STRUCTURES.register("brick_pillar", BrickPillarStructure::new);
 
+    public static final RegistryObject<Structure<NoFeatureConfig>> ROOMS =
+            STRUCTURES.register("rooms", RoomsStructure::new);
+
     /* average distance apart in chunks between spawn attempts */
     /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/
     /* this modifies the seed of the structure so no two structures always spawn over each-other.
     Make this large and unique. */
     public static void setupStructures() {
         setupMapSpacingAndLand(BRICK_PILLAR.get(),
+                new StructureSeparationSettings(100, 50, 475658536),
+                true);
+        setupMapSpacingAndLand(ROOMS.get(),
                 new StructureSeparationSettings(100, 50, 475658536),
                 true);
     }

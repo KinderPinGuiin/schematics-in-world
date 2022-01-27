@@ -90,7 +90,7 @@ public class BrickPillarStructure extends Structure<NoFeatureConfig> {
             //addpieces()
             JigsawManager.func_242837_a(dynamicRegistryManager,
                     new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
-                            .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "brick_pillar/start_pool")),
+                            .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "brick_pillar/brick_pillar_pool")),
                             10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                     blockpos, this.components, this.rand, false, true);
 

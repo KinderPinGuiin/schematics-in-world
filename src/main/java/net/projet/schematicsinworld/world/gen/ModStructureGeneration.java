@@ -22,7 +22,8 @@ public class ModStructureGeneration {
         if(types.contains(BiomeDictionary.Type.PLAINS)) {
             List<Supplier<StructureFeature<?, ?>>> structures = event.getGeneration().getStructures();
 
-            structures.add(() -> ModStructures.BRICK_PILLAR.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+            //structures.add(() -> ModStructures.BRICK_PILLAR.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+            structures.add(() -> ModStructures.ROOMS.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         }
     }
 }
