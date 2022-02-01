@@ -28,10 +28,9 @@ import org.apache.logging.log4j.LogManager;
 public class SiwStructureProvider {
 
     // ATTRIBUTS
-    private final String struct_name;
+    private static String struct_name = null;
     private final int distMax = 100;
     private final int distMin = 30;
-
 
     // CONSTRUCTORs
 
@@ -41,7 +40,7 @@ public class SiwStructureProvider {
 
     // REQUETES
     // The name of the structure. Used for /locate, notably
-    public String name() {
+    public static String name() {
         return struct_name;
     }
 
@@ -106,18 +105,27 @@ public class SiwStructureProvider {
                 BlockPos blockpos = new BlockPos(x, 0, z);
 
                 //addpieces()
+                /*
                 JigsawManager.func_242837_a(dynamicRegistryManager,
                         new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
                                 .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "brick_pillar/start_pool")),
                                 10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                         blockpos, this.components, this.rand, false, true);
+                 */
+                JigsawManager.func_242837_a(dynamicRegistryManager,
+                        new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
+                                .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
+                                        SiwStructureProvider.name() + "/start_pool")),
+                                10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
+                        blockpos, this.components, this.rand, false, true);
+
 
                 this.components.forEach(piece -> piece.offset(0, 1, 0));
                 this.components.forEach(piece -> piece.getBoundingBox().minY -= 1);
 
                 this.recalculateStructureSize();
 
-                LogManager.getLogger().log(Level.DEBUG, "House at " +
+                LogManager.getLogger().log(Level.DEBUG, SiwStructureProvider.name() +" at " +
                         this.components.get(0).getBoundingBox().minX + " " +
                         this.components.get(0).getBoundingBox().minY + " " +
                         this.components.get(0).getBoundingBox().minZ);

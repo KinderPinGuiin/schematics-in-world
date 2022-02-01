@@ -2,6 +2,8 @@ package net.projet.schematicsinworld.world.structure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -15,21 +17,40 @@ import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.world.structures.BrickPillarStructure;
 import net.projet.schematicsinworld.world.structures.SiwStructureProvider;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 public class ModStructures {
     public static final DeferredRegister<Structure<?>> STRUCTURES =
             DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SchematicsInWorld.MOD_ID);
 
-    private static final List<SiwStructureProvider> providerList = new LinkedList<SiwStructureProvider>();
+    // -------------------- On explore le dossier src/main/resources/data/siw/structures puis on stocke les noms des nbt présents
+    public static final List<String> STRUCTURE_NAMES = new LinkedList<String>();
 
     static {
+        File[] fileList = new File("src/main/resources/data/siw/structures").listFiles();
+
+        for (File file : fileList) {
+            if (file.isFile() && file.getName().endsWith(".nbt")) {
+                String r = StringUtils.removeEnd(file.getName(), ".nbt");
+                STRUCTURE_NAMES.add(r);
+            }
+        }
+    }
+    // --------------------
+    private static final List<SiwStructureProvider> providerList = new LinkedList<SiwStructureProvider>();
+
+   /*static {
         providerList.add(new SiwStructureProvider("brick_pillar"));
         providerList.add(new SiwStructureProvider("dummy_same_structure"));
+    }*/
+
+    static {
+        for(String str : STRUCTURE_NAMES) {
+            providerList.add(new SiwStructureProvider(str));
+        }
     }
+
     // Notre liste des RegistryObject.
     public static final List<RegistryObject<Structure<NoFeatureConfig>>> SIW_STRUCTURES_LIST =
             new LinkedList<RegistryObject<Structure<NoFeatureConfig>>>();
