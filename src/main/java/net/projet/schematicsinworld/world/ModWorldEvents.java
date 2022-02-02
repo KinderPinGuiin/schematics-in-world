@@ -60,10 +60,12 @@ public class ModWorldEvents {
             // Adding our Structure to the Map
             Map<Structure<?>, StructureSeparationSettings> tempMap =
                     new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
-            tempMap.putIfAbsent(ModStructures.BRICK_PILLAR.get(),
-                    DimensionStructuresSettings.field_236191_b_.get(ModStructures.BRICK_PILLAR.get()));
-            tempMap.putIfAbsent(ModStructures.ROOMS.get(),
-                    DimensionStructuresSettings.field_236191_b_.get(ModStructures.ROOMS.get()));
+            for (int i = 0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++) {
+                tempMap.putIfAbsent(ModStructures.SIW_STRUCTURES_LIST.get(i).get(),
+                        DimensionStructuresSettings.field_236191_b_.get(ModStructures.SIW_STRUCTURES_LIST.get(i).get()));
+            }
+            //tempMap.putIfAbsent(ModStructures.BRICK_PILLAR.get(),
+            //        DimensionStructuresSettings.field_236191_b_.get(ModStructures.BRICK_PILLAR.get()));
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
     }

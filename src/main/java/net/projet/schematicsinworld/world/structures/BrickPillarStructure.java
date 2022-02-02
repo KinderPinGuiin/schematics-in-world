@@ -88,6 +88,7 @@ public class BrickPillarStructure extends Structure<NoFeatureConfig> {
             BlockPos blockpos = new BlockPos(x, 0, z);
 
             //addpieces()
+            //Ici le champ p_i241987_2_ initialisé a 10 correspond a la size du VillageConfig
             JigsawManager.func_242837_a(dynamicRegistryManager,
                     new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
                             .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "brick_pillar/brick_pillar_pool")),

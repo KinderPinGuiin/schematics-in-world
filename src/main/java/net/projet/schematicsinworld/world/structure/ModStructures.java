@@ -2,6 +2,8 @@ package net.projet.schematicsinworld.world.structure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -13,32 +15,70 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.world.structures.BrickPillarStructure;
-import net.projet.schematicsinworld.world.structures.RoomsStructure;
+import net.projet.schematicsinworld.world.structures.SiwStructureProvider;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 public class ModStructures {
     public static final DeferredRegister<Structure<?>> STRUCTURES =
             DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SchematicsInWorld.MOD_ID);
 
-    public static final RegistryObject<Structure<NoFeatureConfig>> BRICK_PILLAR =
-            STRUCTURES.register("brick_pillar", BrickPillarStructure::new);
+    // -------------------- On explore le dossier src/main/resources/data/siw/structures puis on stocke les noms des nbt présents
+    public static final List<String> STRUCTURE_NAMES = new LinkedList<String>();
 
-    public static final RegistryObject<Structure<NoFeatureConfig>> ROOMS =
-            STRUCTURES.register("rooms", RoomsStructure::new);
+    static {
+        File[] fileList = new File("src/main/resources/data/siw/structures").listFiles();
+
+        for (File file : fileList) {
+            if (file.isFile() && file.getName().endsWith(".nbt")) {
+                String r = StringUtils.removeEnd(file.getName(), ".nbt");
+                STRUCTURE_NAMES.add(r);
+            }
+        }
+    }
+    // --------------------
+    private static final List<SiwStructureProvider> providerList = new LinkedList<SiwStructureProvider>();
+
+   /*static {
+        providerList.add(new SiwStructureProvider("brick_pillar"));
+        providerList.add(new SiwStructureProvider("dummy_same_structure"));
+    }*/
+
+    static {
+        for(String str : STRUCTURE_NAMES) {
+            providerList.add(new SiwStructureProvider(str));
+        }
+    }
+
+    // Notre liste des RegistryObject.
+    public static final List<RegistryObject<Structure<NoFeatureConfig>>> SIW_STRUCTURES_LIST =
+            new LinkedList<RegistryObject<Structure<NoFeatureConfig>>>();
+
+    // Pour chaque structure, on enregistre !
+    static {
+        for(SiwStructureProvider s : providerList) {
+            SIW_STRUCTURES_LIST.add(STRUCTURES.register(s.name(), s::provide));
+        }
+    }
+    //public static final RegistryObject<Structure<NoFeatureConfig>> BRICK_PILLAR =
+    //                STRUCTURES.register(brick.name(), brick::provide);
+         //   STRUCTURES.register("brick_pillar", BrickPillarStructure::new);
 
     /* average distance apart in chunks between spawn attempts */
     /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/
     /* this modifies the seed of the structure so no two structures always spawn over each-other.
     Make this large and unique. */
     public static void setupStructures() {
-        setupMapSpacingAndLand(BRICK_PILLAR.get(),
-                new StructureSeparationSettings(100, 50, 475658536),
-                true);
-        setupMapSpacingAndLand(ROOMS.get(),
-                new StructureSeparationSettings(100, 50, 475658536),
-                true);
+        for(int i = 0; i < providerList.size(); i++) {
+            SiwStructureProvider p = providerList.get(i);
+            setupMapSpacingAndLand(SIW_STRUCTURES_LIST.get(i).get(),
+                    new StructureSeparationSettings(p.maxDist(), p.minDist(), p.randseed()),
+                    true);
+        }
+        //setupMapSpacingAndLand(BRICK_PILLAR.get(),
+        //        new StructureSeparationSettings(100, 50, 475658536),
+        //        true);
     }
 
     public static void register(IEventBus eventBus) {
