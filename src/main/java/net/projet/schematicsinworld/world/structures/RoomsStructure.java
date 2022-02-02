@@ -90,7 +90,7 @@ public class RoomsStructure extends Structure<NoFeatureConfig> {
             //addpieces()
             JigsawManager.func_242837_a(dynamicRegistryManager,
                     new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
-                            .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "rooms/rooms_pool")),
+                            .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "run_down_house/start_pool")),
                             10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                     blockpos, this.components, this.rand, false, true);
 
