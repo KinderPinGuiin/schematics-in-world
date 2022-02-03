@@ -28,7 +28,7 @@ public class ModStructures {
     public static final List<String> STRUCTURE_NAMES = new LinkedList<String>();
 
     static {
-        File[] fileList = new File("src/main/resources/data/siw/structures").listFiles();
+        File[] fileList = new File("Mettre\\votre\\chemin\\ici").listFiles();
 
         for (File file : fileList) {
             if (file.isFile() && file.getName().endsWith(".nbt")) {
