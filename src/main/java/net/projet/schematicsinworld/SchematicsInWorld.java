@@ -15,14 +15,10 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.projet.schematicsinworld.parser.SchematicsParser;
-import net.projet.schematicsinworld.parser.tags.TagFloat;
-import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.world.structure.ModStructures;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -37,7 +33,7 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
+        // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
         // new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
 
         /* Test de la classe TagFloat
@@ -61,6 +57,8 @@ public class SchematicsInWorld {
         LOGGER.info(tf.getKey() + " " + tf.getValue());
         */
 
+        ModStructures.register(modEventBus);
+
         modEventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading
         modEventBus.addListener(this::enqueueIMC);
@@ -78,6 +76,10 @@ public class SchematicsInWorld {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
+        event.enqueueWork(() -> {
+           ModStructures.setupStructures();
+        });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
