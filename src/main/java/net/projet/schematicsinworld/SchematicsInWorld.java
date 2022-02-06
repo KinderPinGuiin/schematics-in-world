@@ -16,6 +16,9 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.projet.schematicsinworld.parser.SchematicsParser;
 import net.projet.schematicsinworld.world.structure.ModStructures;
+import net.projet.schematicsinworld.parser.tags.TagFloat;
+import net.projet.schematicsinworld.parser.utils.BytesStream;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,6 +59,21 @@ public class SchematicsInWorld {
         TagFloat tf = new TagFloat(bs);
         LOGGER.info(tf.getKey() + " " + tf.getValue());
         */
+
+        SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison_test.schem");
+        try {
+            s.saveToNBT("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\test.nbt");
+        } catch (ParserException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }/*
+        SchematicsParser s = new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
+        try {
+            s.saveToNBT("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\test.nbt");
+        } catch (ParserException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }*/
 
         ModStructures.register(modEventBus);
 
