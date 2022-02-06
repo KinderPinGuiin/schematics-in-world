@@ -40,9 +40,11 @@ public class GenericStructurePool {
         json = gson.toJson(this);
 
         String path = System.getProperty("user.dir");
-        path = path.substring(0, path.length() - 4);
-        path += "/src/main/resources/data/" + SchematicsInWorld.MOD_ID
-                + "/worldgen/template_pool/" + subStructName;
+        path += "/../src/main/resources/data/" + SchematicsInWorld.MOD_ID
+                + "/worldgen/template_pool/" + subStructName + "/";
+
+        System.out.println("putain2\n");
+        System.out.println(path);
 
         try {
             Files.createDirectories(Paths.get(path));
@@ -50,14 +52,10 @@ public class GenericStructurePool {
             e.printStackTrace();
         }
 
-        path += "/" + subStructName;
-
         if (structName.endsWith("_0")) {
-            path += "_start_pool.json";
+            path += "start_pool.json";
         } else {
-            int l = structName.length();
-            String end = structName.substring(l - 2, l);
-            path += end + "_pool.json";
+            path += structName + "_pool.json";
         }
 
         Writer writer = null;

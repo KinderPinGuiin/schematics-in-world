@@ -41,8 +41,10 @@ public class ModStructures {
 
     static {
         String start = System.getProperty("user.dir");
-        start = start.substring(0, start.length() - 4);
-        start += "/src/main/resources/data/" + SchematicsInWorld.MOD_ID + "/structures";
+        start += "/../src/main/resources/data/" + SchematicsInWorld.MOD_ID + "/structures";
+
+        System.out.println("putain\n");
+        System.out.println(start);
 
         try (Stream<Path> stream = Files.walk(Paths.get(start), Integer.MAX_VALUE)) {
             List<String> collect = stream
