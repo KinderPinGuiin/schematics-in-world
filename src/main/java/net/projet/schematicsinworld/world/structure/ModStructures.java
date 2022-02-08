@@ -16,6 +16,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.world.structures.SiwStructureProvider;
+import net.projet.schematicsinworld.config.ConfigHandler;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -69,13 +70,7 @@ public class ModStructures {
     }
 
     // --------------------
-    private static final List<SiwStructureProvider> providerList = new LinkedList<SiwStructureProvider>();
-
-    static {
-        for(String str : STRUCTURE_NAMES) {
-            providerList.add(new SiwStructureProvider(str));
-        }
-    }
+    private static final List<SiwStructureProvider> providerList = ConfigHandler.getConfigurations();
 
     // Notre liste des RegistryObject.
     public static final List<RegistryObject<Structure<NoFeatureConfig>>> SIW_STRUCTURES_LIST =
