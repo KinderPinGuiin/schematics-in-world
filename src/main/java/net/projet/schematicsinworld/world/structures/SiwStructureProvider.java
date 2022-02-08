@@ -28,36 +28,37 @@ import org.apache.logging.log4j.LogManager;
 public class SiwStructureProvider {
 
     // ATTRIBUTS
-    private final String struct_name;
-    private final int distMax = 32;
-    private final int distMin = 8;
+    private final StructConfig config;
 
-    // CONSTRUCTORs
+    // CONSTRUCTORS
 
-    public SiwStructureProvider(String name) {
-        struct_name = name;
+    public SiwStructureProvider(StructConfig config) {
+        this.config = (StructConfig) config.clone();
     }
 
     // REQUETES
     // The name of the structure. Used for /locate, notably
     public String name() {
         return struct_name;
+    }// The name of the structure. Used for /locate, notably
+    public String name() {
+        return config.getName();
     }
 
     // Distance max entre structure.
     public int maxDist(){
-        return distMax;
+        return config.getDistMaxSpawn();
     }
 
     // Distance min entre structure.
     public int minDist(){
-        return distMin;
+        return config.getDistMinSpawn();
     }
 
     // The random seed associated with this provider.
     // Linked to the name.
     public int randseed(){
-        return struct_name.hashCode();
+        return name().hashCode();
     }
 
     // The main method. It provides instances of its Structure.
@@ -117,7 +118,7 @@ public class SiwStructureProvider {
                 JigsawManager.func_242837_a(dynamicRegistryManager,
                         new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
                                 .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
-                                        struct_name + "/start_pool")),
+                                        name() + "/start_pool")),
                                 10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                         blockpos, this.components, this.rand, false, true);
 
