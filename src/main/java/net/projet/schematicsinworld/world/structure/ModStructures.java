@@ -2,8 +2,6 @@ package net.projet.schematicsinworld.world.structure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.projet.schematicsinworld.world.structures.generic.GenericStructurePool;
-import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -17,57 +15,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.world.structures.SiwStructureProvider;
 import net.projet.schematicsinworld.config.ConfigHandler;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ModStructures {
     public static final DeferredRegister<Structure<?>> STRUCTURES =
             DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SchematicsInWorld.MOD_ID);
-
-    // -------------------- On explore le dossier src/main/resources/data/siw/structures puis on stocke les noms des nbt présents
-    public final static List<String> STRUCTURE_NAMES = new LinkedList<String>();
-    public final static List<String> STRUCTURE_FILES = new LinkedList<String>();
-
-    static {
-        String start = System.getProperty("user.dir");
-        start += "/../src/main/resources/data/" + SchematicsInWorld.MOD_ID + "/structures";
-
-        try (Stream<Path> stream = Files.walk(Paths.get(start), Integer.MAX_VALUE)) {
-            List<String> collect = stream
-                    .map(String::valueOf)
-                    .sorted()
-                    .collect(Collectors.toList());
-            for (String str : collect) {
-                File file = new File(str);
-                if (file.isFile() && file.getName().endsWith(".nbt")) {
-                    String r = StringUtils.removeEnd(file.getName(), ".nbt");
-                    STRUCTURE_FILES.add(r);
-                    r = r.substring(0, r.length() - 2);
-                    if (!STRUCTURE_NAMES.contains(r)) {
-                        STRUCTURE_NAMES.add(r);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for(String str : STRUCTURE_FILES) {
-            GenericStructurePool gsp = new GenericStructurePool(str);
-        }
-    }
 
     // --------------------
     private static final List<SiwStructureProvider> providerList = ConfigHandler.getConfigurations();
@@ -82,9 +37,6 @@ public class ModStructures {
             SIW_STRUCTURES_LIST.add(STRUCTURES.register(s.name(), s::provide));
         }
     }
-    //public static final RegistryObject<Structure<NoFeatureConfig>> BRICK_PILLAR =
-    //                STRUCTURES.register(brick.name(), brick::provide);
-         //   STRUCTURES.register("brick_pillar", BrickPillarStructure::new);
 
     /* average distance apart in chunks between spawn attempts */
     /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/

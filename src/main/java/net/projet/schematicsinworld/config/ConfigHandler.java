@@ -75,6 +75,7 @@ public abstract class ConfigHandler {
                     throw new AssertionError(e.getMessage());
                 }
             }
+
             // On rajoute la structure
             if (cfgFile.canRead()) {
                 providerList.add(new SiwStructureProvider(new StructConfig(cfgFile)));
