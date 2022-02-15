@@ -16,6 +16,7 @@ import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.projet.schematicsinworld.SchematicsInWorld;
+import net.projet.schematicsinworld.config.StructConfig;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
@@ -37,10 +38,8 @@ public class SiwStructureProvider {
     }
 
     // REQUETES
+
     // The name of the structure. Used for /locate, notably
-    public String name() {
-        return struct_name;
-    }// The name of the structure. Used for /locate, notably
     public String name() {
         return config.getName();
     }
