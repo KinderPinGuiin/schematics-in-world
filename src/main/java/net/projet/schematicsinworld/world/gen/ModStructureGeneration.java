@@ -19,14 +19,13 @@ public class ModStructureGeneration {
         RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
 
-        if(types.contains(BiomeDictionary.Type.PLAINS)) {
-            List<Supplier<StructureFeature<?, ?>>> structures = event.getGeneration().getStructures();
+        for(int i=0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++) {
+            int finalI = i;
 
-            for(int i=0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++){
-                int finalI = i;
+            List<Supplier<StructureFeature<?, ?>>> structures = event.getGeneration().getStructures();
+            if (ModStructures.providerList.get(finalI).isLocationOk(types)) {
                 structures.add(() -> ModStructures.SIW_STRUCTURES_LIST.get(finalI).get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
             }
-           // structures.add(() -> ModStructures.BRICK_PILLAR.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         }
     }
 }
