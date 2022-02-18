@@ -25,7 +25,7 @@ public class ModStructures {
             DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SchematicsInWorld.MOD_ID);
 
     // --------------------
-    private static final List<SiwStructureProvider> providerList = ConfigHandler.getConfigurations();
+    public static final List<SiwStructureProvider> providerList = ConfigHandler.getConfigurations();
 
     // Notre liste des RegistryObject.
     public static final List<RegistryObject<Structure<NoFeatureConfig>>> SIW_STRUCTURES_LIST =
