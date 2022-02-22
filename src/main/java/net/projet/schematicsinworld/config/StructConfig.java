@@ -90,7 +90,7 @@ public class StructConfig implements Cloneable {
                 isBiomeFilterBlackList = json.get("isBiomeFilterBlackList").getAsBoolean();
             }
             if (json.get("biomeFilter") != null) {
-                biomeFilter = new BiomeFilter(json.get("biomeFilter").getAsString());
+                setBiomeFilter(json.get("biomeFilter").getAsString());
             }
 
             // Error checking
@@ -157,7 +157,10 @@ public class StructConfig implements Cloneable {
         try {
             biomeFilter = new BiomeFilter(filterString);
         } catch (AssertionError e){
-            throw new IncoherentConfigurationError("Filter string is invalid: " + e.getMessage());
+            throw new IncoherentConfigurationError(e.getMessage());
+        } catch (Error e) {
+            // This should not happen. contact mod author if it does.
+            throw new IncoherentConfigurationError("Unknown BiomeFilter creation error");
         }
     }
     /**
