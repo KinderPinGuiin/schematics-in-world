@@ -29,12 +29,25 @@ public class BiomeFilter {
     private Filter filter;
     private static final Pattern isJustChars = Pattern.compile("[a-zA-Z]+");
 
+    /**
+     *
+     * @param expr
+     * @throws AssertionError si expr n'est pas reconnu.
+     */
     public BiomeFilter(String expr){
         if (expr == null || expr.matches("\\s*")){
             return;
         }
         analyseExpr(expr);
-        filter = new OrFilter();
+        try {
+            filter = new OrFilter();
+            if (args.size() > 0) {
+                throw new AssertionError("Open your parentheses");
+            }
+        } catch (AssertionError e) {
+            throw new AssertionError("Invalid BiomeFilter string: \"" +
+                    expr + "\". " + e.getMessage());
+        }
     }
 
     /**
@@ -111,6 +124,9 @@ public class BiomeFilter {
             firstFilter = new NegFilter();
             if (args.size() > 0 && args.get(0).equals("&")) {
                 args.remove(0);
+                if (!(args.size() > 0)) {
+                    throw new AssertionError("No arguments after &");
+                }
                 secondFilter = new AndFilter();
             }
         }
@@ -139,11 +155,18 @@ public class BiomeFilter {
             if (args.get(0).equals("!")) {
                 negate = true;
                 args.remove(0);
+                if (!(args.size() > 0)) {
+                    throw new AssertionError("! is not followed by anything");
+                }
             }
             if (args.get(0).equals("(")){
                 args.remove(0);
+                if (!(args.size() > 0) || args.get(0).equals(")")){
+                    throw new AssertionError("parentheses must contain an expression");
+                }
+
                 filter = new OrFilter();
-                if (!args.get(0).equals(")")){
+                if (args.size() == 0 || !args.get(0).equals(")")){
                     throw new AssertionError("Close your parentheses");
                 }
                 args.remove(0);
@@ -178,6 +201,10 @@ public class BiomeFilter {
         public TypeFilter() {
             Matcher m = isJustChars.matcher(args.get(0));
             if (!m.matches()) {
+                if (args.get(0).length() == 0){
+                    throw new AssertionError("0 length String is not a valid type." +
+                            " Are there consecutives spaces?");
+                }
                 throw new AssertionError( args.get(0) +" is not a valid type");
             }
             type = BiomeDictionary.Type.getType(args.get(0));
