@@ -15,6 +15,7 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraftforge.common.BiomeDictionary;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.config.StructConfig;
 import org.apache.logging.log4j.Level;
