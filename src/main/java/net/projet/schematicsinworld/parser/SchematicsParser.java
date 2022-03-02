@@ -78,10 +78,10 @@ public class SchematicsParser {
 
     public void saveToNBT(String filepath) throws ParserException {
         // Convertit le fichier .schem en NBT de structure bloc
-        ArrayList<Tag> tags = this.convertSchematicsToNBT();
+        ArrayList<ArrayList<Tag>> tags = this.convertSchematicsToNBT();
         // Enregistre le fichier
         try {
-            new NBTParser(filepath, 'w', tags);
+            new NBTParser(filepath, 'w', tags.get(0));
         } catch (ParserException e) {
             e.printStackTrace();
         }
@@ -92,7 +92,8 @@ public class SchematicsParser {
      */
 
     @SuppressWarnings("unchecked")
-    private ArrayList<Tag> convertSchematicsToNBT() throws ParserException {
+    private ArrayList<ArrayList<Tag>> convertSchematicsToNBT() throws ParserException {
+        ArrayList<ArrayList<Tag>> results = new ArrayList<>();
         ArrayList<Tag> res = new ArrayList<>();
         ArrayList<Tag> size = new ArrayList<>();
         for (int i = 0; i < 3; ++i) { size.add(new TagInt()); }
@@ -130,6 +131,7 @@ public class SchematicsParser {
         this.convertEntities(res);
 
         // blocks
+        final int max_size = 35;
         ArrayList<BlockData> blockData = this.convertBlocks(blocks, blockEntities, size);
         TagList blocksTag = new TagList();
         blocksTag.setKey("blocks");
@@ -151,6 +153,7 @@ public class SchematicsParser {
                 ti.setValue(i);
                 coords.add(ti);
             }
+            System.out.println(coords);
             tl.setValue(coords);
             tcList.add(tl);
             // nbt
@@ -177,7 +180,7 @@ public class SchematicsParser {
         sizeTag.setValue(size);
         res.add(sizeTag);
 
-        return res;
+        return results;
     }
 
     @SuppressWarnings("unchecked")
