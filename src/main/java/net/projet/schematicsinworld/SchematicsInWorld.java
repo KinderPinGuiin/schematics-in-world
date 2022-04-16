@@ -43,8 +43,9 @@ public class SchematicsInWorld {
 
         // Version test, sans création du dossier Schematics à la racine du jeu
         //  On cherche le dossier schem_tests (dans schematicsInWorld)
-        List<String> paths;
-        File directory = new File("schem_tests");
+        List<String> paths = null;
+        String sep = System.getProperty("file.separator");
+        File directory = new File(".." + sep + "schem_tests");
         System.out.println(directory.getAbsolutePath());
         // Pour chercher avec ctrl+f dans le terminal, ça va plus vite xd
         System.out.println("chibre");
@@ -53,15 +54,23 @@ public class SchematicsInWorld {
             paths = findFiles(Paths.get(path), "schem");
             paths.forEach(x -> System.out.println(x));
         } catch (IOException e) {
-            System.out.println("ALEEEEEEEEEEEEEEEEEEED");
             e.printStackTrace();
         }
-        SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison_test.schem");
-        try {
-            s.saveToNBT("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\test.nbt");
-        } catch (ParserException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+
+        if (paths != null) {
+            SchematicsParser s;
+            for (int i = 0; i < paths.size(); ++i) {
+                s = new SchematicsParser(paths.get(i));
+                try {
+                    System.out.println("KAARISM");
+                    System.out.println(paths.get(i).substring(0, paths.get(i).length() - 5) + "nbt");
+                    s.saveToNBT(paths.get(i).substring(0, paths.get(i).length() - 5) + "nbt");
+                } catch (ParserException e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
         }
 
         /*
