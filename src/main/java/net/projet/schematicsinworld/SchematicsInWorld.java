@@ -16,13 +16,18 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.projet.schematicsinworld.parser.SchematicsParser;
 import net.projet.schematicsinworld.world.structure.ModStructures;
-import net.projet.schematicsinworld.parser.tags.TagFloat;
-import net.projet.schematicsinworld.parser.utils.BytesStream;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SchematicsInWorld.MOD_ID)
@@ -32,48 +37,42 @@ public class SchematicsInWorld {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public SchematicsInWorld() {
+    public SchematicsInWorld() throws IOException {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
-        // new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
-
-        /* Test de la classe TagFloat
-        byte buffer[] = new byte[] {64, 73, -103, -102};
-        String s = "pain";
-        byte[] name = s.getBytes(StandardCharsets.UTF_8);
-        byte[] len = new byte[] {0, (byte)name.length};//BigInteger.valueOf(name.length).toByteArray();
-
-        byte[] all = new byte[len.length + name.length + buffer.length + 10];
-        all[0] = len[0];
-        all[1] = len[1];
-
-        for (int i = 0; i < name.length; ++i) {
-            all[i + 2] = name[i];
+        // Version test, sans création du dossier Schematics à la racine du jeu
+        //  On cherche le dossier schem_tests (dans schematicsInWorld)
+        List<String> paths;
+        File directory = new File("schem_tests");
+        System.out.println(directory.getAbsolutePath());
+        // Pour chercher avec ctrl+f dans le terminal, ça va plus vite xd
+        System.out.println("chibre");
+        try {
+            String path = directory.getAbsolutePath();
+            paths = findFiles(Paths.get(path), "schem");
+            paths.forEach(x -> System.out.println(x));
+        } catch (IOException e) {
+            System.out.println("ALEEEEEEEEEEEEEEEEEEED");
+            e.printStackTrace();
         }
-        for (int i = 0; i < buffer.length; ++i) {
-            all[i + 2 + name.length] = buffer[i];
-        }
-        BytesStream bs = new BytesStream(all);
-        TagFloat tf = new TagFloat(bs);
-        LOGGER.info(tf.getKey() + " " + tf.getValue());
-        */
-
         SchematicsParser s = new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison_test.schem");
         try {
             s.saveToNBT("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\test.nbt");
         } catch (ParserException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-        }/*
+        }
+
+        /*
         SchematicsParser s = new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
         try {
             s.saveToNBT("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\test.nbt");
         } catch (ParserException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-        }*/
+        }
+        */
 
         ModStructures.register(modEventBus);
 
@@ -88,6 +87,23 @@ public class SchematicsInWorld {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
+
+    private List<String> findFiles(Path path, String ext) throws IOException {
+        if (!Files.isDirectory(path)) {
+            throw new IllegalArgumentException("Path must be a directory !");
+        }
+
+        List<String> result;
+
+        try (Stream<Path> walk = Files.walk(path)) {
+            result = walk.filter(p -> !Files.isDirectory(p))
+                    .map(p -> p.toString().toLowerCase())
+                    .filter(f -> f.endsWith(ext))
+                    .collect(Collectors.toList());
+        }
+        return result;
+    }
+
 
     private void setup(final FMLCommonSetupEvent event)
     {
