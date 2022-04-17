@@ -76,6 +76,8 @@ public class SchematicsParser {
         }
     }
 
+    // Convertit le fichier .schem en une liste de .nbt (de longueur > 1 si la taille de la
+    // structure dépasse la taille autorisée)
     public void saveToNBT(String filepath) throws ParserException {
         // Convertit le fichier .schem en NBT de structure bloc
         ArrayList<ArrayList<Tag>> tags = this.convertSchematicsToNBT();
@@ -153,7 +155,7 @@ public class SchematicsParser {
                 ti.setValue(i);
                 coords.add(ti);
             }
-            System.out.println(coords);
+            //System.out.println(coords);
             tl.setValue(coords);
             tcList.add(tl);
             // nbt
@@ -179,6 +181,8 @@ public class SchematicsParser {
         sizeTag.setKey("size");
         sizeTag.setValue(size);
         res.add(sizeTag);
+
+        results.add(res);
 
         return results;
     }

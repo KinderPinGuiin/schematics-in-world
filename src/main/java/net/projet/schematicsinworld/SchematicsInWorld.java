@@ -76,14 +76,29 @@ public class SchematicsInWorld {
             e.printStackTrace();
         }
 
+        // Parse tous les .schem trouvés dans le dossier Schematics
         if (paths != null) {
+            // dossier racine des nbt
+            String dest = System.getProperty("user.dir") + File.separator + ".." +
+                    File.separator + "src" + File.separator + "main" + File.separator +
+                    "resources" + File.separator + "data" + File.separator + MOD_ID +
+                    File.separator + "structures";
+
+            // gérer le cas où dest existe pas comme dossier
             SchematicsParser s;
             for (int i = 0; i < paths.size(); ++i) {
                 s = new SchematicsParser(paths.get(i));
                 try {
-                    System.out.println("KAARISM");
-                    System.out.println(paths.get(i).substring(0, paths.get(i).length() - 5) + "nbt");
-                    s.saveToNBT(paths.get(i).substring(0, paths.get(i).length() - 5) + "nbt");
+                    // nom de la structure (sans extension)
+                    String name = paths.get(i).substring(((rootPath + File.separator + "Schematics")).length() + 1, paths.get(i).length() - 6);
+
+                    // dossier de la structure
+                    File nbtDir = new File(dest + File.separator + name);
+                    if (!nbtDir.exists()) {
+                        nbtDir.mkdir();
+                    }
+                    // 0 pour le moment car pas de sous-structures
+                    s.saveToNBT(dest + File.separator + name + File.separator + name + "0" + ".nbt");
                 } catch (ParserException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
@@ -91,16 +106,6 @@ public class SchematicsInWorld {
             }
 
         }
-
-        /*
-        SchematicsParser s = new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
-        try {
-            s.saveToNBT("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\test.nbt");
-        } catch (ParserException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-        */
 
         ModStructures.register(modEventBus);
 
