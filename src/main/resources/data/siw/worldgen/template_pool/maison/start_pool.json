@@ -1,11 +1,11 @@
 {
-  "name": "siw:floating_islan/floating_island0_pool",
+  "name": "siw:maison/maison_0_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:floating_islan/floating_island0",
+        "location": "siw:maison/maison_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

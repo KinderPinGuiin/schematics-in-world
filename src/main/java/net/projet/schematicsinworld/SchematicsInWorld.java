@@ -98,7 +98,7 @@ public class SchematicsInWorld {
                         nbtDir.mkdir();
                     }
                     // 0 pour le moment car pas de sous-structures
-                    s.saveToNBT(dest + File.separator + name + File.separator + name + "0" + ".nbt");
+                    s.saveToNBT(dest + File.separator + name + File.separator + name + "_0" + ".nbt");
                 } catch (ParserException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();

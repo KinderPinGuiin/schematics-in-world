@@ -1,11 +1,11 @@
 {
-  "name": "siw:truc_rando/truc_random0_pool",
+  "name": "siw:truc_random/truc_random_0_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:truc_rando/truc_random0",
+        "location": "siw:truc_random/truc_random_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

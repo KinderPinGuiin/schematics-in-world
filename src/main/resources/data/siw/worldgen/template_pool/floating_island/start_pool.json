@@ -1,11 +1,11 @@
 {
-  "name": "siw:tou/tour0_pool",
+  "name": "siw:floating_island/floating_island_0_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:tou/tour0",
+        "location": "siw:floating_island/floating_island_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

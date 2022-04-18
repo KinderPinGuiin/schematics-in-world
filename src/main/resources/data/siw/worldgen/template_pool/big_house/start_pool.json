@@ -1,11 +1,11 @@
 {
-  "name": "siw:maison_avec_bo/maison_avec_bob0_pool",
+  "name": "siw:big_house/big_house_0_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:maison_avec_bo/maison_avec_bob0",
+        "location": "siw:big_house/big_house_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
