@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "siw:run_down_house/run_down_house_1",
+=======
+  "name": "siw:run_down_house/run_down_house_1_pool",
+>>>>>>> parsing
   "fallback": "minecraft:empty",
   "elements": [
     {

@@ -104,16 +104,7 @@ public class SiwStructureProvider {
                 int z = (chunkZ << 4) + 7;
                 BlockPos blockpos = new BlockPos(x, 0, z);
 
-                //addpieces()
-
-                /*
-                JigsawManager.func_242837_a(dynamicRegistryManager,
-                        new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
-                                .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "brick_pillar/start_pool")),
-                                10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
-                        blockpos, this.components, this.rand, false, true);
-                 */
-
+                // Anciennement : name() + "/" + struct_name + "_start_pool" au lieu de juste "start_pool"
                 JigsawManager.func_242837_a(dynamicRegistryManager,
                         new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
                                 .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,

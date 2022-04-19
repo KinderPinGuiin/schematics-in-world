@@ -6,11 +6,10 @@ import net.projet.schematicsinworld.parser.tags.Tags;
 import net.projet.schematicsinworld.parser.utils.BytesStream;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 class NBTParser extends TagCompound {
 
@@ -25,14 +24,49 @@ class NBTParser extends TagCompound {
      * Constructeur
      */
 
-    public NBTParser(String filepath) throws ParserException {
+    public NBTParser(String filepath, char mode, ArrayList<Tag> tags) throws ParserException {
         super();
-        // Initialisation des attributs
-        this.buffer = new BytesStream();
-        // Décompresse le fichier et stock ses données dans buffer.
-        this.extractFile(filepath);
-        // Parse le fichier
-        this.parseBuffer();
+        if (mode == 'r') {
+            // Initialisation du buffer en mode lecture
+            this.buffer = new BytesStream(BytesStream.READ_MODE);
+            // Décompresse le fichier et stock ses données dans buffer.
+            this.extractFile(filepath);
+            // Parse le fichier
+            this.parseBuffer();
+        } else {
+            // Initialisation du buffer en mode écriture
+            this.buffer = new BytesStream(BytesStream.WRITE_MODE);
+            // Dans le cas où l'utilisateur souhaite écrire un fichier NBT,
+            // on prend ses tags passés en paramètres afin de créer le fichier
+            if (tags == null) {
+                throw new ParserException("Les tags fournis sont nuls");
+            }
+            // TODO: Changer le nom par le nom du fichier à produire
+            this.setKey("NBT");
+            this.setValue(tags);
+            // Parse les tags et les écrit dans le buffer
+            this.renderBuffer(this.buffer);
+            // Création du fichier
+            try {
+                FileOutputStream output = new FileOutputStream(filepath + ".tmp");
+                output.write(this.buffer.getContent());
+                output.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Compresse le fichier
+            this.compressFile(filepath + ".tmp", filepath);
+            // Supprime le fichier temporaire
+            if (!new File(filepath + ".tmp").delete()) {
+                System.err.println(
+                    "Impossible de supprimer le fichier NBT temporaire"
+                );
+            }
+        }
+    }
+
+    public NBTParser(String filepath) throws ParserException {
+        this(filepath, 'r', null);
     }
 
     /*
@@ -84,6 +118,25 @@ class NBTParser extends TagCompound {
         this.buffer.setBytes(fileContent);
     }
 
+    private void compressFile(String source, String target) throws ParserException {
+        try {
+            FileOutputStream fos = new FileOutputStream(target);
+            GZIPOutputStream gos = new GZIPOutputStream(fos);
+            FileInputStream fis = new FileInputStream(source);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = fis.read(buffer)) > 0) {
+                gos.write(buffer, 0, len);
+            }
+            gos.close();
+            fos.close();
+            fis.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new ParserException("Impossible de compresser le fichier");
+        }
+    }
+
     protected void parseBuffer() throws ParserException {
         // Lit le premier octet
         if (this.buffer.read(1)[0] != Tags.TAG_COMPOUND.ordinal()) {
@@ -93,6 +146,12 @@ class NBTParser extends TagCompound {
         }
         // Parsing du reste du fichier
         super.parseBuffer(this.buffer);
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+        buffer.write(new byte[] {(byte) Tags.TAG_COMPOUND.ordinal()});
+        super.renderBuffer(buffer);
     }
 
 }

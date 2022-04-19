@@ -49,6 +49,19 @@ public enum Tags {
         return null;
     }
 
+    public static int getOrdByClass(Class c) {
+        for (Tags tag : Tags.values()) {
+            if (tag.getTagClass() == null) {
+                continue;
+            }
+            if (tag.getTagClass().getSimpleName().equals(c.getSimpleName())) {
+                return tag.ordinal();
+            }
+        }
+
+        return -1;
+    }
+
     /**
      * @return La classe associée au tag.
      */

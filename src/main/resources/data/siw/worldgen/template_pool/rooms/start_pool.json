@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "siw:rooms/start_pool",
+=======
+  "name": "siw:rooms/rooms_0_pool",
+>>>>>>> parsing
   "fallback": "minecraft:empty",
   "elements": [
     {

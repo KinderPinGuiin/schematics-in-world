@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "siw:brick_pillar/start_pool",
+=======
+  "name": "siw:brick_pillar/brick_pillar_0_pool",
+>>>>>>> parsing
   "fallback": "minecraft:empty",
   "elements": [
     {
