@@ -211,13 +211,89 @@ public class SchematicsParser {
                 key_prop[1] = key_prop[1].substring(0, key_prop[1].length() - 1);
                 TagCompound props = new TagCompound();
                 ArrayList<Tag> propsVal = new ArrayList<>();
+
+                boolean northOn = false;
+                boolean southOn = false;
+                boolean eastOn = false;
+                boolean westOn = false;
+
                 for (String prop : key_prop[1].split(",")) {
                     String[] prop_name_val = prop.split("=");
                     TagString propTagString = new TagString();
+                    // Fixing "facing" property (stairs, ..)
+                    if (prop_name_val[0].equals("facing")) {
+                        if (prop_name_val[1].equals("north")) {
+                            prop_name_val[1] = "west";
+                        } else if (prop_name_val[1].equals("east")) {
+                            prop_name_val[1] = "north";
+                        } else if (prop_name_val[1].equals("south")) {
+                            prop_name_val[1] = "east";
+                        } else {
+                            prop_name_val[1] = "south";
+                        }
+
+
+                    // Fixing "cardinal points" property for other block (like glass panes, fences, ..)
+                    } else if (prop_name_val[0].equals("east")) {
+                        if (prop_name_val[1].equals("true")) {
+                            prop_name_val[1] = "false";
+                            northOn = true;
+                        }
+                    } else if (prop_name_val[0].equals("south")) {
+                        if (prop_name_val[1].equals("true")) {
+                            prop_name_val[1] = "false";
+                            eastOn = true;
+                        }
+                    } else if (prop_name_val[0].equals("north")) {
+                        if (prop_name_val[1].equals("true")) {
+                            prop_name_val[1] = "false";
+                            westOn = true;
+                        }
+                    } else if (prop_name_val[0].equals("west")) {
+                        if (prop_name_val[1].equals("true")) {
+                            prop_name_val[1] = "false";
+                            southOn = true;
+                        }
+                    // Doors
+                    } else if (prop_name_val[0].equals("hinge")) {
+                        prop_name_val[1] = (prop_name_val[1].equals("left") ? "right" : "left");
+                    // Logs
+                    } else if (prop_name_val[0].equals("axis")) {
+                        if (prop_name_val[1].equals("x")) {
+                            prop_name_val[1] = "z";
+                        } else if (prop_name_val[1].equals("z")) {
+                            prop_name_val[1] = "x";
+                        }
+                    // Rails
+                    } else if (key_prop[0].endsWith("rail") && prop_name_val[0].equals("shape")) {
+                        if (prop_name_val[1].equals("north_south")) {
+                            prop_name_val[1] = "east_west";
+                        } else if (prop_name_val[1].equals("east_west")) {
+                            prop_name_val[1] = "north_south";
+                        }
+
+                    }
+
+                        // Skulls
+                    // todo gérer tous les cas de rails et skulls à faire
+
                     propTagString.setKey(prop_name_val[0]);
                     propTagString.setValue(prop_name_val[1]);
                     propsVal.add(propTagString);
                 }
+
+                // We reloop through propsVal to update values with our flags
+
+                for (Tag ts : propsVal) {
+                    if ((ts.getKey().equals("east") && eastOn) ||
+                            (ts.getKey().equals("north") && northOn) ||
+                            (ts.getKey().equals("south") && southOn) ||
+                            (ts.getKey().equals("west") && westOn)
+                    ) {
+                        ts.setValue("true");
+                    }
+                }
+
                 props.setKey("Properties");
                 props.setValue(propsVal);
                 compoundVal.add(props);
@@ -245,7 +321,8 @@ public class SchematicsParser {
         ArrayList<BlockData> blocksVal = new ArrayList<>();
         int nextX = 0;
         int nextY = 0;
-        int nextZ = 0;
+        //int nextZ = 0;
+        int nextZ = (int) size.get(2).getValue() - 1;
         for (byte b : blockData) {
             HashMap<String, Tag> nbt = new HashMap<>();
             boolean isHere = false;
@@ -273,13 +350,14 @@ public class SchematicsParser {
             }
             BlockData bd = new BlockData(nextX, nextY, nextZ, b, isHere ? nbt : new HashMap<>());
             blocksVal.add(bd);
-            nextZ = (nextZ + 1) % (int) size.get(2).getValue();
-            if (nextZ == 0) {
-                nextX = (nextX + 1) % (int) size.get(0).getValue();
+            nextZ = ((nextZ - 1) + (int) size.get(2).getValue()) % (int) size.get(2).getValue();
+            if (nextZ + 1 == (int) size.get(2).getValue()) {
+                nextX = (nextX +  1)  % (int) size.get(0).getValue();
                 if (nextX == 0) {
                     nextY = (nextY + 1) % (int) size.get(1).getValue();
                 }
             }
+
         }
         return blocksVal;
     }
