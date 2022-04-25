@@ -48,13 +48,8 @@ public class GenericStructurePool {
             e.printStackTrace();
         }
 
-        if (structName.endsWith("_0")) {
-            path += "start_pool.json";
-            name = "siw:" + subStructName + "/start_pool";
-        } else {
-            path += structName + "_pool.json";
-            name = "siw:" + subStructName + "/" + structName;
-        }
+        path += structName + "_pool.json";
+        name = "siw:" + subStructName + "/" + structName;
 
         Writer writer = null;
         try {
