@@ -1,11 +1,11 @@
 {
-  "name": "siw:rooms/rooms_3_pool",
+  "name": "siw:tripwire2/tripwire2_0_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:rooms/rooms_3",
+        "location": "siw:tripwire2/tripwire2_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

@@ -133,7 +133,6 @@ public class SchematicsParser {
         this.convertEntities(res);
 
         // blocks
-        final int max_size = 35;
         ArrayList<BlockData> blockData = this.convertBlocks(blocks, blockEntities, size);
         TagList blocksTag = new TagList();
         blocksTag.setKey("blocks");
@@ -155,7 +154,6 @@ public class SchematicsParser {
                 ti.setValue(i);
                 coords.add(ti);
             }
-            //System.out.println(coords);
             tl.setValue(coords);
             tcList.add(tl);
             // nbt
@@ -211,16 +209,19 @@ public class SchematicsParser {
                 key_prop[1] = key_prop[1].substring(0, key_prop[1].length() - 1);
                 TagCompound props = new TagCompound();
                 ArrayList<Tag> propsVal = new ArrayList<>();
-
+                /*
                 boolean northOn = false;
                 boolean southOn = false;
                 boolean eastOn = false;
                 boolean westOn = false;
 
+                 */
+
                 for (String prop : key_prop[1].split(",")) {
                     String[] prop_name_val = prop.split("=");
                     TagString propTagString = new TagString();
                     // Fixing "facing" property (stairs, ..)
+                    /*
                     if (prop_name_val[0].equals("facing")) {
                         if (prop_name_val[1].equals("north")) {
                             prop_name_val[1] = "west";
@@ -276,14 +277,14 @@ public class SchematicsParser {
 
                         // Skulls
                     // todo gérer tous les cas de rails et skulls à faire
-
+                    */
                     propTagString.setKey(prop_name_val[0]);
                     propTagString.setValue(prop_name_val[1]);
                     propsVal.add(propTagString);
                 }
 
                 // We reloop through propsVal to update values with our flags
-
+                /*
                 for (Tag ts : propsVal) {
                     if ((ts.getKey().equals("east") && eastOn) ||
                             (ts.getKey().equals("north") && northOn) ||
@@ -293,6 +294,8 @@ public class SchematicsParser {
                         ts.setValue("true");
                     }
                 }
+                */
+
 
                 props.setKey("Properties");
                 props.setValue(propsVal);
@@ -321,7 +324,6 @@ public class SchematicsParser {
         ArrayList<BlockData> blocksVal = new ArrayList<>();
         int nextX = 0;
         int nextY = 0;
-        //int nextZ = 0;
         int nextZ = (int) size.get(2).getValue() - 1;
         for (byte b : blockData) {
             HashMap<String, Tag> nbt = new HashMap<>();
@@ -350,14 +352,14 @@ public class SchematicsParser {
             }
             BlockData bd = new BlockData(nextX, nextY, nextZ, b, isHere ? nbt : new HashMap<>());
             blocksVal.add(bd);
+
             nextZ = ((nextZ - 1) + (int) size.get(2).getValue()) % (int) size.get(2).getValue();
             if (nextZ + 1 == (int) size.get(2).getValue()) {
-                nextX = (nextX +  1)  % (int) size.get(0).getValue();
+                nextX = (nextX + 1) % (int) size.get(0).getValue();
                 if (nextX == 0) {
-                    nextY = (nextY + 1) % (int) size.get(1).getValue();
+                    nextY = (nextY +  1)  % (int) size.get(1).getValue();
                 }
             }
-
         }
         return blocksVal;
     }

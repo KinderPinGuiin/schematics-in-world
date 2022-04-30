@@ -1,11 +1,11 @@
 {
-  "name": "siw:rooms/rooms_1_pool",
+  "name": "siw:cardinal/cardinal_0_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:rooms/rooms_1",
+        "location": "siw:cardinal/cardinal_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
