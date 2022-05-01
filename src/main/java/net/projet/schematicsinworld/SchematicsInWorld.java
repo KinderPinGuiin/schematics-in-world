@@ -104,7 +104,6 @@ public class SchematicsInWorld {
                     e.printStackTrace();
                 }
             }
-
         }
 
         ModStructures.register(modEventBus);
