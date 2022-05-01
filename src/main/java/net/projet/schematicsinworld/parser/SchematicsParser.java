@@ -320,12 +320,15 @@ public class SchematicsParser {
 
     @SuppressWarnings("unchecked")
     private ArrayList<BlockData> convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities, ArrayList<Tag> size) {
-        TagList blocks = new TagList();
         ArrayList<BlockData> blocksVal = new ArrayList<>();
-        int nextX = 0;
-        int nextY = 0;
-        int nextZ = (int) size.get(2).getValue() - 1;
+        // int nextX = 0;
+        // int nextY = 0;
+        // int nextZ = 0;
+        int i = 0;
         for (byte b : blockData) {
+            int nextX = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) % (int) size.get(2).getValue();
+            int nextY = i / ((int) size.get(2).getValue() * (int) size.get(0).getValue());
+            int nextZ = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) / (int) size.get(2).getValue();
             HashMap<String, Tag> nbt = new HashMap<>();
             boolean isHere = false;
             for (TagCompound tc : blockEntities) {
@@ -352,14 +355,7 @@ public class SchematicsParser {
             }
             BlockData bd = new BlockData(nextX, nextY, nextZ, b, isHere ? nbt : new HashMap<>());
             blocksVal.add(bd);
-
-            nextZ = ((nextZ - 1) + (int) size.get(2).getValue()) % (int) size.get(2).getValue();
-            if (nextZ + 1 == (int) size.get(2).getValue()) {
-                nextX = (nextX + 1) % (int) size.get(0).getValue();
-                if (nextX == 0) {
-                    nextY = (nextY +  1)  % (int) size.get(1).getValue();
-                }
-            }
+            ++i;
         }
         return blocksVal;
     }
