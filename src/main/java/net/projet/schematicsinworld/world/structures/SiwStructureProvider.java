@@ -15,10 +15,12 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraftforge.common.BiomeDictionary;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.config.StructConfig;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import java.util.Set;
 
 /**
  * This class' purpose is to provide all information relevant to generating its own generic structure.
@@ -39,6 +41,14 @@ public class SiwStructureProvider {
 
     // REQUETES
 
+    /**
+     * If this location is suitable for spawning the structure.
+     * @return true if this location is suitable.
+     */
+    public boolean isLocationOk(Set<BiomeDictionary.Type> biome) {
+        return config.isEnabled() && config.isSpawningBiome(biome);
+    }
+    
     // The name of the structure. Used for /locate, notably
     public String name() {
         return config.getName();
