@@ -49,11 +49,11 @@ public class StructConfig implements Cloneable {
     }
 
     /**
-     * Constructeur a partir d'un fichier de configuration JSON.
+     * Constructeur à partir d'un fichier de configuration JSON.
      * Si le fichier n'est pas un .JSON, ou si le fichier ne peut pas
      * être ouvert, une AssertionError sera renvoyée.
      *
-     * Si les valeurs sont incoherente (et non pas absente), une
+     * Si les valeurs sont incohérentes (et non pas absentes), une
      * IncoherentConfigurationError sera renvoyée.
      **/
     public StructConfig(File cfgFile) {
@@ -61,8 +61,8 @@ public class StructConfig implements Cloneable {
             throw new AssertionError("File unsupported");
 
         struct_name = StringUtils.removeEnd(cfgFile.getName(), ".JSON");
-        JsonObject json;
 
+        JsonObject json;
         try {
             JsonReader reader;
             reader = new JsonReader(new FileReader(cfgFile));
@@ -72,7 +72,7 @@ public class StructConfig implements Cloneable {
 
             json = jelem.getAsJsonObject();
 
-            // On lis l'objet que nous avons obtenue !
+            // On lit l'objet que nous avons obtenu
             if (json.get("distMaxSpawn") != null) {
                 distMaxSpawn = json.get("distMaxSpawn").getAsInt();
             }
@@ -170,12 +170,12 @@ public class StructConfig implements Cloneable {
         return clone;
     }
 
-    private String attributToJson(String comment, String attrname, int n){
+    private String attributToJson(String comment, String attrname, int n) {
         return JSON_INDENTATION + "#" + comment + "\n"
                 + JSON_INDENTATION + "\"" + attrname + "\": " + String.valueOf(n) + ",\n\n";
     }
 
-    private String attributToJson(String comment, String attrname, boolean value){
+    private String attributToJson(String comment, String attrname, boolean value) {
         return JSON_INDENTATION + "#" + comment + "\n"
                 + JSON_INDENTATION + "\"" + attrname + "\": " + String.valueOf(value) + ",\n\n";
     }

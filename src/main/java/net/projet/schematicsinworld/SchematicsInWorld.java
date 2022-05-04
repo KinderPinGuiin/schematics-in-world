@@ -41,8 +41,6 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Pour l'instant ça plante pas car le dossier Schematics dans le .minecraft est vide
-        // si on met des .schem, c'est la hess
         List<String> paths = null;
         String rootPath = System.getProperty("user.home") + File.separator +
                 "AppData" + File.separator + "Roaming" + File.separator +
@@ -54,24 +52,18 @@ public class SchematicsInWorld {
             // gérer le problème car ça veut dire pas de dossier .minecraft
         }
 
-        // Dossier.schem
+        // Schematics folder (containing .schem)
         File schemDir = new File(rootPath + File.separator + "Schematics");
         if (!schemDir.exists()) {
-            System.out.println("n'existe pas de base");
+            LOGGER.info("Schematics folder not found : creating now.\n");
             schemDir.mkdir();
-            // partir ? car rien à charger, ou on laisse le jeu se lancer jsp
         } else {
-            System.out.println("existe de base");
+            LOGGER.info("Schematics folder found.\n");
         }
-        System.out.println(schemDir.getAbsolutePath());
-
-        // Pour chercher avec ctrl+f dans le terminal, ça va plus vite xd
-        System.out.println("chibre");
 
         try {
             String path = schemDir.getAbsolutePath();
             paths = findFiles(Paths.get(path), "schem");
-            paths.forEach(x -> System.out.println(x));
         } catch (IOException e) {
             e.printStackTrace();
         }

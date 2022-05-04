@@ -109,7 +109,7 @@ public class SchematicsParser {
                     dataVersion.setValue(t.getValue());
                     res.add(dataVersion);
                     break;
-                case "Palette":
+                case PALETTE:
                     this.convertPalette(res, (TagCompound) t);
                     break;
                 case "Length":

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Classe qui permet de gérer de manière globales les configurations.
+ * Classe qui permet de gérer de manière globale les configurations.
  * Permet de charger les config.
  */
 public abstract class ConfigHandler {
@@ -25,7 +25,7 @@ public abstract class ConfigHandler {
     public static final List<String> STRUCTURE_NAMES = new LinkedList<String>();
     public static final List<String> STRUCTURE_FILES = new LinkedList<String>();
 
-    public static List<SiwStructureProvider> getConfigurations(){
+    public static List<SiwStructureProvider> getConfigurations() {
 
         // Si le sous-dossier n'a pas été créé
         if (!CONFIG_DIRECTORY.exists()) {
