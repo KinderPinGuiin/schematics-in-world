@@ -1,11 +1,11 @@
 {
-  "name": "siw:maison/maison_0_pool",
+  "name": "siw:pieces/pieces_0",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:maison/maison_0",
+        "location": "siw:pieces/pieces_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

@@ -1,0 +1,182 @@
+package net.projet.schematicsinworld.config;
+
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.*;
+
+/**
+ *   Represente une configuration de structure.
+ *   Les champs doivent être simple, pour pouvoir être écrit dans un
+ *   fichier de configuration ou cloné de surface.
+ *   Le fichier de configuration equivalent est un
+ *   JsonObject unique, avec des champs nommés pour chaque variable.
+ *
+ * @Inv :
+ *      getDistMaxSpawn() >= getDistMinSpawn()
+ *      getName() != null && getName() != ""
+ */
+public class StructConfig implements Cloneable {
+
+    // ATTRIBUTS
+    private final String struct_name;
+    private int distMaxSpawn = 32;
+    private int distMinSpawn = 8;
+    private boolean isEnabled = true;
+
+    public static final String JSON_INDENTATION = "      ";
+
+    // CONSTRUCTEURS
+    // par défaut. Possède des valeurs de base.
+    public StructConfig(String name){
+        struct_name = name;
+    }
+
+    public class IncoherentConfigurationError extends Error {
+        private final String message;
+        public IncoherentConfigurationError(String message) {
+            this.message = message;
+        }
+
+        @Override
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    /**
+     * Constructeur a partir d'un fichier de configuration JSON.
+     * Si le fichier n'est pas un .JSON, ou si le fichier ne peut pas
+     * être ouvert, une AssertionError sera renvoyée.
+     *
+     * Si les valeurs sont incoherente (et non pas absente), une
+     * IncoherentConfigurationError sera renvoyée.
+     **/
+    public StructConfig(File cfgFile) {
+        if (!cfgFile.getName().endsWith(".JSON") || !cfgFile.canRead())
+            throw new AssertionError("File unsupported");
+
+        struct_name = StringUtils.removeEnd(cfgFile.getName(), ".JSON");
+        JsonObject json;
+
+        try {
+            JsonReader reader;
+            reader = new JsonReader(new FileReader(cfgFile));
+            reader.setLenient(true);
+            JsonElement jelem = new JsonParser().parse(reader);
+            reader.close();
+
+            json = jelem.getAsJsonObject();
+
+            // On lis l'objet que nous avons obtenue !
+            if (json.get("distMaxSpawn") != null) {
+                distMaxSpawn = json.get("distMaxSpawn").getAsInt();
+            }
+            if (json.get("distMinSpawn") != null) {
+                distMinSpawn = json.get("distMinSpawn").getAsInt();
+            }
+            if (json.get("isEnabled") != null) {
+                isEnabled = json.get("isEnabled").getAsBoolean();
+            }
+
+            // Error checking
+            if (distMaxSpawn < distMinSpawn) {
+                throw new IncoherentConfigurationError("distMaxSpawn is lower than distMinSpawn");
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("This will never happen");
+        } catch (IOException e) {
+            System.out.println("could not close?");
+        }
+    }
+
+    // REQUETES
+    public String getName() {
+        return struct_name;
+    }
+
+    public int getDistMaxSpawn() {
+        return distMaxSpawn;
+    }
+
+    public int getDistMinSpawn() {
+        return distMinSpawn;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    // COMMANDES
+
+    public void setDistMaxSpawn(int distMaxSpawn) {
+        if(distMaxSpawn < getDistMinSpawn()) {
+            throw new AssertionError("Value is lower than distMinSpawn!");
+        }
+        this.distMaxSpawn = distMaxSpawn;
+    }
+
+    public void setDistMinSpawn(int distMinSpawn) {
+        if(getDistMaxSpawn() < distMinSpawn) {
+            throw new AssertionError("Value is higher than distMaxSpawn!");
+        }
+        this.distMinSpawn = distMinSpawn;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    /**
+     *
+     * @return Une chaine JSON qui represente cette configuration.
+     * N'inclut pas le nom de la structure.
+     * Possède des commentaires, donc illisible sans "Lenient Parsing".
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("{\n");
+
+        builder.append(attributToJson(
+                "The maximum distance between two of these structures in chunks",
+                "distMaxSpawn", distMaxSpawn));
+
+        builder.append(attributToJson(
+                "The minimum distance between two of these structures in chunks",
+                "distMinSpawn", distMinSpawn));
+
+        builder.append(attributToJson(
+                "If this structure is to spawn naturally in the world",
+                "isEnabled", isEnabled));
+
+        // On enleve le ',' qui est de trop
+        builder.deleteCharAt(builder.lastIndexOf(","));
+        builder.append("}");
+        return builder.toString();
+    }
+    @Override
+    public Object clone() {
+        StructConfig clone = null;
+        try {
+            clone = (StructConfig) super.clone();
+        } catch(CloneNotSupportedException e) {
+            // N'arrivera pas
+        }
+        return clone;
+    }
+
+    private String attributToJson(String comment, String attrname, int n){
+        return JSON_INDENTATION + "#" + comment + "\n"
+                + JSON_INDENTATION + "\"" + attrname + "\": " + String.valueOf(n) + ",\n\n";
+    }
+
+    private String attributToJson(String comment, String attrname, boolean value){
+        return JSON_INDENTATION + "#" + comment + "\n"
+                + JSON_INDENTATION + "\"" + attrname + "\": " + String.valueOf(value) + ",\n\n";
+    }
+}

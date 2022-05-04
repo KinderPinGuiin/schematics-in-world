@@ -1,11 +1,11 @@
 {
-  "name": "siw:truc_random/truc_random_0_pool",
+  "name": "siw:rooms/rooms_5",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:truc_random/truc_random_0",
+        "location": "siw:rooms/rooms_5",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
