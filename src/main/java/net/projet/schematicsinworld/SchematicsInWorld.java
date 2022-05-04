@@ -76,7 +76,12 @@ public class SchematicsInWorld {
                     "resources" + File.separator + "data" + File.separator + MOD_ID +
                     File.separator + "structures";
 
-            // gérer le cas où dest existe pas comme dossier
+            // ne devrait pas être possible
+            File destFolder = new File(dest);
+            if (!destFolder.exists()) {
+                destFolder.mkdir();
+            }
+
             SchematicsParser s;
             for (int i = 0; i < paths.size(); ++i) {
                 s = new SchematicsParser(paths.get(i));
