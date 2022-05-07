@@ -33,7 +33,9 @@ public abstract class ConfigHandler {
         }
 
         String start = System.getProperty("user.dir");
-        start += "/../src/main/resources/data/" + SchematicsInWorld.MOD_ID + "/structures";
+        start += File.separator + ".." + File.separator + "src" + File.separator + "main" +
+                File.separator + "resources" + File.separator + "data" + File.separator +
+                SchematicsInWorld.MOD_ID + File.separator + "structures";
 
         try (Stream<Path> stream = Files.walk(Paths.get(start), Integer.MAX_VALUE)) {
             List<String> collect = stream

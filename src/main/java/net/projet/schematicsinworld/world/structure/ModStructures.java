@@ -49,9 +49,6 @@ public class ModStructures {
                     new StructureSeparationSettings(p.maxDist(), p.minDist(), p.randseed()),
                     true);
         }
-        //setupMapSpacingAndLand(BRICK_PILLAR.get(),
-        //        new StructureSeparationSettings(100, 50, 475658536),
-        //        true);
     }
 
     public static void register(IEventBus eventBus) {

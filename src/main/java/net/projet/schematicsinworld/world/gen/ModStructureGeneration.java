@@ -19,7 +19,7 @@ public class ModStructureGeneration {
         RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
 
-        for(int i=0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++) {
+        for(int i = 0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++) {
             int finalI = i;
 
             List<Supplier<StructureFeature<?, ?>>> structures = event.getGeneration().getStructures();
