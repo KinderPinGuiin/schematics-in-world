@@ -230,7 +230,7 @@ public class StructConfig implements Cloneable {
                 + JSON_INDENTATION + "\"" + attrname + "\": \"" + value + "\",\n\n";
     }
 
-    private String stringToComment(String comment){
+    private String stringToComment(String comment) {
         return JSON_INDENTATION + "#" + comment + "\n";
     }
 }
