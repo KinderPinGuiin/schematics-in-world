@@ -10,18 +10,15 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
+import net.minecraft.world.gen.feature.structure.*;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.world.ForgeChunkManager;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.config.StructConfig;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.File;
 import java.util.Set;
 
 /**
@@ -38,8 +35,7 @@ public class SiwStructureProvider {
     // CONSTRUCTORS
 
     public SiwStructureProvider(StructConfig config) {
-        this.config = (StructConfig) config.clone();
-    }
+        this.config = (StructConfig) config.clone(); }
 
     // REQUETES
 
@@ -94,7 +90,6 @@ public class SiwStructureProvider {
             return GenerationStage.Decoration.SURFACE_STRUCTURES;
         }
 
-
         @Override
         public IStartFactory<NoFeatureConfig> getStartFactory() {
             return Start::new;
@@ -108,16 +103,19 @@ public class SiwStructureProvider {
                 super(structureIn, chunkX, chunkZ, mutableBoundingBox, referenceIn, seedIn);
             }
 
+
             @Override // GeneratePieces
             public void func_230364_a_(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator,
                                        TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn,
                                        NoFeatureConfig config) {
                 int x = (chunkX << 4) + 7;
                 int z = (chunkZ << 4) + 7;
-                chunkGenerator.
+
                 BlockPos blockpos = new BlockPos(x, 0, z);
 
-                JigsawManager.func_242837_a(dynamicRegistryManager,
+                //ForgeChunkManager.forceChunk(null, blockpos, chunkX + 1, chunkZ + 1, true, true);
+
+                        JigsawManager.func_242837_a(dynamicRegistryManager,
                         new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
                                 .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
                                         name() + "/" + name() + "_0_pool")),
@@ -134,6 +132,11 @@ public class SiwStructureProvider {
                         this.components.get(0).getBoundingBox().minX + " " +
                         this.components.get(0).getBoundingBox().minY + " " +
                         this.components.get(0).getBoundingBox().minZ);
+                LogManager.getLogger().log(Level.DEBUG, name() + " of size " +
+                        (this.components.get(0).getBoundingBox().maxX - this.components.get(0).getBoundingBox().minX) + " " +
+                        (this.components.get(0).getBoundingBox().maxY - this.components.get(0).getBoundingBox().minY) + " " +
+                        (this.components.get(0).getBoundingBox().maxZ - this.components.get(0).getBoundingBox().minZ) + " ");
+
             }
         }
     }
