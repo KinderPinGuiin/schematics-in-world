@@ -1,11 +1,11 @@
 {
-  "name": "siw:rooms/rooms_5",
+  "name": "siw:snow_man_3x3/snow_man_3x3_0",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:rooms/rooms_5",
+        "location": "siw:snow_man_3x3/snow_man_3x3_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

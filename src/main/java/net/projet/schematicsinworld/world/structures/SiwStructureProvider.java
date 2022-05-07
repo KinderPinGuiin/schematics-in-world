@@ -20,6 +20,8 @@ import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.config.StructConfig;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+
+import java.io.File;
 import java.util.Set;
 
 /**
@@ -112,9 +114,9 @@ public class SiwStructureProvider {
                                        NoFeatureConfig config) {
                 int x = (chunkX << 4) + 7;
                 int z = (chunkZ << 4) + 7;
+                chunkGenerator.
                 BlockPos blockpos = new BlockPos(x, 0, z);
 
-                // Anciennement : name() + "/" + struct_name + "_start_pool" au lieu de juste "start_pool"
                 JigsawManager.func_242837_a(dynamicRegistryManager,
                         new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
                                 .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
