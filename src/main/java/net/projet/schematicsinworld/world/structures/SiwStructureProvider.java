@@ -129,7 +129,6 @@ public class SiwStructureProvider {
                                 10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                         blockpos, this.components, this.rand, false, true);
 
-
                 this.components.forEach(piece -> piece.offset(0, 1, 0));
                 this.components.forEach(piece -> piece.getBoundingBox().minY -= 1);
 
@@ -143,7 +142,6 @@ public class SiwStructureProvider {
                         (this.components.get(0).getBoundingBox().maxX - this.components.get(0).getBoundingBox().minX) + " " +
                         (this.components.get(0).getBoundingBox().maxY - this.components.get(0).getBoundingBox().minY) + " " +
                         (this.components.get(0).getBoundingBox().maxZ - this.components.get(0).getBoundingBox().minZ) + " ");
-
             }
         }
     }
