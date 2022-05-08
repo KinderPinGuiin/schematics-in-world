@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.debug.ChunkBorderDebugRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
@@ -119,6 +120,12 @@ public class SiwStructureProvider {
                                        NoFeatureConfig config) {
                 int x = (chunkX << 4) + 7;
                 int z = (chunkZ << 4) + 7;
+
+                /*
+                Constat : que les chunks en Z qui sont pas bien gérés
+                Chunk Zi généré pour la structure -> Chunk Z(i-1) pas forcément
+                Voir l'offset ?
+                 */
 
                 BlockPos blockpos = new BlockPos(x, 0, z);
 
