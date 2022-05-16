@@ -1,30 +1,18 @@
 package net.projet.schematicsinworld.world.structures;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientChunkProvider;
-import net.minecraft.client.renderer.debug.ChunkBorderDebugRenderer;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.structure.*;
 import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraftforge.client.extensions.IForgeRenderChunk;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.world.ForgeChunkManager;
-import net.minecraftforge.server.command.ChunkGenWorker;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.config.StructConfig;
 import org.apache.logging.log4j.Level;
@@ -75,7 +63,7 @@ public class SiwStructureProvider {
 
     // The random seed associated with this provider.
     // Linked to the name.
-    public int randseed(){
+    public int randseed() {
         return name().hashCode();
     }
 
