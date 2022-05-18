@@ -1,0 +1,15 @@
+{
+  "name": "siw:truc_random_/truc_random_14",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "siw:truc_random_/truc_random_14",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
