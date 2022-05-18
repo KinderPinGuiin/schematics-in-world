@@ -412,6 +412,26 @@ public class SchematicsParser {
     }
      */
 
+    private void addJigsawInPalette(ArrayList<Tag> res) throws ParserException {
+        TagCompound tagCompound = new TagCompound();
+        ArrayList<Tag> compoundVal = new ArrayList<>();
+        TagString compoundValName = new TagString();
+        compoundValName.setKey("Name");
+        compoundValName.setValue("minecraft:jigsaw");
+        compoundVal.add(compoundValName);
+        TagCompound props = new TagCompound();
+        ArrayList<Tag> propsVal = new ArrayList<>();
+        TagString propTagString = new TagString();
+        propTagString.setKey("orientation");
+        propTagString.setValue("west_up");
+        propsVal.add(propTagString);
+        props.setKey("Properties");
+        props.setValue(propsVal);
+        compoundVal.add(props);
+        tagCompound.setValue(compoundVal);
+        res.add(tagCompound);
+    }
+
     @SuppressWarnings("unchecked")
     private void convertPalette(TagList palette, TagCompound schemPalette) throws ParserException {
         ArrayList<Tag> paletteVal = new ArrayList<>();
@@ -450,6 +470,7 @@ public class SchematicsParser {
         }
 
         palette.setKey("palette");
+        addJigsawInPalette(paletteVal);
         palette.setValue(paletteVal);
     }
 
