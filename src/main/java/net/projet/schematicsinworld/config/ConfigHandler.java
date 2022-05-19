@@ -47,7 +47,12 @@ public abstract class ConfigHandler {
                 if (file.isFile() && file.getName().endsWith(".nbt")) {
                     String r = StringUtils.removeEnd(file.getName(), ".nbt");
                     STRUCTURE_FILES.add(r);
-                    r = r.substring(0, r.length() - 2);
+                    int k = r.lastIndexOf('_');
+                    if (k == -1) {
+                        // Should never happen
+                        throw new IllegalArgumentException("structure name is impossible to use !");
+                    }
+                    r = r.substring(0, k);
                     if (!STRUCTURE_NAMES.contains(r)) {
                         STRUCTURE_NAMES.add(r);
                     }

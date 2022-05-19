@@ -274,7 +274,6 @@ public class SchematicsParser {
         for (int i = 0; i < nbX; ++i) {
             for (int j = 0; j < nbZ; ++j) {
                 ArrayList<Tag> structNbt = new ArrayList<>();
-                System.out.println(i + " " + j);
                 // --- Partie "commune" ---
 
                 // DataVersion tag
@@ -297,7 +296,6 @@ public class SchematicsParser {
                 int sizeZ = j < nbZ - 1 ? MAX_SIZE : (int) size.get(2).getValue() % MAX_SIZE;
                 curSize.get(2).setValue(sizeZ);
                 curSize.get(1).setValue((int) size.get(1).getValue());
-                System.out.println("Size : " + sizeX + " " + sizeZ);
                 sizeTag.setValue(curSize);
                 structNbt.add(sizeTag);
 
