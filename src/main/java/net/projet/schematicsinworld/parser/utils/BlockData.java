@@ -74,5 +74,5 @@ public class BlockData {
                 '}';
     }
 
-    public void setState()
+//    public void setState()
 }
