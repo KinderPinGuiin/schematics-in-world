@@ -106,6 +106,7 @@ public class SiwStructureProvider {
             public void func_230364_a_(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator,
                                        TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn,
                                        NoFeatureConfig config) {
+                System.out.println("Test du 20.05");
                 int x = (chunkX << 4) + 7;
                 int z = (chunkZ << 4) + 7;
 

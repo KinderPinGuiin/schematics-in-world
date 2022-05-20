@@ -1,7 +1,5 @@
 package net.projet.schematicsinworld.parser;
 
-import jdk.nashorn.internal.ir.Block;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.projet.schematicsinworld.parser.tags.*;
 import net.projet.schematicsinworld.parser.utils.BlockData;
 import net.projet.schematicsinworld.parser.utils.ParserException;
@@ -10,7 +8,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Convertit des fichiers .schem générés par WorldEdit en fichier .nbt
@@ -185,6 +182,33 @@ public class SchematicsParser {
         return results;
     }
 
+    private void addJigsawInPalette(ArrayList<Tag> paletteVal) throws ParserException {
+        String[] Orientations = {"north_up","down_east","down_north",
+                "down_south","down_west","east_up","north_up","south_up","up_east",
+                "up_north","up_south","up_west","west_up"};
+        TagString compoundValName = new TagString();
+        compoundValName.setKey("Name");
+        compoundValName.setValue("minecraft:jigsaw");
+        for(String orientation : Orientations) {
+            TagCompound tagCompound = new TagCompound();
+            ArrayList<Tag> compoundVal = new ArrayList<>();
+//            System.out.println("bonsoir_seb");
+//            System.out.println(orientation);
+            compoundVal.add(compoundValName);
+            TagCompound props = new TagCompound();
+            ArrayList<Tag> propsVal = new ArrayList<>();
+            TagString propTagString = new TagString();
+            propTagString.setKey("orientation");
+            propTagString.setValue(orientation);
+            propsVal.add(propTagString);
+            props.setKey("Properties");
+            props.setValue(propsVal);
+            compoundVal.add(props);
+            tagCompound.setValue(compoundVal);
+            paletteVal.add(tagCompound);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private void convertPalette(ArrayList<Tag> res, TagCompound schemPalette) throws ParserException {
         TagList palette = new TagList();
@@ -224,6 +248,7 @@ public class SchematicsParser {
         }
         // Ajoute la liste au résultat
         palette.setKey("palette");
+        addJigsawInPalette(paletteVal);
         palette.setValue(paletteVal);
         res.add(palette);
     }
@@ -234,6 +259,33 @@ public class SchematicsParser {
         entities.setValue(new ArrayList<Tag>());
         res.add(entities);
     }
+
+//    private void addJigsawBlock(ArrayList<BlockData> blocksVal) throws ParserException {
+//        String[] Orientations = {"north_up","down_east","down_north",
+//                "down_south","down_west","east_up","north_up","south_up","up_east",
+//                "up_north","up_south","up_west","west_up"};
+//        TagString compoundValName = new TagString();
+//        compoundValName.setKey("Name");
+//        compoundValName.setValue("minecraft:jigsaw");
+//        for(String orientation : Orientations) {
+//            TagCompound tagCompound = new TagCompound();
+//            ArrayList<Tag> compoundVal = new ArrayList<>();
+//            System.out.println("bonsoir_seb");
+//            System.out.println(orientation);
+//            compoundVal.add(compoundValName);
+//            TagCompound props = new TagCompound();
+//            ArrayList<Tag> propsVal = new ArrayList<>();
+//            TagString propTagString = new TagString();
+//            propTagString.setKey("orientation");
+//            propTagString.setValue(orientation);
+//            propsVal.add(propTagString);
+//            props.setKey("Properties");
+//            props.setValue(propsVal);
+//            compoundVal.add(props);
+//            tagCompound.setValue(compoundVal);
+//            blocksVal.add(tagCompound);
+//        }
+//    }
 
     @SuppressWarnings("unchecked")
     private ArrayList<BlockData> convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities, ArrayList<Tag> size) {
@@ -268,6 +320,8 @@ public class SchematicsParser {
                 }
             }
             BlockData bd = new BlockData(nextX, nextY, nextZ, b, isHere ? nbt : new HashMap<>());
+            System.out.println("bonsoir_seb " + isHere + " _ " + file.getName());
+            System.out.println("pos: [" + nextX + "," + nextY + "," + nextZ + "];");
             blocksVal.add(bd);
             ++i;
         }
