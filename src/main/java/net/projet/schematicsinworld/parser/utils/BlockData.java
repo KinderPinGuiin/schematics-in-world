@@ -74,5 +74,11 @@ public class BlockData {
                 '}';
     }
 
-//    public void setState()
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public void setNbt(HashMap<String,Tag> map) {
+        this.nbt = map;
+    }
 }
