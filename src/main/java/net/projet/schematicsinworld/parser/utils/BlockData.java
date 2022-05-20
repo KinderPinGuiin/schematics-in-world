@@ -73,4 +73,6 @@ public class BlockData {
                 ", nbt=" + nbt +
                 '}';
     }
+
+    public void setState()
 }
