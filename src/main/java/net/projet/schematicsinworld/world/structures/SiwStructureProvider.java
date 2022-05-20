@@ -106,23 +106,16 @@ public class SiwStructureProvider {
             public void func_230364_a_(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator,
                                        TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn,
                                        NoFeatureConfig config) {
-                int x = (chunkX << 4) + 7;
-                int z = (chunkZ << 4) + 7;
-
-                /*
-                Constat : que les chunks en Z qui sont pas bien gérés
-                Chunk Zi généré pour la structure -> Chunk Z(i-1) pas forcément
-                Voir l'offset ?
-                 */
+                int x = (chunkX << 4) + 8;
+                int z = (chunkZ << 4) + 8;
 
                 BlockPos blockpos = new BlockPos(x, 0, z);
-
-                        JigsawManager.func_242837_a(dynamicRegistryManager,
-                        new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
-                                .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
-                                        name() + "/" + name() + "_0_pool")),
-                                10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
-                        blockpos, this.components, this.rand, false, true);
+                JigsawManager.func_242837_a(dynamicRegistryManager,
+                new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
+                        .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
+                                name() + "/" + name() + "_0_pool")),
+                        10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
+                blockpos, this.components, this.rand, false, true);
 
                 this.components.forEach(piece -> piece.offset(0, 1, 0));
                 this.components.forEach(piece -> piece.getBoundingBox().minY -= 1);
@@ -133,10 +126,6 @@ public class SiwStructureProvider {
                         this.components.get(0).getBoundingBox().minX + " " +
                         this.components.get(0).getBoundingBox().minY + " " +
                         this.components.get(0).getBoundingBox().minZ);
-                LogManager.getLogger().log(Level.DEBUG, name() + " of size " +
-                        (this.components.get(0).getBoundingBox().maxX - this.components.get(0).getBoundingBox().minX) + " " +
-                        (this.components.get(0).getBoundingBox().maxY - this.components.get(0).getBoundingBox().minY) + " " +
-                        (this.components.get(0).getBoundingBox().maxZ - this.components.get(0).getBoundingBox().minZ) + " ");
             }
         }
     }

@@ -36,7 +36,7 @@ public class StructConfig implements Cloneable {
 
     // CONSTRUCTEURS
     // par défaut. Possède des valeurs de base.
-    public StructConfig(String name){
+    public StructConfig(String name) {
         struct_name = name;
     }
 
@@ -63,9 +63,7 @@ public class StructConfig implements Cloneable {
     public StructConfig(File cfgFile) {
         if (!cfgFile.getName().endsWith(".JSON") || !cfgFile.canRead())
             throw new AssertionError("File unsupported");
-
         struct_name = StringUtils.removeEnd(cfgFile.getName(), ".JSON");
-
         JsonObject json;
         try {
             JsonReader reader;

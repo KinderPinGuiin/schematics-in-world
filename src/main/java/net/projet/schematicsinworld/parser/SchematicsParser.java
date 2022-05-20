@@ -120,11 +120,7 @@ public class SchematicsParser {
         for (int i = 0; i < tags.size(); ++i) {
             // Enregistre le fichier
             try {
-                for (Tag t : tags.get(0)) {
-                    System.out.println(t.getKey());
-                    System.out.println(t.getValue());
-                }
-                new NBTParser(filepath + "_" + i, 'w', tags.get(i));
+                new NBTParser(filepath + "_" + i + ".nbt", 'w', tags.get(i));
             } catch (ParserException e) {
                 e.printStackTrace();
             }
@@ -278,7 +274,6 @@ public class SchematicsParser {
         for (int i = 0; i < nbX; ++i) {
             for (int j = 0; j < nbZ; ++j) {
                 ArrayList<Tag> structNbt = new ArrayList<>();
-                System.out.println(i + " " + j);
                 // --- Partie "commune" ---
 
                 // DataVersion tag
@@ -300,7 +295,7 @@ public class SchematicsParser {
                 // Size en z
                 int sizeZ = j < nbZ - 1 ? MAX_SIZE : (int) size.get(2).getValue() % MAX_SIZE;
                 curSize.get(2).setValue(sizeZ);
-                System.out.println("Size : " + sizeX + " " + sizeZ);
+                curSize.get(1).setValue((int) size.get(1).getValue());
                 sizeTag.setValue(curSize);
                 structNbt.add(sizeTag);
 
@@ -551,6 +546,7 @@ public class SchematicsParser {
             int x = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) % (int) size.get(2).getValue();
             int y = i / ((int) size.get(2).getValue() * (int) size.get(0).getValue());
             int z = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) / (int) size.get(2).getValue();
+
             HashMap<String, Tag> nbt = new HashMap<>();
             boolean isHere = false;
             for (TagCompound tc : blockEntities) {
@@ -580,7 +576,9 @@ public class SchematicsParser {
             // Pour déterminer dans quelle sous-structure on ajoute ce bloc
             int structX = x / MAX_SIZE;
             int structZ = z / MAX_SIZE;
-            blocksVal[structX][structZ].add(bd);
+            System.out.println("cpt : " + i + " / " + blockData.length);
+            System.out.println("sx et sz : " + structX + " " + structZ);
+            blocksVal[structZ][structX].add(bd);
 
             ++i;
         }

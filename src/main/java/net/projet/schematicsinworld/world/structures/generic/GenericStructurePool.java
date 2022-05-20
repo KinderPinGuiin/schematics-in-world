@@ -29,7 +29,12 @@ public class GenericStructurePool {
 
     public GenericStructurePool(String n) {
         structName = n;
-        subStructName = n.substring(0, n.length() - 2);
+        int k = structName.lastIndexOf('_');
+        if (k == -1) {
+            // Should never happen
+            throw new IllegalArgumentException("structure name is impossible to use !");
+        }
+        subStructName = n.substring(0, k);
         subName = "siw:" + subStructName + "/" + structName;
         elements = new Element[1];
         elements[0] = new Element();
