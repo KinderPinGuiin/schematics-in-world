@@ -29,6 +29,7 @@ public class StructConfig implements Cloneable {
     private int distMaxSpawn = 32;
     private int distMinSpawn = 8;
     private boolean isEnabled = true;
+    private boolean isSpawningInWater = false;
     private boolean isBiomeFilterBlackList = true;
     private BiomeFilter biomeFilter = new BiomeFilter("");
 
@@ -84,6 +85,9 @@ public class StructConfig implements Cloneable {
             if (json.get("isEnabled") != null) {
                 isEnabled = json.get("isEnabled").getAsBoolean();
             }
+            if (json.get("isSpawningInWater") != null) {
+                isSpawningInWater = json.get("isSpawningInWater").getAsBoolean();
+            }
             if (json.get("isBiomeFilterBlackList") != null) {
                 isBiomeFilterBlackList = json.get("isBiomeFilterBlackList").getAsBoolean();
             }
@@ -116,9 +120,9 @@ public class StructConfig implements Cloneable {
         return distMinSpawn;
     }
 
-    public boolean isEnabled() {
-        return isEnabled;
-    }
+    public boolean isEnabled() { return isEnabled; }
+
+    public boolean isSpawningInWater(){ return isSpawningInWater; }
 
     public boolean isSpawningBiome(Set<BiomeDictionary.Type> biome){
         if(isBiomeFilterBlackList){
@@ -147,6 +151,7 @@ public class StructConfig implements Cloneable {
         this.isEnabled = isEnabled;
     }
 
+    public void setSpawningInWater(boolean isSpawningInWater) { this.isSpawningInWater = isSpawningInWater; }
     public void setBiomeFilterBlackList(boolean biomeFilterBlackList){
         isBiomeFilterBlackList = biomeFilterBlackList;
     }
@@ -182,6 +187,10 @@ public class StructConfig implements Cloneable {
         builder.append(attributToJson(
                 "If this structure is to spawn naturally in the world",
                 "isEnabled", isEnabled));
+
+        builder.append(attributToJson(
+                "If this structure is to spawn in water",
+                "isSpawningInWater", isSpawningInWater));
 
         builder.append(stringToComment(
                 "Wether or not the biome filter is a blacklist or a whitelist."));

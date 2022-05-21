@@ -1,13 +1,19 @@
 package net.projet.schematicsinworld.world.structures;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.structure.*;
@@ -87,6 +93,26 @@ public class SiwStructureProvider {
         @Override
         public GenerationStage.Decoration getDecorationStage() {
             return GenerationStage.Decoration.SURFACE_STRUCTURES;
+        }
+
+        @Override
+        public boolean func_230363_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeSource,
+                                      long seed, SharedSeedRandom chunkRandom, int chunkX, int chunkZ,
+                                      Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
+            BlockPos centerOfChunk = new BlockPos(chunkX * 16, 0, chunkZ * 16);
+
+            int landHeight = chunkGenerator.getHeight(centerOfChunk.getX(), centerOfChunk.getZ(),
+                    Heightmap.Type.WORLD_SURFACE_WG);
+
+            boolean res = true;
+            res &= landHeight != 0;
+
+            IBlockReader columnOfBlocks = chunkGenerator.func_230348_a_(centerOfChunk.getX(), centerOfChunk.getZ());
+            BlockState topBlock = columnOfBlocks.getBlockState(centerOfChunk.up(landHeight - 1));
+
+            res &= (config.isSpawningInWater() || topBlock.getFluidState().isEmpty());
+
+            return res;
         }
 
         @Override
