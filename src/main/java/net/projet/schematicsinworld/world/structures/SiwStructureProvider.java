@@ -139,7 +139,7 @@ public class SiwStructureProvider {
                 JigsawManager.func_242837_a(dynamicRegistryManager,
                 new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
                         .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
-                                name() + "/" + name() + "_0_pool")),
+                                name() + "/" + name() + "_0_0_pool")),
                         10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                 blockpos, this.components, this.rand, false, true);
 
