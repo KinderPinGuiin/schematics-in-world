@@ -535,28 +535,55 @@ public class SchematicsParser {
                                    JigsawOrientations orientation,
                                    int nElemPalette,
                                    int x, int y, int z, int structX, int structZ,
-                                   boolean isTarget) {
-        String joint = JOINT;
+                                   boolean isTarget) throws ParserException {
         String fileName = getFile().getName();
-        String id = JIGSAW_ID;
+        String joint = JOINT;
+        String name;
+        String pool;
         String final_state = FINAL_STATE;
+        String id = JIGSAW_ID;
+        String target;
         int state = orientation.ordinal() + nElemPalette;
         if (!isTarget) {
-            String name = EMPTY_ID;
-            String pool = "siw:" + fileName + "/" + fileName + "_"
+            name = EMPTY_ID;
+            pool = "siw:" + fileName + "/" + fileName + "_"
                     + structX + "_" + structZ + "_pool";
-            String target = "siw:" + fileName + "_" + structX + "_" + structZ;
+            target = "siw:" + fileName + "_" + structX + "_" + structZ;
         } else {
-            String name = "siw:" + fileName + "_" + structX + "_" + structZ;
-            String pool = EMPTY_ID;
-            String target = EMPTY_ID;
+            name = "siw:" + fileName + "_" + structX + "_" + structZ;
+            pool = EMPTY_ID;
+            target = EMPTY_ID;
         }
-
+        Tag tJoint = new TagCompound();
+        tJoint.setKey("joint");
+        tJoint.setValue(joint);
+        nbt.put(tJoint.getKey(), tJoint);
+        Tag tName = new TagCompound();
+        tName.setKey("name");
+        tName.setValue(name);
+        nbt.put(tName.getKey(), tName);
+        Tag tPool = new TagCompound();
+        tPool.setKey("pool");
+        tPool.setValue(pool);
+        nbt.put(tPool.getKey(), tPool);
+        Tag tFinalState = new TagCompound();
+        tFinalState.setKey("final_state");
+        tFinalState.setValue(final_state);
+        nbt.put(tFinalState.getKey(), tFinalState);
+        Tag tId = new TagCompound();
+        tId.setKey("id");
+        tId.setValue(id);
+        nbt.put(tId.getKey(), tId);
+        Tag tTarget = new TagCompound();
+        tTarget.setKey("target");
+        tTarget.setValue(target);
+        nbt.put(tTarget.getKey(), tTarget);
     }
 
     @SuppressWarnings("unchecked")
     private ArrayList<BlockData>[][] convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities,
-                                                   ArrayList<Tag> size, TagList palette) {
+                                                   ArrayList<Tag> size, TagList palette)
+            throws ParserException {
         // Permet de connaître le nombre de chunks pris par la structure en X et en Z
         int nbStructX = (int) size.get(0).getValue() / MAX_SIZE;
         nbStructX += ((int) size.get(0).getValue() % MAX_SIZE) == 0 ? 0 : 1;
@@ -577,32 +604,51 @@ public class SchematicsParser {
             int x = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) % (int) size.get(2).getValue();
             int y = i / ((int) size.get(2).getValue() * (int) size.get(0).getValue());
             int z = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) / (int) size.get(2).getValue();
+            int pX = (x % MAX_SIZE);
+            int pZ = (z % MAX_SIZE);
             int structX = x / MAX_SIZE;
             int structZ = z / MAX_SIZE;
 
             HashMap<String, Tag> nbt = new HashMap<>();
             boolean isHere = false;
+
+            //Tests des coordonnées pour ajouter les jigsaw blocks aux bons endroits
+            if (y == 0) {
+                if (structX < nbStructX - 1 && pX == (MAX_SIZE - 1)) {
+                    JigsawOrientations orientation = JigsawOrientations.EAST;
+                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
+                            pX, y, pZ, structX, structZ,
+                            false);
+                } else if (structZ < nbStructZ - 1 && pZ == (MAX_SIZE - 1)) {
+                    JigsawOrientations orientation = JigsawOrientations.NORTH;
+                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
+                            pX, y, pZ, structX, structZ,
+                            false);
+                } else if (structX != 0 || structZ != 0) {
+                    if (pX == 0 && pZ == 0) {
+                        JigsawOrientations orientation;
+                        if (structX == 0) {
+                            orientation = JigsawOrientations.WEST;
+                        } else {
+                            orientation = JigsawOrientations.SOUTH;
+                        }
+                        addJigsawInBlocks(nbt, orientation, palette.getLen(),
+                                pX, y, pZ, structX, structZ,
+                                true);
+                    }
+                }
+
+                if (!nbt.isEmpty()) {
+                    BlockData bd = new BlockData(pX, y, pZ, b, isHere ? nbt : new HashMap<>());
+                    blocksVal[structZ][structX].add(bd);
+                }
+            }
+
             for (TagCompound tc : blockEntities) {
                 if (isHere) {
                     break;
                 }
                 nbt = new HashMap<>();
-                if (structX < nbStructX - 1 && (x % MAX_SIZE) == (MAX_SIZE - 1)) {
-                    JigsawOrientations orientation = JigsawOrientations.EAST;
-                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
-                            (x % MAX_SIZE), y, (z % MAX_SIZE), structX, structZ,
-                            false);
-                } else if (structZ < nbStructZ - 1 && (z % MAX_SIZE) == (MAX_SIZE - 1)) {
-                    JigsawOrientations orientation = JigsawOrientations.EAST;
-                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
-                            (x % MAX_SIZE), y, (z % MAX_SIZE), structX, structZ,
-                            false);
-                } else if (structX != 0 || structZ != 0) {
-                    JigsawOrientations orientation = JigsawOrientations.EAST;
-                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
-                            (x % MAX_SIZE), y, (z % MAX_SIZE), structX, structZ,
-                            false);
-                }
                 for (Tag t : (ArrayList<Tag>) tc.getValue()) {
                     if (t.getKey().equals("Pos")) {
                         int[] tagPos = (int[]) t.getValue();
@@ -620,7 +666,7 @@ public class SchematicsParser {
                     }
                 }
             }
-            BlockData bd = new BlockData(x % MAX_SIZE, y, z % MAX_SIZE, b, isHere ? nbt : new HashMap<>());
+            BlockData bd = new BlockData(pX, y, pZ, b, isHere ? nbt : new HashMap<>());
 
             // Pour déterminer dans quelle sous-structure on ajoute ce bloc
             System.out.println("cpt : " + i + " / " + blockData.length);
