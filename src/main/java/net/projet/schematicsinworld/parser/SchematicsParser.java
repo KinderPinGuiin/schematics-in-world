@@ -25,6 +25,11 @@ public class SchematicsParser {
     public final static String BLOCKS = "BlockData";
     public final static String PALETTE = "Palette";
     public final static int MAX_SIZE = 32;
+    public final static String BLOCKS = "BlockData";
+    public final static String PALETTE = "Palette";
+    public final static String JOINT = "rollable";
+    public final static String JIGSAW_ID = "minecraft:jigsaw";
+    public final static String EMPTY_ID = "minecraft:empty";
 
     /*
      * ATTRIBUTS
@@ -60,6 +65,38 @@ public class SchematicsParser {
         }
     }
      */
+
+    private void addJigsawsInPalette(ArrayList<Tag> paletteVal) throws ParserException {
+        JigsawOrientations[] Orientations = JigsawOrientations.values();
+        TagString compoundValName = new TagString();
+        compoundValName.setKey("Name");
+        compoundValName.setValue("minecraft:jigsaw");
+        for(JigsawOrientations orientation : Orientations) {
+            TagCompound tagCompound = new TagCompound();
+            ArrayList<Tag> compoundVal = new ArrayList<>();
+            compoundVal.add(compoundValName);
+            TagCompound props = new TagCompound();
+            ArrayList<Tag> propsVal = new ArrayList<>();
+            TagString propTagString = new TagString();
+            propTagString.setKey("orientation");
+            propTagString.setValue(orientation.getId());
+            propsVal.add(propTagString);
+            props.setKey("Properties");
+            props.setValue(propsVal);
+            compoundVal.add(props);
+            tagCompound.setValue(compoundVal);
+            paletteVal.add(tagCompound);
+        }
+    }
+
+    private void addJigsawInBlocks(BlockData blockData,
+                                   JigsawOrientations orientation,
+                                   int nElemPalette,
+                                   int x, int y, int z,
+                                   String name, String pool, String target) {
+        int state = orientation.ordinal() + nElemPalette;
+
+    }
 
     public SchematicsParser(String filepath) {
         if (filepath == null) {
@@ -408,26 +445,6 @@ public class SchematicsParser {
     }
      */
 
-    private void addJigsawInPalette(ArrayList<Tag> res) throws ParserException {
-        TagCompound tagCompound = new TagCompound();
-        ArrayList<Tag> compoundVal = new ArrayList<>();
-        TagString compoundValName = new TagString();
-        compoundValName.setKey("Name");
-        compoundValName.setValue("minecraft:jigsaw");
-        compoundVal.add(compoundValName);
-        TagCompound props = new TagCompound();
-        ArrayList<Tag> propsVal = new ArrayList<>();
-        TagString propTagString = new TagString();
-        propTagString.setKey("orientation");
-        propTagString.setValue("west_up");
-        propsVal.add(propTagString);
-        props.setKey("Properties");
-        props.setValue(propsVal);
-        compoundVal.add(props);
-        tagCompound.setValue(compoundVal);
-        res.add(tagCompound);
-    }
-
     @SuppressWarnings("unchecked")
     private void convertPalette(TagList palette, TagCompound schemPalette) throws ParserException {
         ArrayList<Tag> paletteVal = new ArrayList<>();
@@ -466,7 +483,7 @@ public class SchematicsParser {
         }
 
         palette.setKey("palette");
-        addJigsawInPalette(paletteVal);
+        addJigsawsInPalette(paletteVal);
         palette.setValue(paletteVal);
     }
 
@@ -547,6 +564,8 @@ public class SchematicsParser {
             int x = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) % (int) size.get(2).getValue();
             int y = i / ((int) size.get(2).getValue() * (int) size.get(0).getValue());
             int z = (i % ((int) size.get(2).getValue() * (int) size.get(0).getValue())) / (int) size.get(2).getValue();
+            int structX = x / MAX_SIZE;
+            int structZ = z / MAX_SIZE;
 
             HashMap<String, Tag> nbt = new HashMap<>();
             boolean isHere = false;
@@ -567,8 +586,6 @@ public class SchematicsParser {
                     JigsawOrientations orientation = JigsawOrientations.EAST;
                     addJigsawInBlocks(nbt, orientation, palette.getLen(),
                             (x % MAX_SIZE), y, (z % MAX_SIZE));
-                } else {
-                    nbt.put(t.getKey(), t);
                 }
                 for (Tag t : (ArrayList<Tag>) tc.getValue()) {
                     if (t.getKey().equals("Pos")) {
@@ -590,8 +607,6 @@ public class SchematicsParser {
             BlockData bd = new BlockData(x % MAX_SIZE, y, z % MAX_SIZE, b, isHere ? nbt : new HashMap<>());
 
             // Pour déterminer dans quelle sous-structure on ajoute ce bloc
-            int structX = x / MAX_SIZE;
-            int structZ = z / MAX_SIZE;
             System.out.println("cpt : " + i + " / " + blockData.length);
             System.out.println("sx et sz : " + structX + " " + structZ);
             blocksVal[structZ][structX].add(bd);
