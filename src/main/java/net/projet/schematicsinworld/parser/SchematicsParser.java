@@ -3,6 +3,7 @@ package net.projet.schematicsinworld.parser;
 import jdk.nashorn.internal.ir.Block;
 import net.projet.schematicsinworld.parser.tags.*;
 import net.projet.schematicsinworld.parser.utils.BlockData;
+import net.projet.schematicsinworld.parser.utils.JigsawOrientations;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.io.File;
