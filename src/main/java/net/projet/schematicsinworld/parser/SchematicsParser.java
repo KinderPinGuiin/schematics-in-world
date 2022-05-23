@@ -90,6 +90,7 @@ public class SchematicsParser {
                                    JigsawOrientations orientation,
                                    int nElemPalette,
                                    int x, int y, int z) {
+        String name = getFile().getName();
         int state = orientation.ordinal() + nElemPalette;
 
     }
