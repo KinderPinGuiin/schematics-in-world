@@ -27,6 +27,7 @@ public class SchematicsParser {
     public final static String JOINT = "rollable";
     public final static String JIGSAW_ID = "minecraft:jigsaw";
     public final static String EMPTY_ID = "minecraft:empty";
+    public final static String FINAL_STATE = "minecraft:air";
 
     /*
      * ATTRIBUTS
@@ -62,38 +63,6 @@ public class SchematicsParser {
         }
     }
      */
-
-    private void addJigsawsInPalette(ArrayList<Tag> paletteVal) throws ParserException {
-        JigsawOrientations[] Orientations = JigsawOrientations.values();
-        TagString compoundValName = new TagString();
-        compoundValName.setKey("Name");
-        compoundValName.setValue("minecraft:jigsaw");
-        for(JigsawOrientations orientation : Orientations) {
-            TagCompound tagCompound = new TagCompound();
-            ArrayList<Tag> compoundVal = new ArrayList<>();
-            compoundVal.add(compoundValName);
-            TagCompound props = new TagCompound();
-            ArrayList<Tag> propsVal = new ArrayList<>();
-            TagString propTagString = new TagString();
-            propTagString.setKey("orientation");
-            propTagString.setValue(orientation.getId());
-            propsVal.add(propTagString);
-            props.setKey("Properties");
-            props.setValue(propsVal);
-            compoundVal.add(props);
-            tagCompound.setValue(compoundVal);
-            paletteVal.add(tagCompound);
-        }
-    }
-
-    private void addJigsawInBlocks(HashMap<String, Tag> blockData,
-                                   JigsawOrientations orientation,
-                                   int nElemPalette,
-                                   int x, int y, int z) {
-        String name = getFile().getName();
-        int state = orientation.ordinal() + nElemPalette;
-
-    }
 
     public SchematicsParser(String filepath) {
         if (filepath == null) {
@@ -539,6 +508,52 @@ public class SchematicsParser {
     }
      */
 
+    private void addJigsawsInPalette(ArrayList<Tag> paletteVal) throws ParserException {
+        JigsawOrientations[] Orientations = JigsawOrientations.values();
+        TagString compoundValName = new TagString();
+        compoundValName.setKey("Name");
+        compoundValName.setValue("minecraft:jigsaw");
+        for(JigsawOrientations orientation : Orientations) {
+            TagCompound tagCompound = new TagCompound();
+            ArrayList<Tag> compoundVal = new ArrayList<>();
+            compoundVal.add(compoundValName);
+            TagCompound props = new TagCompound();
+            ArrayList<Tag> propsVal = new ArrayList<>();
+            TagString propTagString = new TagString();
+            propTagString.setKey("orientation");
+            propTagString.setValue(orientation.getId());
+            propsVal.add(propTagString);
+            props.setKey("Properties");
+            props.setValue(propsVal);
+            compoundVal.add(props);
+            tagCompound.setValue(compoundVal);
+            paletteVal.add(tagCompound);
+        }
+    }
+
+    private void addJigsawInBlocks(HashMap<String, Tag> nbt,
+                                   JigsawOrientations orientation,
+                                   int nElemPalette,
+                                   int x, int y, int z, int structX, int structZ,
+                                   boolean isTarget) {
+        String joint = JOINT;
+        String fileName = getFile().getName();
+        String id = JIGSAW_ID;
+        String final_state = FINAL_STATE;
+        int state = orientation.ordinal() + nElemPalette;
+        if (!isTarget) {
+            String name = EMPTY_ID;
+            String pool = "siw:" + fileName + "/" + fileName + "_"
+                    + structX + "_" + structZ + "_pool";
+            String target = "siw:" + fileName + "_" + structX + "_" + structZ;
+        } else {
+            String name = "siw:" + fileName + "_" + structX + "_" + structZ;
+            String pool = EMPTY_ID;
+            String target = EMPTY_ID;
+        }
+
+    }
+
     @SuppressWarnings("unchecked")
     private ArrayList<BlockData>[][] convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities,
                                                    ArrayList<Tag> size, TagList palette) {
@@ -575,15 +590,18 @@ public class SchematicsParser {
                 if (structX < nbStructX - 1 && (x % MAX_SIZE) == (MAX_SIZE - 1)) {
                     JigsawOrientations orientation = JigsawOrientations.EAST;
                     addJigsawInBlocks(nbt, orientation, palette.getLen(),
-                            (x % MAX_SIZE), y, (z % MAX_SIZE));
+                            (x % MAX_SIZE), y, (z % MAX_SIZE), structX, structZ,
+                            false);
                 } else if (structZ < nbStructZ - 1 && (z % MAX_SIZE) == (MAX_SIZE - 1)) {
                     JigsawOrientations orientation = JigsawOrientations.EAST;
                     addJigsawInBlocks(nbt, orientation, palette.getLen(),
-                            (x % MAX_SIZE), y, (z % MAX_SIZE));
+                            (x % MAX_SIZE), y, (z % MAX_SIZE), structX, structZ,
+                            false);
                 } else if (structX != 0 || structZ != 0) {
                     JigsawOrientations orientation = JigsawOrientations.EAST;
                     addJigsawInBlocks(nbt, orientation, palette.getLen(),
-                            (x % MAX_SIZE), y, (z % MAX_SIZE));
+                            (x % MAX_SIZE), y, (z % MAX_SIZE), structX, structZ,
+                            false);
                 }
                 for (Tag t : (ArrayList<Tag>) tc.getValue()) {
                     if (t.getKey().equals("Pos")) {
