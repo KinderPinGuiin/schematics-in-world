@@ -554,6 +554,21 @@ public class SchematicsParser {
                     break;
                 }
                 nbt = new HashMap<>();
+                if (structX < nbStructX - 1 && (x % MAX_SIZE) == (MAX_SIZE - 1)) {
+                    JigsawOrientations orientation = JigsawOrientations.EAST;
+                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
+                            (x % MAX_SIZE), y, (z % MAX_SIZE));
+                } else if (structZ < nbStructZ - 1 && (z % MAX_SIZE) == (MAX_SIZE - 1)) {
+                    JigsawOrientations orientation = JigsawOrientations.EAST;
+                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
+                            (x % MAX_SIZE), y, (z % MAX_SIZE));
+                } else if (structX != 0 || structZ != 0) {
+                    JigsawOrientations orientation = JigsawOrientations.EAST;
+                    addJigsawInBlocks(nbt, orientation, palette.getLen(),
+                            (x % MAX_SIZE), y, (z % MAX_SIZE));
+                } else {
+                    nbt.put(t.getKey(), t);
+                }
                 for (Tag t : (ArrayList<Tag>) tc.getValue()) {
                     if (t.getKey().equals("Pos")) {
                         int[] tagPos = (int[]) t.getValue();
