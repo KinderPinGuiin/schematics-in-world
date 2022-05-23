@@ -120,13 +120,15 @@ public class SchematicsParser {
      */
 
     public void saveToNBT(String filepath) throws ParserException {
-        ArrayList<ArrayList<Tag>> tags = this.convertSchematicsToNBT();
-        for (int i = 0; i < tags.size(); ++i) {
-            // Enregistre le fichier
-            try {
-                new NBTParser(filepath + "_" + i + ".nbt", 'w', tags.get(i));
-            } catch (ParserException e) {
-                e.printStackTrace();
+        ArrayList<Tag>[][] tags = this.convertSchematicsToNBT();
+        for (int i = 0; i < tags.length; ++i) {
+            for (int j = 0; i < tags[0].length; ++j) {
+                // Enregistre le fichier
+                try {
+                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', tags[j][i]);
+                } catch (ParserException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -230,8 +232,7 @@ public class SchematicsParser {
      */
 
     @SuppressWarnings("unchecked")
-    private ArrayList<ArrayList<Tag>> convertSchematicsToNBT() throws ParserException {
-        ArrayList<ArrayList<Tag>> results = new ArrayList<>();
+    private ArrayList<Tag>[][] convertSchematicsToNBT() throws ParserException {
         TagInt dataVersion = new TagInt();
         TagList palette = new TagList();
         TagList entities = new TagList();
@@ -273,6 +274,9 @@ public class SchematicsParser {
         ArrayList<BlockData>[][] blockData = this.convertBlocks(blocks, blockEntities, size, palette);
         int nbX = blockData.length;
         int nbZ = blockData[0].length;
+        ArrayList<Tag> dummy = new ArrayList<>();
+        int[] nbStruct = {nbX, nbZ};
+        ArrayList<Tag>[][] results = (ArrayList<Tag>[][]) Array.newInstance(dummy.getClass(), nbStruct);
 
         // Parcours de toutes les sous-structures
         for (int i = 0; i < nbX; ++i) {
@@ -360,7 +364,7 @@ public class SchematicsParser {
                 blocksTag.setValue(blocksList);
 
                 structNbt.add(blocksTag);
-                results.add(structNbt);
+                results[j][i] = structNbt;
             }
         }
         return results;
