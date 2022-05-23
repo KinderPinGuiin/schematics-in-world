@@ -238,10 +238,13 @@ public class SchematicsParser {
         TagList entities = new TagList();
         ArrayList<Tag> size = new ArrayList<>();
 
+        System.out.println("Plantage 0");
         for (int i = 0; i < 3; ++i) { size.add(new TagInt()); }
         byte[] blocks = new byte[] {};
         ArrayList<TagCompound> blockEntities = null;
+        System.out.println("Plantage -1 : " + tags);
         for (Tag t : this.tags) {
+            System.out.println("Plantage 1");
             switch (t.getKey()) {
                 case "DataVersion":
                     dataVersion.setKey("DataVersion");
@@ -270,6 +273,7 @@ public class SchematicsParser {
         // entities
         this.convertEntities(entities);
 
+        System.out.println("Plantage 2");
         // blocks
         ArrayList<BlockData>[][] blockData = this.convertBlocks(blocks, blockEntities, size, palette);
         int nbX = blockData.length;
@@ -279,6 +283,8 @@ public class SchematicsParser {
         ArrayList<Tag>[][] results = (ArrayList<Tag>[][]) Array.newInstance(dummy.getClass(), nbStruct);
 
         // Parcours de toutes les sous-structures
+
+        System.out.println("Plantage 3");
         for (int i = 0; i < nbX; ++i) {
             for (int j = 0; j < nbZ; ++j) {
                 ArrayList<Tag> structNbt = new ArrayList<>();
@@ -367,6 +373,8 @@ public class SchematicsParser {
                 results[j][i] = structNbt;
             }
         }
+
+        System.out.println("Plantage 4");
         return results;
     }
 
