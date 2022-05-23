@@ -1,6 +1,5 @@
 package net.projet.schematicsinworld.parser;
 
-import jdk.nashorn.internal.ir.Block;
 import net.projet.schematicsinworld.parser.tags.*;
 import net.projet.schematicsinworld.parser.utils.BlockData;
 import net.projet.schematicsinworld.parser.utils.JigsawOrientations;
@@ -25,8 +24,6 @@ public class SchematicsParser {
     public final static String BLOCKS = "BlockData";
     public final static String PALETTE = "Palette";
     public final static int MAX_SIZE = 32;
-    public final static String BLOCKS = "BlockData";
-    public final static String PALETTE = "Palette";
     public final static String JOINT = "rollable";
     public final static String JIGSAW_ID = "minecraft:jigsaw";
     public final static String EMPTY_ID = "minecraft:empty";
@@ -89,11 +86,10 @@ public class SchematicsParser {
         }
     }
 
-    private void addJigsawInBlocks(BlockData blockData,
+    private void addJigsawInBlocks(HashMap<String, Tag> blockData,
                                    JigsawOrientations orientation,
                                    int nElemPalette,
-                                   int x, int y, int z,
-                                   String name, String pool, String target) {
+                                   int x, int y, int z) {
         int state = orientation.ordinal() + nElemPalette;
 
     }
