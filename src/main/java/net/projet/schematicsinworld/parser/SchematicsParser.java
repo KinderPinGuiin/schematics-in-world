@@ -304,7 +304,7 @@ public class SchematicsParser {
         this.convertEntities(entities);
 
         // blocks
-        ArrayList<BlockData>[][] blockData = this.convertBlocks(blocks, blockEntities, size);
+        ArrayList<BlockData>[][] blockData = this.convertBlocks(blocks, blockEntities, size, palette);
         int nbX = blockData.length;
         int nbZ = blockData[0].length;
 
@@ -543,7 +543,8 @@ public class SchematicsParser {
      */
 
     @SuppressWarnings("unchecked")
-    private ArrayList<BlockData>[][] convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities, ArrayList<Tag> size) {
+    private ArrayList<BlockData>[][] convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities,
+                                                   ArrayList<Tag> size, TagList palette) {
         // Permet de connaître le nombre de chunks pris par la structure en X et en Z
         int nbStructX = (int) size.get(0).getValue() / MAX_SIZE;
         nbStructX += ((int) size.get(0).getValue() % MAX_SIZE) == 0 ? 0 : 1;
