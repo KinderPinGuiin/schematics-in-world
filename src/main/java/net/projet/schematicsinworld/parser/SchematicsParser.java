@@ -23,7 +23,7 @@ public class SchematicsParser {
 
     public final static String BLOCKS = "BlockData";
     public final static String PALETTE = "Palette";
-    public final static int MAX_SIZE = 32;
+    public final static int MAX_SIZE = 8;
     public final static String JOINT = "rollable";
     public final static String JIGSAW_ID = "minecraft:jigsaw";
     public final static String EMPTY_ID = "minecraft:empty";
