@@ -21,7 +21,6 @@ public class SchematicsParser {
      * CONSTANTES
      */
 
-    public final static String BLOCKS = "BlockData";
     public final static String PALETTE = "Palette";
     public final static int MAX_SIZE = 8;
     public final static String JOINT = "rollable";
@@ -33,10 +32,8 @@ public class SchematicsParser {
      * ATTRIBUTS
      */
 
-    // Inutiles si jme trompe pas ces attributs ?
-
     // Les tags parsés dans le fichier passé dans le constructeur
-    private ArrayList<Tag> tags = null;
+    private ArrayList<Tag> tags;
     // Le fichier schematic source
     private final File file;
 
@@ -73,7 +70,9 @@ public class SchematicsParser {
             throw new AssertionError("cannot open file");
         }
         try {
+            System.out.println("CHIBRAX TMAX");
             NBTParser nbtp = new NBTParser(filepath);
+            System.out.println("CHIBRAX TMAX");
             this.tags = nbtp.getTags();
         } catch (ParserException e) {
             System.err.println(e.getMessage());
@@ -94,15 +93,6 @@ public class SchematicsParser {
      * METHODES
      */
 
-    // Inutile ?
-    public void parseBlocks() {
-        for (Tag t : tags) {
-            if (t.getKey() == BLOCKS) {
-                Object[] values = (Object[]) t.getValue();
-            }
-        }
-    }
-
     // Convertit le fichier .schem en une liste de .nbt (de longueur > 1 si la taille de la
     // structure dépasse la taille autorisée)
 
@@ -120,12 +110,12 @@ public class SchematicsParser {
      */
 
     public void saveToNBT(String filepath) throws ParserException {
-        ArrayList<Tag>[][] tags = this.convertSchematicsToNBT();
-        for (int i = 0; i < tags.length; ++i) {
-            for (int j = 0; i < tags[0].length; ++j) {
+        ArrayList<Tag>[][] structs = this.convertSchematicsToNBT();
+        for (int i = 0; i < structs.length; ++i) {
+            for (int j = 0; i < structs[0].length; ++j) {
                 // Enregistre le fichier
                 try {
-                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', tags[j][i]);
+                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', structs[j][i]);
                 } catch (ParserException e) {
                     e.printStackTrace();
                 }
@@ -238,11 +228,9 @@ public class SchematicsParser {
         TagList entities = new TagList();
         ArrayList<Tag> size = new ArrayList<>();
 
-        System.out.println("Plantage 0");
         for (int i = 0; i < 3; ++i) { size.add(new TagInt()); }
         byte[] blocks = new byte[] {};
         ArrayList<TagCompound> blockEntities = null;
-        System.out.println("Plantage -1 : " + tags);
         for (Tag t : this.tags) {
             System.out.println("Plantage 1");
             switch (t.getKey()) {

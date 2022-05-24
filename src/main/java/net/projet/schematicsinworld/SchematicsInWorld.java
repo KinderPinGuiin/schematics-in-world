@@ -96,7 +96,7 @@ public class SchematicsInWorld {
                     }
                     // Version de base quand on a une seule structure
                     // s.saveToNBT(dest + File.separator + name + File.separator + name + "_0" + ".nbt");
-                    // Version multi-structure (découpage) (le _i est géré par le NBTParser appelé par saveToNBT)
+                    // Version multi-structure (découpage) (le _i_j est géré par le NBTParser appelé par saveToNBT)
                     s.saveToNBT(dest + File.separator + name + File.separator + name);
                 } catch (ParserException e) {
                     System.out.println(e.getMessage());
