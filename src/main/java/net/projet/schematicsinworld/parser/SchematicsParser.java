@@ -112,10 +112,11 @@ public class SchematicsParser {
     public void saveToNBT(String filepath) throws ParserException {
         ArrayList<Tag>[][] structs = this.convertSchematicsToNBT();
         for (int i = 0; i < structs.length; ++i) {
-            for (int j = 0; i < structs[0].length; ++j) {
+            for (int j = 0; j < structs[0].length; ++j) {
+                System.out.println("coucou : " + i + ", " + j);
                 // Enregistre le fichier
                 try {
-                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', structs[j][i]);
+                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', structs[i][j]);
                 } catch (ParserException e) {
                     e.printStackTrace();
                 }
@@ -358,7 +359,7 @@ public class SchematicsParser {
                 blocksTag.setValue(blocksList);
 
                 structNbt.add(blocksTag);
-                results[j][i] = structNbt;
+                results[i][j] = structNbt;
             }
         }
 

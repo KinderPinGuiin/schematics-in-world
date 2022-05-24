@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class TagList extends Tag {
 
-    private int len;
+    private int len = 0;
 
     /*
      * Constructeurs
@@ -24,7 +24,6 @@ public class TagList extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
-        len = ByteBuffer.wrap(buffer.read(4)).getInt();
         this.parseBuffer(buffer);
     }
 
@@ -57,6 +56,9 @@ public class TagList extends Tag {
             );
         }
         // Parse la liste
+
+        len = ByteBuffer.wrap(buffer.read(4)).getInt();
+
         this.value = new ArrayList<Tag>();
         for (int k = 0; k < len; ++k) {
             try {
