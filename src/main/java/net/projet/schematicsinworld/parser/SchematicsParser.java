@@ -228,6 +228,7 @@ public class SchematicsParser {
     private ArrayList<Tag>[][] convertSchematicsToNBT() throws ParserException {
         TagInt dataVersion = new TagInt();
         TagList palette = new TagList();
+        int paletteLength = 0;
         TagList entities = new TagList();
         ArrayList<Tag> size = new ArrayList<>();
 
@@ -235,14 +236,13 @@ public class SchematicsParser {
         byte[] blocks = new byte[] {};
         ArrayList<TagCompound> blockEntities = null;
         for (Tag t : this.tags) {
-            System.out.println("Plantage 1");
             switch (t.getKey()) {
                 case "DataVersion":
                     dataVersion.setKey("DataVersion");
                     dataVersion.setValue(t.getValue());
                     break;
                 case PALETTE:
-                    this.convertPalette(palette, (TagCompound) t);
+                    paletteLength = this.convertPalette(palette, (TagCompound) t);
                     break;
                 case "Length":
                     size.get(0).setValue(((Short) t.getValue()).intValue());
@@ -264,10 +264,9 @@ public class SchematicsParser {
         // entities
         this.convertEntities(entities);
 
-        System.out.println("Plantage 2");
         // blocks
-        System.out.println("palette p =" + palette.getLen());
-        ArrayList<BlockData>[][] blockData = this.convertBlocks(blocks, blockEntities, size, palette);
+
+        ArrayList<BlockData>[][] blockData = this.convertBlocks(blocks, blockEntities, size, palette, paletteLength);
         int nbX = blockData.length;
         int nbZ = blockData[0].length;
         ArrayList<Tag> dummy = new ArrayList<>();
@@ -275,8 +274,6 @@ public class SchematicsParser {
         ArrayList<Tag>[][] results = (ArrayList<Tag>[][]) Array.newInstance(dummy.getClass(), nbStruct);
 
         // Parcours de toutes les sous-structures
-
-        System.out.println("Plantage 3");
         for (int i = 0; i < nbX; ++i) {
             for (int j = 0; j < nbZ; ++j) {
                 ArrayList<Tag> structNbt = new ArrayList<>();
@@ -365,8 +362,6 @@ public class SchematicsParser {
                 results[i][j] = structNbt;
             }
         }
-
-        System.out.println("Plantage 4");
         return results;
     }
 
@@ -416,13 +411,15 @@ public class SchematicsParser {
      */
 
     @SuppressWarnings("unchecked")
-    private void convertPalette(TagList palette, TagCompound schemPalette) throws ParserException {
+    private int convertPalette(TagList palette, TagCompound schemPalette) throws ParserException {
         ArrayList<Tag> paletteVal = new ArrayList<>();
         // Transforme le dictionnaire schemPalette en TagList de TagCompound
         ((ArrayList<Tag>) schemPalette.getValue()).sort(
                 Comparator.comparingInt(o -> ((Integer) o.getValue()))
         );
+        int paletteLength = 0;
         for (Tag t : (ArrayList<Tag>) schemPalette.getValue()) {
+            ++paletteLength;
             // Sépare la clé du NBT et ses propriétés
             String[] key_prop = t.getKey().split("\\[");
             TagCompound tagCompound = new TagCompound();
@@ -455,6 +452,7 @@ public class SchematicsParser {
         palette.setKey("palette");
         addJigsawsInPalette(paletteVal);
         palette.setValue(paletteVal);
+        return paletteLength;
     }
 
     /*
@@ -536,7 +534,7 @@ public class SchematicsParser {
     }
 
     private void addJigsawInBlocks(HashMap<String, Tag> nbt, int structX, int structZ,
-                                   boolean isTarget) throws ParserException {
+                                   boolean isTarget, JigsawOrientations jo) throws ParserException {
         String fileName = getFile().getName().substring(0, getFile().getName().length() - 6);
         String joint = JOINT;
         String name;
@@ -548,7 +546,14 @@ public class SchematicsParser {
             name = EMPTY_ID;
             pool = "siw:" + fileName + "/" + fileName + "_"
                     + structX + "_" + structZ + "_pool";
-            target = "siw:" + fileName + "_" + structX + "_" + structZ;
+            if (jo == JigsawOrientations.EAST) {
+                target = "siw:" + fileName + "_" + structX + "_" + (structZ + 1);
+            } else if (jo == JigsawOrientations.NORTH) {
+                target = "siw:" + fileName + "_" + (structX + 1) + "_" + structZ;
+            } else {
+                target = "siw:" + fileName + "_" + (structX + 1) + "_" + structZ;
+            }
+
         } else {
             name = "siw:" + fileName + "_" + structX + "_" + structZ;
             pool = EMPTY_ID;
@@ -582,7 +587,7 @@ public class SchematicsParser {
 
     @SuppressWarnings("unchecked")
     private ArrayList<BlockData>[][] convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities,
-                                                   ArrayList<Tag> size, TagList palette)
+                                                   ArrayList<Tag> size, TagList palette, int paletteLength)
             throws ParserException {
         // Permet de connaître le nombre de chunks pris par la structure en X et en Z
         int nbStructX = (int) size.get(0).getValue() / MAX_SIZE;
@@ -614,16 +619,15 @@ public class SchematicsParser {
 
             //Tests des coordonnées pour ajouter les jigsaw blocks aux bons endroits
             if (y == 0) {
-                System.out.println("y == 0");
                 JigsawOrientations orientation = JigsawOrientations.NORTH;
-                if (structX < nbStructX - 1 && pX == (MAX_SIZE - 1)) {
+                if (structX < nbStructX - 1 && pX == (MAX_SIZE - 1) && pZ == 0) {
                     System.out.println("case 1");
                     orientation = JigsawOrientations.EAST;
-                    addJigsawInBlocks(nbt, structX, structZ,false);
-                } else if (structZ < nbStructZ - 1 && pZ == (MAX_SIZE - 1)) {
+                    addJigsawInBlocks(nbt, structX, structZ,false, orientation);
+                } else if (structZ < nbStructZ - 1 && pZ == (MAX_SIZE - 1) && pX == 0) {
                     System.out.println("case 2");
                     orientation = JigsawOrientations.NORTH;
-                    addJigsawInBlocks(nbt, structX, structZ,false);
+                    addJigsawInBlocks(nbt, structX, structZ,false, orientation);
                 } else if (structX != 0 || structZ != 0) {
                     System.out.println("case 3");
                     if (pX == 0 && pZ == 0) {
@@ -636,21 +640,20 @@ public class SchematicsParser {
                             orientation = JigsawOrientations.SOUTH;
                         }
                         System.out.println("case 7");
-                        addJigsawInBlocks(nbt, structX, structZ, true);
+                        addJigsawInBlocks(nbt, structX, structZ, true, null);
                     }
                 }
-                System.out.println("case 8");
-                System.out.println("palette len = " + palette.getLen());
-                byte state = (byte) (orientation.ordinal() + palette.getLen());
+
+
                 if (!nbt.isEmpty()) {
-                    System.out.println("is nbt Empty");
+                    byte state = (byte) (orientation.ordinal() + paletteLength);
+                    System.out.println("nbt not Empty : state = " + state);
                     BlockData bd = new BlockData(pX, y, pZ, state, nbt);
                     blocksVal[structZ][structX].add(bd);
                     for (BlockData pd : blocksVal[structZ][structX]) {
                         System.out.println(pd.toString());
                     }
                 }
-                System.out.println("case 9");
             }
 
             for (TagCompound tc : blockEntities) {
