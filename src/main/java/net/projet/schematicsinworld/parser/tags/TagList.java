@@ -24,7 +24,17 @@ public class TagList extends Tag {
         if (buffer == null) {
             throw new AssertionError("buffer is null");
         }
+
+        if (len == 0) {
+            BytesStream bs = new BytesStream(buffer.getContent());
+            byte b = bs.read(1)[0];
+            len = ByteBuffer.wrap(bs.read(4)).getInt();
+            System.out.println("len de bbw : " + len);
+        }
+        System.out.println("longueur palette " + len);
+
         this.parseBuffer(buffer);
+
     }
 
     public TagList() {
@@ -57,10 +67,11 @@ public class TagList extends Tag {
         }
         // Parse la liste
 
-        len = ByteBuffer.wrap(buffer.read(4)).getInt();
+        int length = ByteBuffer.wrap(buffer.read(4)).getInt();
+        System.out.println("length " + length);
 
         this.value = new ArrayList<Tag>();
-        for (int k = 0; k < len; ++k) {
+        for (int k = 0; k < length; ++k) {
             try {
                 // Récupère le constructeur correspondant à la classe
                 Constructor<Tag> c =
