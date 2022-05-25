@@ -22,7 +22,7 @@ public class SchematicsParser {
      */
 
     public final static String PALETTE = "Palette";
-    public final static int MAX_SIZE = 8;
+    public final static int MAX_SIZE = 32;
     public final static String JOINT = "rollable";
     public final static String JIGSAW_ID = "minecraft:jigsaw";
     public final static String EMPTY_ID = "minecraft:empty";
@@ -118,7 +118,7 @@ public class SchematicsParser {
                 System.out.println(file.getName());
                 // Enregistre le fichier
                 try {
-                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', structs[j][i]);
+                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', structs[i][j]);
                 } catch (ParserException e) {
                     e.printStackTrace();
                 }
@@ -293,10 +293,13 @@ public class SchematicsParser {
                 ArrayList<TagInt> curSize = new ArrayList<>();
                 for (int k = 0; k < 3; ++k) { curSize.add(new TagInt()); }
                 // Size en x
-                int sizeX = i < nbX - 1 ? MAX_SIZE : (int) size.get(0).getValue() % MAX_SIZE;
+                int x = (int) size.get(0).getValue();
+                int z = (int) size.get(2).getValue();
+                System.out.println(x + " et " + z);
+                int sizeX = (i < nbX - 1 || x % MAX_SIZE == 0) ? MAX_SIZE : z % MAX_SIZE;
                 curSize.get(0).setValue(sizeX);
                 // Size en z
-                int sizeZ = j < nbZ - 1 ? MAX_SIZE : (int) size.get(2).getValue() % MAX_SIZE;
+                int sizeZ = (j < nbZ - 1 || z % MAX_SIZE == 0) ? MAX_SIZE : x % MAX_SIZE;
                 curSize.get(2).setValue(sizeZ);
                 curSize.get(1).setValue((int) size.get(1).getValue());
                 sizeTag.setValue(curSize);
@@ -534,7 +537,7 @@ public class SchematicsParser {
     }
 
     private void addJigsawInBlocks(HashMap<String, Tag> nbt, int structX, int structZ, int structNextX, int structNextZ,
-                                   boolean isTarget) throws ParserException {
+                                   boolean isTarget, String state) throws ParserException {
         String fileName = getFile().getName().substring(0, getFile().getName().length() - 6);
         String name;
         String pool;
@@ -563,7 +566,7 @@ public class SchematicsParser {
         nbt.put(tPool.getKey(), tPool);
         Tag tFinalState = new TagString();
         tFinalState.setKey("final_state");
-        tFinalState.setValue(FINAL_STATE);
+        tFinalState.setValue(state);
         nbt.put(tFinalState.getKey(), tFinalState);
         Tag tId = new TagString();
         tId.setKey("id");
@@ -580,10 +583,10 @@ public class SchematicsParser {
                                                    ArrayList<Tag> size, TagList palette, int paletteLength)
             throws ParserException {
         // Permet de connaître le nombre de chunks pris par la structure en X et en Z
-        int nbStructX = (int) size.get(0).getValue() / MAX_SIZE;
-        nbStructX += ((int) size.get(0).getValue() % MAX_SIZE) == 0 ? 0 : 1;
-        int nbStructZ = (int) size.get(2).getValue() / MAX_SIZE;
-        nbStructZ += ((int) size.get(2).getValue() % MAX_SIZE) == 0 ? 0 : 1;
+        int nbStructX = (int) size.get(2).getValue() / MAX_SIZE;
+        nbStructX += ((int) size.get(2).getValue()) % MAX_SIZE == 0 ? 0 : 1;
+        int nbStructZ = (int) size.get(0).getValue() / MAX_SIZE;
+        nbStructZ += ((int) size.get(0).getValue()) % MAX_SIZE == 0 ? 0 : 1;
         ArrayList<BlockData> dummy = new ArrayList<>();
         int[] nbStruct = {nbStructX, nbStructZ};
         ArrayList<BlockData>[][] blocksVal = (ArrayList<BlockData>[][]) Array.newInstance(dummy.getClass(), nbStruct);
@@ -593,6 +596,7 @@ public class SchematicsParser {
                 blocksVal[i][j] = new ArrayList<>();
             }
         }
+
         System.out.println("N_CHUNKS = " + nbStructX + ", " + nbStructZ);
         int i = 0;
         for (byte b : blockData) {
@@ -610,41 +614,43 @@ public class SchematicsParser {
             //Tests des coordonnées pour ajouter les jigsaw blocks aux bons endroits
             if (y == 0) {
                 JigsawOrientations orientation = null;
+                String final_state;
                 // Pas dernière structure en X : on pointe sur la structure suivante en X
                 if (structX < nbStructX - 1 && pX == (MAX_SIZE - 1) && pZ == 0) {
-                    System.out.println("case 1");
-                    orientation = JigsawOrientations.SOUTH;
-                    addJigsawInBlocks(nbt, structX, structZ, (structX + 1), structZ, false);
+                    orientation = JigsawOrientations.EAST;
+                    final_state = "minecraft:brick_stairs[facing=east,]";
+                    addJigsawInBlocks(nbt, structX, structZ, (structX + 1), structZ, false, final_state);
                 // Pas dernière structure en Z : on pointe sur la structure suivante en Z
                 } else if (structX == 0 && structZ < nbStructZ - 1 && pZ == (MAX_SIZE - 1) && pX == 0) {
-                    System.out.println("case 2");
-                    orientation = JigsawOrientations.WEST;
-                    addJigsawInBlocks(nbt, structX, structZ, structX, (structZ + 1), false);
+                    orientation = JigsawOrientations.SOUTH;
+                    final_state = "minecraft:oak_stairs[facing=south,]";
+                    addJigsawInBlocks(nbt, structX, structZ, structX, (structZ + 1), false, final_state);
                 // Pas en 0,0
                 } else if (structX != 0 || structZ != 0) {
-                    System.out.println("case 3");
                     // Coin en bas à gauche d'une structure
                     if (pX == 0 && pZ == 0) {
-                        System.out.println("case 4");
                         // Pas première structure en Z : on est la target d'une structure précédente en Z
                         if (structX == 0) {
-                            System.out.println("case 5");
-                            orientation = JigsawOrientations.EAST;
+                            orientation = JigsawOrientations.NORTH;
+                            final_state = "minecraft:quartz_stairs[facing=north,]";
+
                         // Première structure en Z : target d'une structure précédente en X
                         } else {
-                            System.out.println("case 6");
-                            orientation = JigsawOrientations.NORTH;
+                            orientation = JigsawOrientations.WEST;
+                            final_state = "minecraft:stone_stairs[facing=west,]";
                         }
-                        System.out.println("case 7");
-                        addJigsawInBlocks(nbt, structX, structZ, structX, structZ, true);
+                        addJigsawInBlocks(nbt, structX, structZ, structX, structZ, true, final_state);
                     }
                 }
 
 
                 if (!nbt.isEmpty()) {
                     byte state = (byte) (orientation.ordinal() + paletteLength);
-                    System.out.println("nbt not Empty : state = " + state);
                     BlockData bd = new BlockData(pX, y, pZ, state, nbt);
+                    /*System.out.println("SIZE : x = " + (int) size.get(0).getValue() + ", z = "  + (int) size.get(2).getValue());
+                    System.out.println("struct coordonnées : " + structX + " " + structZ);
+                    System.out.println("struct coordonnées max : " + nbStructX + " " + nbStructZ);
+                    System.out.println("coordonnées bloc : " + x + " " + z);*/
                     blocksVal[structX][structZ].add(bd);
                 }
             }
@@ -674,8 +680,12 @@ public class SchematicsParser {
             BlockData bd = new BlockData(pX, y, pZ, b, isHere ? nbt : new HashMap<>());
 
             // Pour déterminer dans quelle sous-structure on ajoute ce bloc
-            System.out.println("cpt : " + i + " / " + blockData.length);
-            System.out.println("sx et sz : " + structX + " " + structZ);
+//            System.out.println("cpt : " + i + " / " + blockData.length);
+//            System.out.println("sx et sz : " + structX + " " + structZ);
+            /*System.out.println("SIZE : x = " + (int) size.get(0).getValue() + ", z = "  + (int) size.get(2).getValue());
+            System.out.println("struct coordonnées : " + structX + " " + structZ);
+            System.out.println("struct coordonnées max : " + nbStructX + " " + nbStructZ);
+            System.out.println("coordonnées bloc : " + x + " " + z);*/
             blocksVal[structX][structZ].add(bd);
 
             ++i;

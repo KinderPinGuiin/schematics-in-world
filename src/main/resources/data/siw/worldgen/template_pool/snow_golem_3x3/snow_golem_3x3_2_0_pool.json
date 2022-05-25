@@ -1,11 +1,11 @@
 {
-  "name": "siw:floating_island/floating_island_0_1",
+  "name": "siw:snow_golem_3x3/snow_golem_3x3_2_0",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:floating_island/floating_island_0_1",
+        "location": "siw:snow_golem_3x3/snow_golem_3x3_2_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
