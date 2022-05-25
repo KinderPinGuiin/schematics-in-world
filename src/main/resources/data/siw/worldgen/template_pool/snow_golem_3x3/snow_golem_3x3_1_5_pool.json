@@ -1,0 +1,15 @@
+{
+  "name": "siw:snow_golem_3x3/snow_golem_3x3_1_5",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "siw:snow_golem_3x3/snow_golem_3x3_1_5",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
