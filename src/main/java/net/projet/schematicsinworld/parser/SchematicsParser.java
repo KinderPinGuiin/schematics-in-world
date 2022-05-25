@@ -118,7 +118,7 @@ public class SchematicsParser {
                 System.out.println(file.getName());
                 // Enregistre le fichier
                 try {
-                    new NBTParser(filepath + "_" + i + "_" + j + ".nbt", 'w', structs[i][j]);
+                    new NBTParser(filepath + "_" + j + "_" + i + ".nbt", 'w', structs[i][j]);
                 } catch (ParserException e) {
                     e.printStackTrace();
                 }
@@ -296,11 +296,11 @@ public class SchematicsParser {
                 int x = (int) size.get(0).getValue();
                 int z = (int) size.get(2).getValue();
                 System.out.println(x + " et " + z);
-                int sizeX = (i < nbX - 1 || x % MAX_SIZE == 0) ? MAX_SIZE : z % MAX_SIZE;
-                curSize.get(0).setValue(sizeX);
+                int sizeX = (i < nbX - 1 || x % MAX_SIZE == 0) ? MAX_SIZE : x % MAX_SIZE;
+                curSize.get(2).setValue(sizeX);
                 // Size en z
-                int sizeZ = (j < nbZ - 1 || z % MAX_SIZE == 0) ? MAX_SIZE : x % MAX_SIZE;
-                curSize.get(2).setValue(sizeZ);
+                int sizeZ = (j < nbZ - 1 || z % MAX_SIZE == 0) ? MAX_SIZE : z % MAX_SIZE;
+                curSize.get(0).setValue(sizeZ);
                 curSize.get(1).setValue((int) size.get(1).getValue());
                 sizeTag.setValue(curSize);
                 structNbt.add(sizeTag);
