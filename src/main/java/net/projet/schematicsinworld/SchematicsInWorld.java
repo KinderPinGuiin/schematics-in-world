@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,7 +50,7 @@ public class SchematicsInWorld {
         // Dossier .minecraft
         File root = new File(rootPath);
         if (!root.exists()) {
-            // gérer le problème car ça veut dire pas de dossier .minecraft
+            throw new FileNotFoundException(".minecraft directory missing : cannot load the mod properly !");
         }
 
         // Schematics folder (containing .schem)
