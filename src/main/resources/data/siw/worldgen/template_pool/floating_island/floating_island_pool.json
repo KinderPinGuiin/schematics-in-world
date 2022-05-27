@@ -1,11 +1,11 @@
 {
-  "name": "siw:heroboob/heroboob_0_0",
+  "name": "siw:floating_island/floating_island",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:heroboob/heroboob_0_0",
+        "location": "siw:floating_island/floating_island",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

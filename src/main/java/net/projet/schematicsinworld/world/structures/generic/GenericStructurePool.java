@@ -21,7 +21,6 @@ public class GenericStructurePool {
 
     private final transient String json;
     private final transient String structName;
-    private final transient String subStructName;
     private final transient String subName;
     private final String name;
     private final String fallback = "minecraft:empty";
@@ -29,20 +28,8 @@ public class GenericStructurePool {
 
     public GenericStructurePool(String n) {
         structName = n;
-        int i = structName.lastIndexOf('_');
-        if (i == -1) {
-            // Should never happen
-            throw new IllegalArgumentException("structure name is impossible to use !");
-        }
-        String subStructName_temp = n.substring(0, i);
-        int j = subStructName_temp.lastIndexOf('_');
-        if (j == -1) {
-            // Should never happen
-            throw new IllegalArgumentException("structure name is impossible to use !");
-        }
-        subStructName = subStructName_temp.substring(0, j);
-        System.out.println("subStructName = " + subStructName);
-        subName = "siw:" + subStructName + "/" + structName;
+
+        subName = "siw:" + structName + "/" + structName;
         System.out.println("subName = " + subName);
         elements = new Element[1];
         elements[0] = new Element();
@@ -53,9 +40,7 @@ public class GenericStructurePool {
 
         String path = System.getProperty("user.dir");
         path += "/../src/main/resources/data/" + SchematicsInWorld.MOD_ID
-                + "/worldgen/template_pool/" + subStructName + "/";
-        System.out.println("json test");
-        System.out.println(path);
+                + "/worldgen/template_pool/" + structName + "/";
 
         try {
             Files.createDirectories(Paths.get(path));
@@ -64,9 +49,7 @@ public class GenericStructurePool {
         }
 
         path += structName + "_pool.json";
-        name = "siw:" + subStructName + "/" + structName;
-        System.out.println("json test2");
-        System.out.println(path);
+        name = "siw:" + structName + "/" + structName;
 
         Writer writer = null;
         try {

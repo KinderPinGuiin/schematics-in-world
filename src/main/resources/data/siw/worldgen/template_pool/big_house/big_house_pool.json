@@ -1,11 +1,11 @@
 {
-  "name": "siw:big_house/big_house_0_0",
+  "name": "siw:big_house/big_house",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:big_house/big_house_0_0",
+        "location": "siw:big_house/big_house",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

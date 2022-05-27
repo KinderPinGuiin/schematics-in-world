@@ -5,7 +5,6 @@ import net.projet.schematicsinworld.parser.utils.BlockData;
 import net.projet.schematicsinworld.parser.utils.ParserException;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,7 +20,12 @@ public class SchematicsParser {
      */
 
     public final static String PALETTE = "Palette";
-    public final static int MAX_SIZE = 100000;
+    public final static String DATAVERSION = "DataVersion";
+    public final static String LENGTH = "Length";
+    public final static String HEIGHT = "Height";
+    public final static String WIDTH = "Width";
+    public final static String BLOCKDATA = "BlockData";
+    public final static String BLOCKENTITIES = "BlockEntities";
 
     /*
      * ATTRIBUTS
@@ -35,15 +39,13 @@ public class SchematicsParser {
     /*
      * CONSTRUCTEURS
      */
-
-
     public SchematicsParser(String filepath) {
         if (filepath == null) {
-            throw new AssertionError("filepath is null");
+            throw new AssertionError("The file path provided is null");
         }
         file = new File(filepath);
         if (!file.isFile() || !file.canRead()) {
-            throw new AssertionError("cannot open file");
+            throw new AssertionError("Cannot open file : " + filepath);
         }
         try {
             NBTParser nbtp = new NBTParser(filepath);
@@ -56,25 +58,14 @@ public class SchematicsParser {
     }
 
     /*
-     * REQUETES
-     */
-
-    // Inutile ?
-    public File getFile() {
-        return file;
-    }
-
-
-    /*
      * METHODES
      */
 
-    // Convertit le fichier .schem en une liste de .nbt (de longueur > 1 si la taille de la
-    // structure dépasse la taille autorisée)
+    // Convertit un fichier .schem en un fichier .nbt
     public void saveToNBT(String filepath) throws ParserException {
         ArrayList<Tag> struct = this.convertSchematicsToNBT();
         try {
-            new NBTParser(filepath + "_" + 0 + "_" + 0 + ".nbt", 'w', struct);
+            new NBTParser(filepath + ".nbt", 'w', struct);
         } catch (ParserException e) {
             e.printStackTrace();
         }
@@ -84,50 +75,58 @@ public class SchematicsParser {
      * Outils
      */
 
-
+    /**
+     * Lit un fichier .schem et en extrait ses tags sous forme d'une liste dynamique.
+     *
+     * @return La liste des tags du fichier .schem chargé
+     * @throws ParserException
+     */
     @SuppressWarnings("unchecked")
     private ArrayList<Tag> convertSchematicsToNBT() throws ParserException {
         TagInt dataVersion = new TagInt();
         TagList palette = new TagList();
         TagList entities = new TagList();
+        ArrayList<TagCompound> blockEntities = null;
         ArrayList<Tag> size = new ArrayList<>();
 
-        for (int i = 0; i < 3; ++i) { size.add(new TagInt()); }
-        byte[] blocks = new byte[] {};
-        ArrayList<TagCompound> blockEntities = null;
+        for (int i = 0; i < 3; ++i) {
+            size.add(new TagInt());
+        }
+        byte[] blocks = new byte[]{};
+
         for (Tag t : this.tags) {
             switch (t.getKey()) {
-                case "DataVersion":
-                    dataVersion.setKey("DataVersion");
+                case DATAVERSION:
+                    dataVersion.setKey(DATAVERSION);
                     dataVersion.setValue(t.getValue());
                     break;
                 case PALETTE:
                     convertPalette(palette, (TagCompound) t);
                     break;
-                case "Length":
+                case LENGTH:
                     size.get(2).setValue(((Short) t.getValue()).intValue());
                     break;
-                case "Height":
+                case HEIGHT:
                     size.get(1).setValue(((Short) t.getValue()).intValue());
                     break;
-                case "Width":
+                case WIDTH:
                     size.get(0).setValue(((Short) t.getValue()).intValue());
                     break;
-                case "BlockData":
+                case BLOCKDATA:
                     blocks = (byte[]) t.getValue();
                     break;
-                case "BlockEntities":
+                case BLOCKENTITIES:
                     blockEntities = (ArrayList<TagCompound>) t.getValue();
                     break;
             }
         }
-        // entities
+        // Entitées
         this.convertEntities(entities);
 
-        // blocks
-
+        // Blocs
         ArrayList<BlockData> blockData = this.convertBlocks(blocks, blockEntities, size);
 
+        // Liste résultat
         ArrayList<Tag> structNbt = new ArrayList<>();
         // --- Partie "commune" ---
 
@@ -143,7 +142,6 @@ public class SchematicsParser {
         sizeTag.setKey("size");
         sizeTag.setValue(size);
         structNbt.add(sizeTag);
-
 
         // --- Partie blocks ---
 
@@ -172,7 +170,7 @@ public class SchematicsParser {
             TagList tl = new TagList();
             tl.setKey("pos");
             ArrayList<TagInt> coords = new ArrayList<>();
-            for(Integer coord : bd.getCoords()) {
+            for (Integer coord : bd.getCoords()) {
                 TagInt ti = new TagInt();
                 ti.setValue(coord);
                 coords.add(ti);
@@ -207,7 +205,13 @@ public class SchematicsParser {
     }
 
 
-
+    /**
+     * Convertit l'élément "Palette" du fichier .schem en une TagList contenant les mêmes valeurs.
+     *
+     * @param palette      la TagList où sera stockée le résultat de la conversion
+     * @param schemPalette l'élément "Palette" à convertir
+     * @throws ParserException
+     */
     @SuppressWarnings("unchecked")
     private void convertPalette(TagList palette, TagCompound schemPalette) throws ParserException {
         ArrayList<Tag> paletteVal = new ArrayList<>();
@@ -248,16 +252,31 @@ public class SchematicsParser {
         palette.setValue(paletteVal);
     }
 
-
+    /**
+     * Convertit l'élément "Entities" du fichier .schem en une TagList (vide car
+     * nous nous intéressons uniquement aux structures).
+     *
+     * @param entities la TagList où sera stockée le résultat de la conversion
+     * @throws ParserException
+     */
     private void convertEntities(TagList entities) throws ParserException {
         entities.setKey("entities");
         entities.setValue(new ArrayList<Tag>());
     }
 
-
+    /**
+     * Convertit l'élément "BlockData" du fichier .schem en une TagList contenant les mêmes valeurs.
+     *
+     * @param blockData     Tableau d'octets contenant les états (= indice du bloc correspondant dans la palette)
+     *                      des blocs du fichier .schem
+     * @param blockEntities Liste de BlockEntities : il s'agit des blocs "spéciaux" qui ont des propriétés en plus
+     *                      par rapport aux blocs classiques
+     * @param size          Liste de 3 Tag représentant la taille de la structure (x, y, z)
+     * @throws ParserException
+     */
     @SuppressWarnings("unchecked")
     private ArrayList<BlockData> convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities,
-                                                   ArrayList<Tag> size) {
+                                               ArrayList<Tag> size) {
 
         ArrayList<BlockData> blocksVal = new ArrayList<>();
 
@@ -299,72 +318,4 @@ public class SchematicsParser {
         }
         return blocksVal;
     }
-
-    /*
-    @SuppressWarnings("unchecked")
-    private ArrayList<BlockData>[][] convertBlocks(byte[] blockData, ArrayList<TagCompound> blockEntities,
-                                                   ArrayList<Tag> size)
-            throws ParserException {
-        // Permet de connaître le nombre de chunks pris par la structure en X et en Z
-        int nbStructX = (int) size.get(0).getValue() / MAX_SIZE;
-        nbStructX += ((int) size.get(0).getValue()) % MAX_SIZE == 0 ? 0 : 1;
-        int nbStructZ = (int) size.get(2).getValue() / MAX_SIZE;
-        nbStructZ += ((int) size.get(2).getValue()) % MAX_SIZE == 0 ? 0 : 1;
-        ArrayList<BlockData> dummy = new ArrayList<>();
-        int[] nbStruct = {nbStructX, nbStructZ};
-        ArrayList<BlockData>[][] blocksVal = (ArrayList<BlockData>[][]) Array.newInstance(dummy.getClass(), nbStruct);
-
-        for (int i = 0; i < nbStructX; ++i) {
-            for (int j = 0; j < nbStructZ; ++j) {
-                blocksVal[i][j] = new ArrayList<>();
-            }
-        }
-
-        System.out.println("N_CHUNKS = " + nbStructX + ", " + nbStructZ);
-
-        int i = 0;
-        for (byte b : blockData) {
-            int x = (i % ((int) size.get(0).getValue() * (int) size.get(2).getValue())) % (int) size.get(0).getValue();
-            int y = i / ((int) size.get(0).getValue() * (int) size.get(2).getValue());
-            int z = (i % ((int) size.get(0).getValue() * (int) size.get(2).getValue())) / (int) size.get(0).getValue();
-            int pX = (x % MAX_SIZE);
-            int pZ = (z % MAX_SIZE);
-            int structX = x / MAX_SIZE;
-            int structZ = z / MAX_SIZE;
-            HashMap<String, Tag> nbt = new HashMap<>();
-            boolean isHere = false;
-
-
-            for (TagCompound tc : blockEntities) {
-                if (isHere) {
-                    break;
-                }
-                nbt = new HashMap<>();
-                for (Tag t : (ArrayList<Tag>) tc.getValue()) {
-                    if (t.getKey().equals("Pos")) {
-                        int[] tagPos = (int[]) t.getValue();
-                        if (tagPos[0] == x && tagPos[1] == y && tagPos[2] == z) {
-                            isHere = true;
-                            continue;
-                        }
-                        break;
-                    }
-                    if (t.getKey().equals("Id")) {
-                        t.setKey("id");
-                        nbt.put("id", t);
-                    } else {
-                        nbt.put(t.getKey(), t);
-                    }
-                }
-            }
-            BlockData bd = new BlockData(pX, y, pZ, b, isHere ? nbt : new HashMap<>());
-
-            // Pour déterminer dans quelle sous-structure on ajoute ce bloc
-            // System.out.println("cpt : " + i + " / " + blockData.length);
-            blocksVal[structX][structZ].add(bd);
-
-            ++i;
-        }
-        return blocksVal;
-    }*/
 }

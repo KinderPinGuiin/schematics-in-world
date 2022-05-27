@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Set;
+import java.util.concurrent.CompletionException;
 
 /**
  * This class' purpose is to provide all information relevant to generating its own generic structure.
@@ -136,12 +137,16 @@ public class SiwStructureProvider {
                 int z = (chunkZ << 4) + 8;
 
                 BlockPos blockpos = new BlockPos(x, 0, z);
-                JigsawManager.func_242837_a(dynamicRegistryManager,
-                new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
-                        .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
-                                name() + "/" + name() + "_0_0_pool")),
-                        10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
-                blockpos, this.components, this.rand, false, true);
+                try {
+                    JigsawManager.func_242837_a(dynamicRegistryManager,
+                            new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
+                                    .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID,
+                                            name() + "/" + name() + "_pool")),
+                                    10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
+                            blockpos, this.components, this.rand, false, true);
+                } catch (NullPointerException e) {
+                    //handle this shit
+                }
 
                 this.components.forEach(piece -> piece.offset(0, 1, 0));
                 this.components.forEach(piece -> piece.getBoundingBox().minY -= 1);

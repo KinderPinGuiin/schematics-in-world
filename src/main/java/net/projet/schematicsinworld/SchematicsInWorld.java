@@ -42,18 +42,16 @@ public class SchematicsInWorld {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        List<String> paths = null;
+        // Dossier .minecraft
         String rootPath = System.getProperty("user.home") + File.separator +
                 "AppData" + File.separator + "Roaming" + File.separator +
                 ".minecraft";
-
-        // Dossier .minecraft
         File root = new File(rootPath);
         if (!root.exists()) {
             throw new FileNotFoundException(".minecraft directory missing : cannot load the mod properly !");
         }
 
-        // Schematics folder (containing .schem)
+        // Dossier Schematics (contenant les .schem)
         File schemDir = new File(rootPath + File.separator + "Schematics");
         if (!schemDir.exists()) {
             LOGGER.info("Schematics folder not found : creating now.\n");
@@ -62,6 +60,8 @@ public class SchematicsInWorld {
             LOGGER.info("Schematics folder found.\n");
         }
 
+        // On cherche les fichiers .schem
+        List<String> paths = null;
         try {
             String path = schemDir.getAbsolutePath();
             paths = findFiles(Paths.get(path), "schem");
@@ -69,15 +69,15 @@ public class SchematicsInWorld {
             e.printStackTrace();
         }
 
-        // Parse tous les .schem trouvés dans le dossier Schematics
+        // Convertit chaque fichier .schem trouvé dans le dossier Schematics
         if (paths != null) {
-            // dossier racine des nbt
+            // Dossier racine des fichiers NBT
             String dest = System.getProperty("user.dir") + File.separator + ".." +
                     File.separator + "src" + File.separator + "main" + File.separator +
                     "resources" + File.separator + "data" + File.separator + MOD_ID +
                     File.separator + "structures";
 
-            // ne devrait pas être possible
+            // Ne devrait jamais arriver
             File destFolder = new File(dest);
             if (!destFolder.exists()) {
                 destFolder.mkdir();
@@ -87,17 +87,14 @@ public class SchematicsInWorld {
             for (int i = 0; i < paths.size(); ++i) {
                 s = new SchematicsParser(paths.get(i));
                 try {
-                    // nom de la structure (sans extension)
+                    // Nom de la structure sans l'extension .schem
                     String name = paths.get(i).substring(((rootPath + File.separator + "Schematics")).length() + 1, paths.get(i).length() - 6);
 
-                    // dossier de la structure
+                    // Dossier de la structure au format NBT
                     File nbtDir = new File(dest + File.separator + name);
                     if (!nbtDir.exists()) {
                         nbtDir.mkdir();
                     }
-                    // Version de base quand on a une seule structure
-                    // s.saveToNBT(dest + File.separator + name + File.separator + name + "_0" + ".nbt");
-                    // Version multi-structure (découpage) (le _i_j est géré par le NBTParser appelé par saveToNBT)
                     s.saveToNBT(dest + File.separator + name + File.separator + name);
                 } catch (ParserException e) {
                     System.out.println(e.getMessage());
@@ -120,6 +117,15 @@ public class SchematicsInWorld {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    /**
+     * Recherche les fichiers ayant l'extension "ext" dans le dossier de chemin "path".
+     * Retourne la liste contenant les chemins d'accès de ces fichiers.
+     *
+     * @param path         Chemin du dossier où l'on cherche les fichiers
+     * @param ext          Extension requise pour les fichiers à ajouter au résultat
+     * @return             Liste des chemins d'accès aux fichiers ayant l'extension ext
+     * @throws IOException
+     */
     private List<String> findFiles(Path path, String ext) throws IOException {
         if (!Files.isDirectory(path)) {
             throw new IllegalArgumentException("Path must be a directory !");

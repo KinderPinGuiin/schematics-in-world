@@ -73,7 +73,7 @@ class NBTParser extends TagCompound {
      */
 
     public ArrayList<Tag> getTags() {
-        return new ArrayList<Tag>((ArrayList<Tag>) this.getValue());
+        return new ArrayList<>((ArrayList<Tag>) this.getValue());
     }
 
     /*
