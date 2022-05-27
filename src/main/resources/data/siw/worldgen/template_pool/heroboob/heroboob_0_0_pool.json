@@ -1,11 +1,11 @@
 {
-  "name": "siw:intel_large/intel_large_0_0",
+  "name": "siw:heroboob/heroboob_0_0",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "siw:intel_large/intel_large_0_0",
+        "location": "siw:heroboob/heroboob_0_0",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
