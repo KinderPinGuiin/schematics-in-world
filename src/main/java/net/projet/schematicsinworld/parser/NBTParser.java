@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * Crée un fichier .nbt à partir d'un nom de fichier et d'une liste de Tag.
+ * Peut également lire un fichier NBT.
+ */
 class NBTParser extends TagCompound {
 
     /*

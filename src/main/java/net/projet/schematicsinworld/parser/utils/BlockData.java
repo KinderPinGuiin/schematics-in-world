@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Permet de regrouper les informations relatives à un bloc.
+ */
 public class BlockData {
 
     /*
@@ -34,6 +37,7 @@ public class BlockData {
      * Requêtes
      */
 
+    // Coordonnées du bloc
     public int getX() {
         return this.x;
     }
@@ -55,10 +59,12 @@ public class BlockData {
         return coords;
     }
 
+    // Etat (= indice dans la palette) du bloc
     public int getState() {
         return this.state;
     }
 
+    // Nbt du bloc (si il s'agit d'un BlockEntities)
     public HashMap<String, Tag> getNbt() {
         return new HashMap<>(this.nbt);
     }

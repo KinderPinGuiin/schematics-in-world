@@ -294,6 +294,7 @@ public class SchematicsParser {
                 }
                 nbt = new HashMap<>();
                 for (Tag t : (ArrayList<Tag>) tc.getValue()) {
+                    // On vérifie si la position du bloc est bien celle que l'on traite
                     if (t.getKey().equals("Pos")) {
                         int[] tagPos = (int[]) t.getValue();
                         if (tagPos[0] == x && tagPos[1] == y && tagPos[2] == z) {
@@ -302,6 +303,8 @@ public class SchematicsParser {
                         }
                         break;
                     }
+
+                    // On remplace car dans un fichier NBT la clé est id et pas Id
                     if (t.getKey().equals("Id")) {
                         t.setKey("id");
                         nbt.put("id", t);
