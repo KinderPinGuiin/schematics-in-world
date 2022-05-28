@@ -12,10 +12,10 @@ import java.io.*;
 import java.util.Set;
 
 /**
- *   Represente une configuration de structure.
+ *   Représente une configuration de structure.
  *   Les champs doivent être simple, pour pouvoir être écrit dans un
  *   fichier de configuration ou cloné de surface.
- *   Le fichier de configuration equivalent est un
+ *   Le fichier de configuration équivalent est un
  *   JsonObject unique, avec des champs nommés pour chaque variable.
  *
  * @Inv :
@@ -28,6 +28,7 @@ public class StructConfig implements Cloneable {
     private final String struct_name;
     private int distMaxSpawn = 32;
     private int distMinSpawn = 8;
+    private int structureHigh = 0;
     private boolean isEnabled = true;
     private boolean isSpawningInWater = false;
     private boolean isBiomeFilterBlackList = true;
@@ -95,9 +96,17 @@ public class StructConfig implements Cloneable {
                 setBiomeFilter(json.get("biomeFilter").getAsString());
             }
 
+            if (json.get("structureHigh") != null) {
+                structureHigh = json.get("structureHigh").getAsInt();
+            }
+
             // Error checking
             if (distMaxSpawn < distMinSpawn) {
                 throw new IncoherentConfigurationError("distMaxSpawn is lower than distMinSpawn");
+            }
+
+            if (structureHigh < 0) {
+                throw new IncoherentConfigurationError("Structure high is lower than 0 !");
             }
 
         } catch (FileNotFoundException e) {
@@ -122,7 +131,11 @@ public class StructConfig implements Cloneable {
 
     public boolean isEnabled() { return isEnabled; }
 
-    public boolean isSpawningInWater(){ return isSpawningInWater; }
+    public boolean isSpawningInWater() { return isSpawningInWater; }
+
+    public int getStructureHigh() {
+        return structureHigh;
+    }
 
     public boolean isSpawningBiome(Set<BiomeDictionary.Type> biome){
         if(isBiomeFilterBlackList){
@@ -168,7 +181,7 @@ public class StructConfig implements Cloneable {
     }
     /**
      *
-     * @return Une chaine JSON qui represente cette configuration.
+     * @return Une chaine JSON qui représente cette configuration.
      * N'inclut pas le nom de la structure.
      * Possède des commentaires, donc illisible sans "Lenient Parsing".
      */
@@ -191,6 +204,10 @@ public class StructConfig implements Cloneable {
         builder.append(attributToJson(
                 "If this structure is to spawn in water",
                 "isSpawningInWater", isSpawningInWater));
+
+        builder.append(attributToJson(
+                "How many blocks above the floor the structure generates",
+                "structureHigh", structureHigh));
 
         builder.append(stringToComment(
                 "Wether or not the biome filter is a blacklist or a whitelist."));

@@ -68,6 +68,8 @@ public class SiwStructureProvider {
         return config.getDistMinSpawn();
     }
 
+    public int structureHigh() { return config.getStructureHigh(); }
+
     // The random seed associated with this provider.
     // Linked to the name.
     public int randseed() {
@@ -135,8 +137,8 @@ public class SiwStructureProvider {
                                        NoFeatureConfig config) {
                 int x = (chunkX << 4) + 8;
                 int z = (chunkZ << 4) + 8;
-
-                BlockPos blockpos = new BlockPos(x, 0, z);
+                System.out.println( name() + "structure high : " + structureHigh());
+                BlockPos blockpos = new BlockPos(x, structureHigh(), z);
                 try {
                     JigsawManager.func_242837_a(dynamicRegistryManager,
                             new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
@@ -147,6 +149,7 @@ public class SiwStructureProvider {
                 } catch (NullPointerException e) {
                     //handle this shit
                 }
+
 
                 this.components.forEach(piece -> piece.offset(0, 1, 0));
                 this.components.forEach(piece -> piece.getBoundingBox().minY -= 1);

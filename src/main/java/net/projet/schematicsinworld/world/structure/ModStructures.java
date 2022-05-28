@@ -47,7 +47,7 @@ public class ModStructures {
             SiwStructureProvider p = providerList.get(i);
             setupMapSpacingAndLand(SIW_STRUCTURES_LIST.get(i).get(),
                     new StructureSeparationSettings(p.maxDist(), p.minDist(), p.randseed()),
-                    true);
+                    p.structureHigh() == 0);
         }
     }
 
@@ -135,4 +135,8 @@ public class ModStructures {
             }
         });
     }
+
+    // Tools
+
+    private boolean transformSurroundingLands
 }
