@@ -50,7 +50,7 @@ public class SiwStructureProvider {
      * @return true if this location is suitable.
      */
     public boolean isLocationOk(Set<BiomeDictionary.Type> biome) {
-        return config.isEnabled() && config.isSpawningBiome(biome);
+        return config.isEnabled() && config.isSpawningBiome(biome) && config.isSpawningDimension(biome);
     }
     
     // The name of the structure. Used for /locate, notably
@@ -137,7 +137,6 @@ public class SiwStructureProvider {
                                        NoFeatureConfig config) {
                 int x = (chunkX << 4) + 8;
                 int z = (chunkZ << 4) + 8;
-                System.out.println( name() + "structure high : " + structureHigh());
                 BlockPos blockpos = new BlockPos(x, structureHigh(), z);
                 try {
                     JigsawManager.func_242837_a(dynamicRegistryManager,

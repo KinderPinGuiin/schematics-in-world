@@ -27,7 +27,7 @@ public class ModStructures {
     // --------------------
     public static final List<SiwStructureProvider> providerList = ConfigHandler.getConfigurations();
 
-    // Notre liste des RegistryObject.
+    // Notre liste des RegistryObject
     public static final List<RegistryObject<Structure<NoFeatureConfig>>> SIW_STRUCTURES_LIST =
             new LinkedList<RegistryObject<Structure<NoFeatureConfig>>>();
 
@@ -80,26 +80,10 @@ public class ModStructures {
         }
 
         /*
-         * This is the map that holds the default spacing of all structures.
-         * Always add your structure to here so that other mods can utilize it if needed.
-         *
-         * However, while it does propagate the spacing to some correct dimensions from this map,
-         * it seems it doesn't always work for code made dimensions as they read from this list beforehand.
-         *
-         * Instead, we will use the WorldEvent.Load event in ModWorldEvents to add the structure
-         * spacing from this list into that dimension or to do dimension blacklisting properly.
-         * We also use our entry in DimensionStructuresSettings.DEFAULTS in WorldEvent.Load as well.
-         *
-         * DEFAULTS requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
-         */
-
-        /*
-        *  public static ImmutableMap<Structure<?>, StructureSeparationSettings> field_236191_b_ contient de base l'intégralité des structures
+        *  field_236191_b_ contient de base l'intégralité des structures
         *  de VanillaMC
-         *
+        *
         */
-
-
         DimensionStructuresSettings.field_236191_b_ =
                 ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
                         .putAll(DimensionStructuresSettings.field_236191_b_)
@@ -119,12 +103,7 @@ public class ModStructures {
         WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
             Map<Structure<?>, StructureSeparationSettings> structureMap =
                     settings.getValue().getStructures().func_236195_a_();
-            /*
-             * Pre-caution in case a mod makes the structure map immutable like datapacks do.
-             * I take no chances myself. You never know what another mods does...
-             *
-             * structureConfig requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
-             */
+
             if (structureMap instanceof ImmutableMap) {
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureSeparationSettings);
@@ -135,8 +114,4 @@ public class ModStructures {
             }
         });
     }
-
-    // Tools
-
-    private boolean transformSurroundingLands
 }

@@ -53,7 +53,7 @@ public class BiomeFilter {
     /**
      * Renvoit true si le filtre accepte le biome définit par ces types BiomeDictionnary.
      */
-    public boolean apply(Set<BiomeDictionary.Type> biome){
+    public boolean apply(Set<BiomeDictionary.Type> biome) {
         if (filter == null){
             return DEFAULT_BOOL;
         }

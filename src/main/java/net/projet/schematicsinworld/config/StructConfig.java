@@ -9,6 +9,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -33,6 +34,8 @@ public class StructConfig implements Cloneable {
     private boolean isSpawningInWater = false;
     private boolean isBiomeFilterBlackList = true;
     private BiomeFilter biomeFilter = new BiomeFilter("");
+    private DimensionFilter dimensionFilter = new DimensionFilter("");
+
 
     public static final String JSON_INDENTATION = "      ";
 
@@ -92,6 +95,9 @@ public class StructConfig implements Cloneable {
             if (json.get("isBiomeFilterBlackList") != null) {
                 isBiomeFilterBlackList = json.get("isBiomeFilterBlackList").getAsBoolean();
             }
+            if (json.get("dimensionFilter") != null) {
+                setDimensionFilter(json.get("dimensionFilter").getAsString());
+            }
             if (json.get("biomeFilter") != null) {
                 setBiomeFilter(json.get("biomeFilter").getAsString());
             }
@@ -137,11 +143,15 @@ public class StructConfig implements Cloneable {
         return structureHigh;
     }
 
-    public boolean isSpawningBiome(Set<BiomeDictionary.Type> biome){
+    public boolean isSpawningBiome(Set<BiomeDictionary.Type> biome) {
         if(isBiomeFilterBlackList){
             return !biomeFilter.apply(biome);
         }
         return biomeFilter.apply(biome);
+    }
+
+    public boolean isSpawningDimension(Set<BiomeDictionary.Type> dimension) {
+        return dimensionFilter.apply(dimension);
     }
 
     // COMMANDES
@@ -169,7 +179,7 @@ public class StructConfig implements Cloneable {
         isBiomeFilterBlackList = biomeFilterBlackList;
     }
 
-    public void setBiomeFilter(String filterString){
+    public void setBiomeFilter(String filterString) {
         try {
             biomeFilter = new BiomeFilter(filterString);
         } catch (AssertionError e){
@@ -179,6 +189,16 @@ public class StructConfig implements Cloneable {
             throw new IncoherentConfigurationError("Unknown BiomeFilter creation error");
         }
     }
+
+    public void setDimensionFilter(String filterString) {
+        try {
+            dimensionFilter = new DimensionFilter(filterString);
+        } catch(Error e) {
+            // This should not happen. contact mod author if it does.
+            throw new IncoherentConfigurationError("Unknown DimensionFilter creation error");
+        }
+    }
+
     /**
      *
      * @return Une chaine JSON qui représente cette configuration.
@@ -210,11 +230,20 @@ public class StructConfig implements Cloneable {
                 "structureHigh", structureHigh));
 
         builder.append(stringToComment(
-                "Wether or not the biome filter is a blacklist or a whitelist."));
+                "Whether or not the biome filter is a blacklist or a whitelist."));
         builder.append(attributToJson(
                 "If true, only biomes who DO NOT pass the biome filter will spawn the structure. Otherwise, the opposite is true.",
                 "isBiomeFilterBlackList",
                 isBiomeFilterBlackList));
+
+        builder.append(stringToComment(
+                "The dimensions this structure should generate in : Minecraft default dimensions are OVERWORLD, NETHER, and ENDER."));
+        builder.append(stringToComment(
+                "Separate the wanted dimensions by placing semicolons."));
+        builder.append(attributToJson(
+                "example: \"OVERWORLD; ENDER; [Dimension from another mod]\" will make the structure generate in Overworld, Ender, and another dimension.",
+                "dimensionFilter",
+                dimensionFilter.toString()));
 
         builder.append(stringToComment(
                 "The biome filter for spawning. it is represented by a string with Forge biome types, like PLAIN or VOID."));
