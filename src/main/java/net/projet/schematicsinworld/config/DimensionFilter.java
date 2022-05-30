@@ -1,6 +1,5 @@
 package net.projet.schematicsinworld.config;
 
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 import java.util.ArrayList;
@@ -31,24 +30,30 @@ public class DimensionFilter {
         for (BiomeDictionary.Type dim : dimension) {
             System.out.println("During apply; dimension contained : " + dim.toString());
             if (dim.equals(BiomeDictionary.Type.OVERWORLD)) {
-                res = dims.contains(dim.toString().toUpperCase());
+                res = dims.contains(dim.toString());
+            } else if (dim.equals(BiomeDictionary.Type.NETHER)) {
+                res = dims.contains(dim.toString());
+            } else if (dim.equals(BiomeDictionary.Type.END)) {
+                res = dims.contains(dim.toString());
             }
         }
 
         return res;
     }
-    /*@Override
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (String s : dims) {
-            sb.append(s.toUpperCase() + ";");
+            sb.append(s + ";");
         }
-        if (sb.charAt(sb.length()) == ';') {
-            sb.deleteCharAt(sb.length());
+
+        int k = sb.lastIndexOf(";");
+        if (k >= 0) {
+            sb.deleteCharAt(k);
         }
-        System.out.println("result of tostring : " + new String(sb));
         return sb.toString();
-    }*/
+    }
 
     private void analyseExpr(String expr) {
         String[] dimensions = expr.split(";");
@@ -56,8 +61,7 @@ public class DimensionFilter {
             if (d == null || d.length() == 0) {
                 throw new AssertionError("Invalid dimension filter !");
             }
-            System.out.println("Dimension readed : " + d);
-            dims.add(d.toUpperCase());
+            dims.add(d.toUpperCase().trim());
         }
     }
 }

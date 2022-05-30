@@ -33,7 +33,7 @@ public class StructConfig implements Cloneable {
     private boolean isSpawningInWater = false;
     private boolean isBiomeFilterBlackList = true;
     private BiomeFilter biomeFilter = new BiomeFilter("");
-    private DimensionFilter dimensionFilter = new DimensionFilter("");
+    private DimensionFilter dimensionFilter = new DimensionFilter("OVERWORLD");
 
 
     public static final String JSON_INDENTATION = "      ";
@@ -65,6 +65,7 @@ public class StructConfig implements Cloneable {
      * IncoherentConfigurationError sera renvoyée.
      **/
     public StructConfig(File cfgFile) {
+
         if (!cfgFile.getName().endsWith(".JSON") || !cfgFile.canRead())
             throw new AssertionError("File unsupported");
         struct_name = StringUtils.removeEnd(cfgFile.getName(), ".JSON");
@@ -107,8 +108,6 @@ public class StructConfig implements Cloneable {
             if (json.get("biomeFilter") != null) {
                 setBiomeFilter(json.get("biomeFilter").getAsString());
             }
-
-
 
             // Error checking
 
@@ -155,9 +154,11 @@ public class StructConfig implements Cloneable {
         return biomeFilter.apply(biome);
     }
 
+
     public boolean isSpawningDimension(Set<BiomeDictionary.Type> dimension) {
         return dimensionFilter.apply(dimension);
     }
+
 
     // COMMANDES
 
@@ -184,6 +185,7 @@ public class StructConfig implements Cloneable {
         isBiomeFilterBlackList = biomeFilterBlackList;
     }
 
+
     public void setBiomeFilter(String filterString) {
         try {
             biomeFilter = new BiomeFilter(filterString);
@@ -194,6 +196,7 @@ public class StructConfig implements Cloneable {
             throw new IncoherentConfigurationError("Unknown BiomeFilter creation error");
         }
     }
+
 
     public void setDimensionFilter(String filterString) {
         try {
@@ -239,15 +242,18 @@ public class StructConfig implements Cloneable {
                 "How many blocks above the floor the structure generates",
                 "structureHigh", structureHigh));
 
+
         // Dimension configuration
         builder.append(stringToComment(
-                "The dimensions this structure should generate in : Minecraft default dimensions are OVERWORLD, NETHER, and ENDER."));
+                "The dimensions this structure should generate in : Minecraft default dimensions are OVERWORLD, NETHER, and END."));
         builder.append(stringToComment(
                 "Separate the wanted dimensions by placing semicolons."));
         builder.append(attributToJson(
-                "example: \"OVERWORLD; ENDER; [Dimension from another mod]\" will make the structure generate in Overworld, Ender, and another dimension.",
+                "example: \"OVERWORLD; END;\" will make the structure generate in Overworld and in the End",
                 "dimensionFilter",
                 dimensionFilter.toString()));
+
+
 
         // Biome configuration
         builder.append(stringToComment(
