@@ -19,10 +19,10 @@ public class DimensionFilter {
     private List<String> dims;
 
     public DimensionFilter(String expr) {
+        dims = new ArrayList<>();
         if (expr == null || expr.matches("\\s*")) {
             return;
         }
-        dims = new ArrayList<>();
         analyseExpr(expr);
     }
 
@@ -37,18 +37,18 @@ public class DimensionFilter {
 
         return res;
     }
-    @Override
+    /*@Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         for (String s : dims) {
             sb.append(s.toUpperCase() + ";");
         }
-        if (sb.length() > 0) {
+        if (sb.charAt(sb.length()) == ';') {
             sb.deleteCharAt(sb.length());
         }
         System.out.println("result of tostring : " + new String(sb));
-        return new String(sb);
-    }
+        return sb.toString();
+    }*/
 
     private void analyseExpr(String expr) {
         String[] dimensions = expr.split(";");

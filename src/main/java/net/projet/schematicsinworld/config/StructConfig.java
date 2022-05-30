@@ -9,7 +9,6 @@ import net.minecraftforge.common.BiomeDictionary;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -92,21 +91,27 @@ public class StructConfig implements Cloneable {
             if (json.get("isSpawningInWater") != null) {
                 isSpawningInWater = json.get("isSpawningInWater").getAsBoolean();
             }
-            if (json.get("isBiomeFilterBlackList") != null) {
-                isBiomeFilterBlackList = json.get("isBiomeFilterBlackList").getAsBoolean();
-            }
-            if (json.get("dimensionFilter") != null) {
-                setDimensionFilter(json.get("dimensionFilter").getAsString());
-            }
-            if (json.get("biomeFilter") != null) {
-                setBiomeFilter(json.get("biomeFilter").getAsString());
-            }
 
             if (json.get("structureHigh") != null) {
                 structureHigh = json.get("structureHigh").getAsInt();
             }
 
+            if (json.get("dimensionFilter") != null) {
+                setDimensionFilter(json.get("dimensionFilter").getAsString());
+            }
+
+            if (json.get("isBiomeFilterBlackList") != null) {
+                isBiomeFilterBlackList = json.get("isBiomeFilterBlackList").getAsBoolean();
+            }
+
+            if (json.get("biomeFilter") != null) {
+                setBiomeFilter(json.get("biomeFilter").getAsString());
+            }
+
+
+
             // Error checking
+
             if (distMaxSpawn < distMinSpawn) {
                 throw new IncoherentConfigurationError("distMaxSpawn is lower than distMinSpawn");
             }
@@ -209,33 +214,32 @@ public class StructConfig implements Cloneable {
     public String toString() {
         StringBuilder builder = new StringBuilder("{\n");
 
+        // Max distance between two of these structures
         builder.append(attributToJson(
                 "The maximum distance between two of these structures in chunks",
                 "distMaxSpawn", distMaxSpawn));
 
+        // Min distance between two of these structures
         builder.append(attributToJson(
                 "The minimum distance between two of these structures in chunks",
                 "distMinSpawn", distMinSpawn));
 
+        // Generating structure ?
         builder.append(attributToJson(
                 "If this structure is to spawn naturally in the world",
                 "isEnabled", isEnabled));
 
+        // Structure generation in water
         builder.append(attributToJson(
                 "If this structure is to spawn in water",
                 "isSpawningInWater", isSpawningInWater));
 
+        // Structure high generation
         builder.append(attributToJson(
                 "How many blocks above the floor the structure generates",
                 "structureHigh", structureHigh));
 
-        builder.append(stringToComment(
-                "Whether or not the biome filter is a blacklist or a whitelist."));
-        builder.append(attributToJson(
-                "If true, only biomes who DO NOT pass the biome filter will spawn the structure. Otherwise, the opposite is true.",
-                "isBiomeFilterBlackList",
-                isBiomeFilterBlackList));
-
+        // Dimension configuration
         builder.append(stringToComment(
                 "The dimensions this structure should generate in : Minecraft default dimensions are OVERWORLD, NETHER, and ENDER."));
         builder.append(stringToComment(
@@ -244,6 +248,14 @@ public class StructConfig implements Cloneable {
                 "example: \"OVERWORLD; ENDER; [Dimension from another mod]\" will make the structure generate in Overworld, Ender, and another dimension.",
                 "dimensionFilter",
                 dimensionFilter.toString()));
+
+        // Biome configuration
+        builder.append(stringToComment(
+                "Whether or not the biome filter is a blacklist or a whitelist."));
+        builder.append(attributToJson(
+                "If true, only biomes who DO NOT pass the biome filter will spawn the structure. Otherwise, the opposite is true.",
+                "isBiomeFilterBlackList",
+                isBiomeFilterBlackList));
 
         builder.append(stringToComment(
                 "The biome filter for spawning. it is represented by a string with Forge biome types, like PLAIN or VOID."));
@@ -269,22 +281,22 @@ public class StructConfig implements Cloneable {
     }
 
     private String attributToJson(String comment, String attrname, int n) {
-        return JSON_INDENTATION + "#" + comment + "\n"
+        return JSON_INDENTATION + "# " + comment + "\n"
                 + JSON_INDENTATION + "\"" + attrname + "\": " + String.valueOf(n) + ",\n\n";
     }
 
     private String attributToJson(String comment, String attrname, boolean value) {
-        return JSON_INDENTATION + "#" + comment + "\n"
+        return JSON_INDENTATION + "# " + comment + "\n"
                 + JSON_INDENTATION + "\"" + attrname + "\": " + String.valueOf(value) + ",\n\n";
     }
 
     private String attributToJson(String comment, String attrname, String value){
-        return JSON_INDENTATION + "#" + comment + "\n"
+        return JSON_INDENTATION + "# " + comment + "\n"
                 + JSON_INDENTATION + "\"" + attrname + "\": \"" + value + "\",\n\n";
     }
 
     private String stringToComment(String comment) {
-        return JSON_INDENTATION + "#" + comment + "\n";
+        return JSON_INDENTATION + "# " + comment + "\n";
     }
 }
 
