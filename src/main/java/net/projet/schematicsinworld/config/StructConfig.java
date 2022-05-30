@@ -127,6 +127,7 @@ public class StructConfig implements Cloneable {
     }
 
     // REQUETES
+
     public String getName() {
         return struct_name;
     }

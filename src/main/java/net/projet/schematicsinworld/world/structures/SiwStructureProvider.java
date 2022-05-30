@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Set;
-import java.util.concurrent.CompletionException;
 
 /**
  * This class' purpose is to provide all information relevant to generating its own generic structure.
@@ -104,8 +103,22 @@ public class SiwStructureProvider {
                                       Biome biome, ChunkPos chunkPos, NoFeatureConfig featureConfig) {
             BlockPos centerOfChunk = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 
-            int landHeight = chunkGenerator.getHeight(centerOfChunk.getX(), centerOfChunk.getZ(),
-                    Heightmap.Type.WORLD_SURFACE_WG);
+            int landHeight;
+            if (biome.getCategory().toString().equals("NETHER")) {
+                System.out.println("biome is nether");
+                landHeight = chunkGenerator.getHeight(centerOfChunk.getX(), centerOfChunk.getZ(),
+                        Heightmap.Type.WORLD_SURFACE_WG);
+                System.out.println("ground : " + chunkGenerator.getGroundHeight());
+                System.out.println("maxbuild : " + chunkGenerator.getMaxBuildHeight());
+                System.out.println("sea : " + chunkGenerator.getSeaLevel());
+
+
+            } else {
+                landHeight = chunkGenerator.getHeight(centerOfChunk.getX(), centerOfChunk.getZ(),
+                        Heightmap.Type.WORLD_SURFACE_WG);
+            }
+            System.out.println(landHeight);
+
 
             boolean res = true;
             res &= landHeight != 0;
@@ -161,5 +174,7 @@ public class SiwStructureProvider {
                         this.components.get(0).getBoundingBox().minZ);
             }
         }
+
+
     }
 }
