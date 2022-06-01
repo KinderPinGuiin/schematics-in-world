@@ -70,6 +70,7 @@ public class SchematicsInWorld {
         }
 
         // Convertit chaque fichier .schem trouvé dans le dossier Schematics
+
         if (paths != null) {
             // Dossier racine des fichiers NBT
             String dest = System.getProperty("user.dir") + File.separator + ".." +

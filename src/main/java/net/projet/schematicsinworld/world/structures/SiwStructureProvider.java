@@ -1,6 +1,8 @@
 package net.projet.schematicsinworld.world.structures;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
@@ -8,6 +10,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.Blockreader;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
@@ -105,19 +108,12 @@ public class SiwStructureProvider {
 
             int landHeight;
             if (biome.getCategory().toString().equals("NETHER")) {
-                System.out.println("biome is nether");
-                landHeight = chunkGenerator.getHeight(centerOfChunk.getX(), centerOfChunk.getZ(),
-                        Heightmap.Type.WORLD_SURFACE_WG);
-                System.out.println("ground : " + chunkGenerator.getGroundHeight());
-                System.out.println("maxbuild : " + chunkGenerator.getMaxBuildHeight());
-                System.out.println("sea : " + chunkGenerator.getSeaLevel());
-
-
+                centerOfChunk = getLowestLand(chunkGenerator, chunkX * 16, chunkZ * 16);
+                landHeight = centerOfChunk.getY();
             } else {
                 landHeight = chunkGenerator.getHeight(centerOfChunk.getX(), centerOfChunk.getZ(),
                         Heightmap.Type.WORLD_SURFACE_WG);
             }
-            System.out.println(landHeight);
 
 
             boolean res = true;
@@ -150,7 +146,16 @@ public class SiwStructureProvider {
                                        NoFeatureConfig config) {
                 int x = (chunkX << 4) + 8;
                 int z = (chunkZ << 4) + 8;
-                BlockPos blockpos = new BlockPos(x, structureHigh(), z);
+
+
+                BlockPos blockpos;
+                if (biomeIn.getCategory().toString().equals("NETHER")) {
+                    int y = getLowestLand(chunkGenerator, x, z).getY();
+                    blockpos = new BlockPos(x, structureHigh() - y, z);
+                } else {
+                    blockpos = new BlockPos(x, structureHigh(), z);
+                }
+
                 try {
                     JigsawManager.func_242837_a(dynamicRegistryManager,
                             new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
@@ -159,7 +164,7 @@ public class SiwStructureProvider {
                                     10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                             blockpos, this.components, this.rand, false, true);
                 } catch (NullPointerException e) {
-                    //handle this shit
+                    // First launch after adding structures
                 }
 
 
@@ -176,5 +181,21 @@ public class SiwStructureProvider {
         }
 
 
+    }
+
+    private BlockPos getLowestLand(ChunkGenerator chunkGenerator, int x, int z) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable(x, chunkGenerator.getSeaLevel() + 1, z);
+        Blockreader br = (Blockreader) chunkGenerator.func_230348_a_(x, z);
+
+        while (mutable.getY() <= chunkGenerator.getMaxBuildHeight() - 20) {
+            if (!(br.getBlockState(mutable).getMaterial() == Material.AIR) &&
+                    br.getBlockState(new BlockPos(x, mutable.getY() + 1, z)).getMaterial() == Material.AIR &&
+                    br.getBlockState(new BlockPos(x, mutable.getY() + 20, z)).getMaterial() == Material.AIR)  {
+                mutable.move(Direction.UP);
+                return mutable.toImmutable();
+            }
+            mutable.move(Direction.UP);
+        }
+        return new BlockPos(mutable.getX(), 0, mutable.getZ());
     }
 }
