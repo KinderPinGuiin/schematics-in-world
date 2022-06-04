@@ -16,10 +16,19 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.projet.schematicsinworld.parser.SchematicsParser;
 import net.projet.schematicsinworld.world.structure.ModStructures;
+import net.projet.schematicsinworld.parser.utils.ParserException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SchematicsInWorld.MOD_ID)
@@ -29,33 +38,71 @@ public class SchematicsInWorld {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public SchematicsInWorld() {
+    public SchematicsInWorld() throws IOException {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // new SchematicsParser("E:\\Jordan\\Modding\\projet_annuel\\schem_tests\\maison.schem");
-        // new SchematicsParser("C:\\Users\\utilisateur\\Desktop\\Minecraft Modding\\schematicsInWorld\\schem_tests\\maison.schem");
-
-        /* Test de la classe TagFloat
-        byte buffer[] = new byte[] {64, 73, -103, -102};
-        String s = "pain";
-        byte[] name = s.getBytes(StandardCharsets.UTF_8);
-        byte[] len = new byte[] {0, (byte)name.length};//BigInteger.valueOf(name.length).toByteArray();
-
-        byte[] all = new byte[len.length + name.length + buffer.length + 10];
-        all[0] = len[0];
-        all[1] = len[1];
-
-        for (int i = 0; i < name.length; ++i) {
-            all[i + 2] = name[i];
+        // Dossier .minecraft
+        String rootPath = System.getProperty("user.home") + File.separator +
+                "AppData" + File.separator + "Roaming" + File.separator +
+                ".minecraft";
+        File root = new File(rootPath);
+        if (!root.exists()) {
+            throw new FileNotFoundException(".minecraft directory missing : cannot load the mod properly !");
         }
-        for (int i = 0; i < buffer.length; ++i) {
-            all[i + 2 + name.length] = buffer[i];
+
+        // Dossier Schematics (contenant les .schem)
+        File schemDir = new File(rootPath + File.separator + "Schematics");
+        if (!schemDir.exists()) {
+            LOGGER.info("Schematics folder not found : creating now.\n");
+            schemDir.mkdir();
+        } else {
+            LOGGER.info("Schematics folder found.\n");
         }
-        BytesStream bs = new BytesStream(all);
-        TagFloat tf = new TagFloat(bs);
-        LOGGER.info(tf.getKey() + " " + tf.getValue());
-        */
+
+        // On cherche les fichiers .schem
+        List<String> paths = null;
+        try {
+            String path = schemDir.getAbsolutePath();
+            paths = findFiles(Paths.get(path), "schem");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Convertit chaque fichier .schem trouvé dans le dossier Schematics
+
+        if (paths != null) {
+            // Dossier racine des fichiers NBT
+            String dest = System.getProperty("user.dir") + File.separator + ".." +
+                    File.separator + "src" + File.separator + "main" + File.separator +
+                    "resources" + File.separator + "data" + File.separator + MOD_ID +
+                    File.separator + "structures";
+
+            // Ne devrait jamais arriver
+            File destFolder = new File(dest);
+            if (!destFolder.exists()) {
+                destFolder.mkdir();
+            }
+
+            SchematicsParser s;
+            for (int i = 0; i < paths.size(); ++i) {
+                s = new SchematicsParser(paths.get(i));
+                try {
+                    // Nom de la structure sans l'extension .schem
+                    String name = paths.get(i).substring(((rootPath + File.separator + "Schematics")).length() + 1, paths.get(i).length() - 6);
+
+                    // Dossier de la structure au format NBT
+                    File nbtDir = new File(dest + File.separator + name);
+                    if (!nbtDir.exists()) {
+                        nbtDir.mkdir();
+                    }
+                    s.saveToNBT(dest + File.separator + name + File.separator + name);
+                } catch (ParserException e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
 
         ModStructures.register(modEventBus);
 
@@ -70,6 +117,32 @@ public class SchematicsInWorld {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
+
+    /**
+     * Recherche les fichiers ayant l'extension "ext" dans le dossier de chemin "path".
+     * Retourne la liste contenant les chemins d'accès de ces fichiers.
+     *
+     * @param path         Chemin du dossier où l'on cherche les fichiers
+     * @param ext          Extension requise pour les fichiers à ajouter au résultat
+     * @return             Liste des chemins d'accès aux fichiers ayant l'extension ext
+     * @throws IOException
+     */
+    private List<String> findFiles(Path path, String ext) throws IOException {
+        if (!Files.isDirectory(path)) {
+            throw new IllegalArgumentException("Path must be a directory !");
+        }
+
+        List<String> result;
+
+        try (Stream<Path> walk = Files.walk(path)) {
+            result = walk.filter(p -> !Files.isDirectory(p))
+                    .map(p -> p.toString().toLowerCase())
+                    .filter(f -> f.endsWith(ext))
+                    .collect(Collectors.toList());
+        }
+        return result;
+    }
+
 
     private void setup(final FMLCommonSetupEvent event)
     {

@@ -29,6 +29,7 @@ public class TagByte extends Tag {
 
     @Override
     protected void renderBuffer(BytesStream buffer) throws ParserException {
-
+        super.renderKey(buffer);
+        buffer.write(new byte[] {(byte) this.value});
     }
 }

@@ -9,7 +9,12 @@ import net.projet.schematicsinworld.parser.utils.ParserException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+/**
+ * Crée un fichier .nbt à partir d'un nom de fichier et d'une liste de Tag.
+ * Peut également lire un fichier NBT.
+ */
 class NBTParser extends TagCompound {
 
     /*
@@ -43,16 +48,23 @@ class NBTParser extends TagCompound {
             this.setKey("NBT");
             this.setValue(tags);
             // Parse les tags et les écrit dans le buffer
-            super.renderBuffer(this.buffer);
+            this.renderBuffer(this.buffer);
             // Création du fichier
-            /*
             try {
-                FileOutputStream output = new FileOutputStream(filepath);
+                FileOutputStream output = new FileOutputStream(filepath + ".tmp");
                 output.write(this.buffer.getContent());
+                output.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
             // Compresse le fichier
+            this.compressFile(filepath + ".tmp", filepath);
+            // Supprime le fichier temporaire
+            if (!new File(filepath + ".tmp").delete()) {
+                System.err.println(
+                    "Impossible de supprimer le fichier NBT temporaire"
+                );
+            }
         }
     }
 
@@ -65,7 +77,7 @@ class NBTParser extends TagCompound {
      */
 
     public ArrayList<Tag> getTags() {
-        return new ArrayList<Tag>((ArrayList<Tag>) this.getValue());
+        return new ArrayList<>((ArrayList<Tag>) this.getValue());
     }
 
     /*
@@ -109,6 +121,25 @@ class NBTParser extends TagCompound {
         this.buffer.setBytes(fileContent);
     }
 
+    private void compressFile(String source, String target) throws ParserException {
+        try {
+            FileOutputStream fos = new FileOutputStream(target);
+            GZIPOutputStream gos = new GZIPOutputStream(fos);
+            FileInputStream fis = new FileInputStream(source);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = fis.read(buffer)) > 0) {
+                gos.write(buffer, 0, len);
+            }
+            gos.close();
+            fos.close();
+            fis.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new ParserException("Impossible de compresser le fichier");
+        }
+    }
+
     protected void parseBuffer() throws ParserException {
         // Lit le premier octet
         if (this.buffer.read(1)[0] != Tags.TAG_COMPOUND.ordinal()) {
@@ -118,6 +149,12 @@ class NBTParser extends TagCompound {
         }
         // Parsing du reste du fichier
         super.parseBuffer(this.buffer);
+    }
+
+    @Override
+    protected void renderBuffer(BytesStream buffer) throws ParserException {
+        buffer.write(new byte[] {(byte) Tags.TAG_COMPOUND.ordinal()});
+        super.renderBuffer(buffer);
     }
 
 }

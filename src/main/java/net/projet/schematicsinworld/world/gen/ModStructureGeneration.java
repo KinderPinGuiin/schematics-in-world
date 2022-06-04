@@ -1,12 +1,19 @@
 package net.projet.schematicsinworld.world.gen;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.projet.schematicsinworld.world.structure.ModStructures;
 
 
@@ -19,14 +26,13 @@ public class ModStructureGeneration {
         RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
 
-        if(types.contains(BiomeDictionary.Type.PLAINS)) {
-            List<Supplier<StructureFeature<?, ?>>> structures = event.getGeneration().getStructures();
+        for(int i = 0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++) {
+            int finalI = i;
 
-            for(int i=0; i < ModStructures.SIW_STRUCTURES_LIST.size(); i++){
-                int finalI = i;
+            List<Supplier<StructureFeature<?, ?>>> structures = event.getGeneration().getStructures();
+            if (ModStructures.providerList.get(finalI).isLocationOk(types)) {
                 structures.add(() -> ModStructures.SIW_STRUCTURES_LIST.get(finalI).get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
             }
-           // structures.add(() -> ModStructures.BRICK_PILLAR.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         }
     }
 }

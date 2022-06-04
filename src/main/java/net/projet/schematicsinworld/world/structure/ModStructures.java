@@ -2,8 +2,6 @@ package net.projet.schematicsinworld.world.structure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.projet.schematicsinworld.world.structures.generic.GenericStructurePool;
-import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -16,71 +14,20 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.projet.schematicsinworld.SchematicsInWorld;
 import net.projet.schematicsinworld.world.structures.SiwStructureProvider;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import net.projet.schematicsinworld.config.ConfigHandler;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ModStructures {
     public static final DeferredRegister<Structure<?>> STRUCTURES =
             DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, SchematicsInWorld.MOD_ID);
 
-    // -------------------- On explore le dossier src/main/resources/data/siw/structures puis on stocke les noms des nbt présents
-    public final static List<String> STRUCTURE_NAMES = new LinkedList<String>();
-    public final static List<String> STRUCTURE_FILES = new LinkedList<String>();
-
-    static {
-        String start = System.getProperty("user.dir");
-        start += "/../src/main/resources/data/" + SchematicsInWorld.MOD_ID + "/structures";
-
-        System.out.println("putain\n");
-        System.out.println(start);
-
-        try (Stream<Path> stream = Files.walk(Paths.get(start), Integer.MAX_VALUE)) {
-            List<String> collect = stream
-                    .map(String::valueOf)
-                    .sorted()
-                    .collect(Collectors.toList());
-            for (String str : collect) {
-                File file = new File(str);
-                if (file.isFile() && file.getName().endsWith(".nbt")) {
-                    String r = StringUtils.removeEnd(file.getName(), ".nbt");
-                    STRUCTURE_FILES.add(r);
-                    r = r.substring(0, r.length() - 2);
-                    if (!STRUCTURE_NAMES.contains(r)) {
-                        STRUCTURE_NAMES.add(r);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for(String str : STRUCTURE_FILES) {
-            GenericStructurePool gsp = new GenericStructurePool(str);
-        }
-    }
-
     // --------------------
-    private static final List<SiwStructureProvider> providerList = new LinkedList<SiwStructureProvider>();
+    public static final List<SiwStructureProvider> providerList = ConfigHandler.getConfigurations();
 
-    static {
-        for(String str : STRUCTURE_NAMES) {
-            providerList.add(new SiwStructureProvider(str));
-        }
-    }
-
-    // Notre liste des RegistryObject.
+    // Notre liste des RegistryObject
     public static final List<RegistryObject<Structure<NoFeatureConfig>>> SIW_STRUCTURES_LIST =
             new LinkedList<RegistryObject<Structure<NoFeatureConfig>>>();
 
@@ -90,9 +37,6 @@ public class ModStructures {
             SIW_STRUCTURES_LIST.add(STRUCTURES.register(s.name(), s::provide));
         }
     }
-    //public static final RegistryObject<Structure<NoFeatureConfig>> BRICK_PILLAR =
-    //                STRUCTURES.register(brick.name(), brick::provide);
-         //   STRUCTURES.register("brick_pillar", BrickPillarStructure::new);
 
     /* average distance apart in chunks between spawn attempts */
     /* minimum distance apart in chunks between spawn attempts. MUST BE LESS THAN ABOVE VALUE*/
@@ -103,11 +47,8 @@ public class ModStructures {
             SiwStructureProvider p = providerList.get(i);
             setupMapSpacingAndLand(SIW_STRUCTURES_LIST.get(i).get(),
                     new StructureSeparationSettings(p.maxDist(), p.minDist(), p.randseed()),
-                    true);
+                    p.structureHigh() == 0);
         }
-        //setupMapSpacingAndLand(BRICK_PILLAR.get(),
-        //        new StructureSeparationSettings(100, 50, 475658536),
-        //        true);
     }
 
     public static void register(IEventBus eventBus) {
@@ -139,26 +80,10 @@ public class ModStructures {
         }
 
         /*
-         * This is the map that holds the default spacing of all structures.
-         * Always add your structure to here so that other mods can utilize it if needed.
-         *
-         * However, while it does propagate the spacing to some correct dimensions from this map,
-         * it seems it doesn't always work for code made dimensions as they read from this list beforehand.
-         *
-         * Instead, we will use the WorldEvent.Load event in ModWorldEvents to add the structure
-         * spacing from this list into that dimension or to do dimension blacklisting properly.
-         * We also use our entry in DimensionStructuresSettings.DEFAULTS in WorldEvent.Load as well.
-         *
-         * DEFAULTS requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
-         */
-
-        /*
-        *  public static ImmutableMap<Structure<?>, StructureSeparationSettings> field_236191_b_ contient de base l'intégralité des structures
+        *  field_236191_b_ contient de base l'intégralité des structures
         *  de VanillaMC
-         *
+        *
         */
-
-
         DimensionStructuresSettings.field_236191_b_ =
                 ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
                         .putAll(DimensionStructuresSettings.field_236191_b_)
@@ -178,12 +103,7 @@ public class ModStructures {
         WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
             Map<Structure<?>, StructureSeparationSettings> structureMap =
                     settings.getValue().getStructures().func_236195_a_();
-            /*
-             * Pre-caution in case a mod makes the structure map immutable like datapacks do.
-             * I take no chances myself. You never know what another mods does...
-             *
-             * structureConfig requires AccessTransformer  (See resources/META-INF/accesstransformer.cfg)
-             */
+
             if (structureMap instanceof ImmutableMap) {
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureSeparationSettings);
