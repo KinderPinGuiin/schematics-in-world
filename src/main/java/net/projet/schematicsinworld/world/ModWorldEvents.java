@@ -65,8 +65,6 @@ public class ModWorldEvents {
                 tempMap.putIfAbsent(ModStructures.SIW_STRUCTURES_LIST.get(i).get(),
                         DimensionStructuresSettings.field_236191_b_.get(ModStructures.SIW_STRUCTURES_LIST.get(i).get()));
             }
-            //tempMap.putIfAbsent(ModStructures.BRICK_PILLAR.get(),
-            //        DimensionStructuresSettings.field_236191_b_.get(ModStructures.BRICK_PILLAR.get()));
             serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
         }
     }

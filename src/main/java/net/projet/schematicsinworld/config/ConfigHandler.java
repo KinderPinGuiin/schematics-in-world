@@ -22,8 +22,8 @@ import java.util.stream.Stream;
 public abstract class ConfigHandler {
 
     public static final File CONFIG_DIRECTORY = new File("config" + File.separator + "siwstructures");
-    public static final List<String> STRUCTURE_NAMES = new LinkedList<String>();
-    public static final List<String> STRUCTURE_FILES = new LinkedList<String>();
+    public static final List<String> STRUCTURE_NAMES = new LinkedList<>();
+    public static final List<String> STRUCTURE_FILES = new LinkedList<>();
 
     public static List<SiwStructureProvider> getConfigurations() {
 
@@ -32,10 +32,7 @@ public abstract class ConfigHandler {
             CONFIG_DIRECTORY.mkdir();
         }
 
-        String start = System.getProperty("user.dir");
-        start += File.separator + ".." + File.separator + "src" + File.separator + "main" +
-                File.separator + "resources" + File.separator + "data" + File.separator +
-                SchematicsInWorld.MOD_ID + File.separator + "structures";
+        String start = SchematicsInWorld.SIW_DIR + File.separator + "structures";
 
         try (Stream<Path> stream = Files.walk(Paths.get(start), Integer.MAX_VALUE)) {
             List<String> collect = stream

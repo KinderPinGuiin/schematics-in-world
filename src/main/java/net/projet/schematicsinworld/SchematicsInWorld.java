@@ -21,7 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,25 +33,18 @@ import java.util.stream.Stream;
 @Mod(SchematicsInWorld.MOD_ID)
 public class SchematicsInWorld {
     public static final String MOD_ID = "siw";
+    public static final String SIW_DIR = ".." + File.separator + "src" + File.separator + "main" + File.separator
+            + "resources" + File.separator + "data" + File.separator + MOD_ID;
 
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public SchematicsInWorld() throws IOException {
+    public SchematicsInWorld() {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Dossier .minecraft
-        String rootPath = System.getProperty("user.home") + File.separator +
-                "AppData" + File.separator + "Roaming" + File.separator +
-                ".minecraft";
-        File root = new File(rootPath);
-        if (!root.exists()) {
-            throw new FileNotFoundException(".minecraft directory missing : cannot load the mod properly !");
-        }
-
         // Dossier Schematics (contenant les .schem)
-        File schemDir = new File(rootPath + File.separator + "Schematics");
+        File schemDir = new File("Schematics");
         if (!schemDir.exists()) {
             LOGGER.info("Schematics folder not found : creating now.\n");
             schemDir.mkdir();
@@ -73,10 +65,7 @@ public class SchematicsInWorld {
 
         if (paths != null) {
             // Dossier racine des fichiers NBT
-            String dest = System.getProperty("user.dir") + File.separator + ".." +
-                    File.separator + "src" + File.separator + "main" + File.separator +
-                    "resources" + File.separator + "data" + File.separator + MOD_ID +
-                    File.separator + "structures";
+            String dest = SIW_DIR + File.separator + "structures";
 
             // Ne devrait jamais arriver
             File destFolder = new File(dest);
@@ -89,7 +78,7 @@ public class SchematicsInWorld {
                 s = new SchematicsParser(paths.get(i));
                 try {
                     // Nom de la structure sans l'extension .schem
-                    String name = paths.get(i).substring(((rootPath + File.separator + "Schematics")).length() + 1, paths.get(i).length() - 6);
+                    String name = paths.get(i).substring(paths.get(i).lastIndexOf(File.separator) + 1, paths.get(i).length() - 6);
 
                     // Dossier de la structure au format NBT
                     File nbtDir = new File(dest + File.separator + name);

@@ -1,4 +1,4 @@
-package net.projet.schematicsinworld.world.structures;
+package net.projet.schematicsinworld.world.structures.template_structures;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
@@ -24,8 +24,8 @@ import net.projet.schematicsinworld.SchematicsInWorld;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
-public class BrickPillarStructure extends Structure<NoFeatureConfig> {
-    public BrickPillarStructure() {
+public class RoomsStructure extends Structure<NoFeatureConfig> {
+    public RoomsStructure() {
         super(NoFeatureConfig.CODEC);
     }
 
@@ -68,7 +68,7 @@ public class BrickPillarStructure extends Structure<NoFeatureConfig> {
 
     @Override
     public IStartFactory<NoFeatureConfig> getStartFactory() {
-        return BrickPillarStructure.Start::new;
+        return RoomsStructure.Start::new;
     }
 
     public static class Start extends StructureStart<NoFeatureConfig> {
@@ -88,10 +88,9 @@ public class BrickPillarStructure extends Structure<NoFeatureConfig> {
             BlockPos blockpos = new BlockPos(x, 0, z);
 
             //addpieces()
-            //Ici le champ p_i241987_2_ initialisé a 10 correspond a la size du VillageConfig
             JigsawManager.func_242837_a(dynamicRegistryManager,
                     new VillageConfig(() -> dynamicRegistryManager.getRegistry(Registry.JIGSAW_POOL_KEY)
-                            .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "brick_pillar/brick_pillar_pool")),
+                            .getOrDefault(new ResourceLocation(SchematicsInWorld.MOD_ID, "run_down_house/start_pool")),
                             10), AbstractVillagePiece::new, chunkGenerator, templateManagerIn,
                     blockpos, this.components, this.rand, false, true);
 

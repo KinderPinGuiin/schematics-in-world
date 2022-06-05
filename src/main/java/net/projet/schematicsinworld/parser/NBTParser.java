@@ -18,6 +18,12 @@ import java.util.zip.GZIPOutputStream;
 class NBTParser extends TagCompound {
 
     /*
+     * Constantes
+     */
+    public static final char READ = 'r';
+    public static final char WRITE = 'w';
+
+    /*
      * Attributs
      */
 
@@ -30,7 +36,7 @@ class NBTParser extends TagCompound {
 
     public NBTParser(String filepath, char mode, ArrayList<Tag> tags) throws ParserException {
         super();
-        if (mode == 'r') {
+        if (mode == READ) {
             // Initialisation du buffer en mode lecture
             this.buffer = new BytesStream(BytesStream.READ_MODE);
             // Décompresse le fichier et stock ses données dans buffer.
@@ -69,7 +75,7 @@ class NBTParser extends TagCompound {
     }
 
     public NBTParser(String filepath) throws ParserException {
-        this(filepath, 'r', null);
+        this(filepath, READ, null);
     }
 
     /*
@@ -91,7 +97,7 @@ class NBTParser extends TagCompound {
             // Parcours le fichier en le décompressant
             FileInputStream fis = new FileInputStream(filepath);
             GZIPInputStream gis = new GZIPInputStream(fis);
-            ArrayList<Byte> bufferList = new ArrayList<Byte>();
+            ArrayList<Byte> bufferList = new ArrayList<>();
             byte[] buffer = new byte[1024];
             int len;
             while ((len = gis.read(buffer)) != -1) {

@@ -3,19 +3,13 @@ package net.projet.schematicsinworld.world.structures.generic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.projet.schematicsinworld.SchematicsInWorld;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GenericStructurePool {
 
@@ -38,9 +32,7 @@ public class GenericStructurePool {
         final Gson gson = builder.create();
         json = gson.toJson(this);
 
-        String path = System.getProperty("user.dir");
-        path += "/../src/main/resources/data/" + SchematicsInWorld.MOD_ID
-                + "/worldgen/template_pool/" + structName + "/";
+        String path = SchematicsInWorld.SIW_DIR + "/worldgen/template_pool/" + structName + "/";
 
         try {
             Files.createDirectories(Paths.get(path));

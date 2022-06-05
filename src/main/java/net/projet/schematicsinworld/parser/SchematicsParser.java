@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
+
 /**
  * Convertit des fichiers .schem générés par WorldEdit en fichier .nbt
  * générés par des structures blocs.
@@ -65,7 +66,7 @@ public class SchematicsParser {
     public void saveToNBT(String filepath) throws ParserException {
         ArrayList<Tag> struct = this.convertSchematicsToNBT();
         try {
-            new NBTParser(filepath + ".nbt", 'w', struct);
+            new NBTParser(filepath + ".nbt", NBTParser.WRITE, struct);
         } catch (ParserException e) {
             e.printStackTrace();
         }
