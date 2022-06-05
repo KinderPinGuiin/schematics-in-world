@@ -30,5 +30,8 @@ Now if you create a world, your schematics will randomly spawn. By default, some
 
 ![Huge tower image](tower.png)
 
+# Provided mods
+If you want, you can use the mods provided in the mods_utils folder to make some experimentations.
+
 # Configuration
 In the .minecraft/config/siwstructures you can find a JSON config file for each structures.
