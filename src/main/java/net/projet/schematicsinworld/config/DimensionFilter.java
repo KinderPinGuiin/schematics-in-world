@@ -30,19 +30,18 @@ public class DimensionFilter {
         boolean res = true;
         for (BiomeDictionary.Type dim : dimension) {
             // Dimensions vanilla
-            if (dim.equals(BiomeDictionary.Type.OVERWORLD) ||
-                    dim.equals(BiomeDictionary.Type.NETHER) ||
-                    dim.equals(BiomeDictionary.Type.END)) {
+            if (dim.toString().equalsIgnoreCase(BiomeDictionary.Type.OVERWORLD.toString()) ||
+                    dim.toString().equalsIgnoreCase(BiomeDictionary.Type.NETHER.toString()) ||
+                    dim.toString().equalsIgnoreCase(BiomeDictionary.Type.END.toString())) {
                 res = dims.contains(dim.toString());
             // Biomes vanilla -> pas intéressé ici
             } else if (isVanillaExceptDims(dim)) {
                 continue;
             // Dimension non-vanilla
             } else {
-                res = dims.contains(dim.toString());
+                res = caseInsensitiveContains(dim.toString(), dims);
             }
         }
-
         return res;
     }
 
@@ -109,5 +108,22 @@ public class DimensionFilter {
                 biome.equals(BiomeDictionary.Type.MODIFIED) ||
                 biome.equals(BiomeDictionary.Type.MUSHROOM) ||
                 biome.equals(BiomeDictionary.Type.RIVER);
+    }
+
+    /**
+     * Returns true if the dimension denoted by the string dim is present in the list of strings searchIn, case
+     * insensitive, false otherwise.
+     *
+     * @param dim      The string searched in searchIn.
+     * @param searchIn The list of strings we are searching dim in.
+     * @return         True if dim was found in searchIn, case insensitive.
+     */
+    private boolean caseInsensitiveContains(String dim, List<String> searchIn) {
+        for (String s : searchIn) {
+            if (dim.equalsIgnoreCase(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

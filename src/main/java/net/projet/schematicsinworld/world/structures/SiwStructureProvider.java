@@ -118,6 +118,9 @@ public class SiwStructureProvider {
 
             boolean res = true;
             res &= landHeight != 0;
+            if (biome.getCategory().toString().equals("NETHER")) {
+                res &= landHeight != chunkGenerator.getGroundHeight();
+            }
 
             IBlockReader columnOfBlocks = chunkGenerator.func_230348_a_(centerOfChunk.getX(), centerOfChunk.getZ());
             BlockState topBlock = columnOfBlocks.getBlockState(centerOfChunk.up(landHeight - 1));
@@ -151,7 +154,7 @@ public class SiwStructureProvider {
                 BlockPos blockpos;
                 if (biomeIn.getCategory().toString().equals("NETHER")) {
                     int y = getLowestLand(chunkGenerator, x, z).getY();
-                    blockpos = new BlockPos(x, structureHigh() - y, z);
+                    blockpos = new BlockPos(x, structureHigh() - y + 1, z);
                 } else {
                     blockpos = new BlockPos(x, structureHigh(), z);
                 }
