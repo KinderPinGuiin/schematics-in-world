@@ -108,6 +108,13 @@ public class SchematicsInWorld {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
+    
+    @SubscribeEvent
+    public void initConstruct(FMLConstructModEvent event) {
+        event.enqueueWork(() -> {
+            ((SimpleReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addResourcePack(new FolderPack(new File("./assets/resources")));
+        });
+    }
 
     /**
      * Recherche les fichiers ayant l'extension "ext" dans le dossier de chemin "path".
