@@ -19,15 +19,15 @@ import java.util.Set;
  *   JsonObject unique, avec des champs nommés pour chaque variable.
  *
  * @Inv :
- *      getDistMaxSpawn() >= getDistMinSpawn()
+ *      getavgDistSpawn() >= getminDistSpawn()
  *      getName() != null && getName() != ""
  */
 public class StructConfig implements Cloneable {
 
     // ATTRIBUTS
     private final String struct_name;
-    private int distMaxSpawn = 32;
-    private int distMinSpawn = 8;
+    private int avgDistSpawn = 32;
+    private int minDistSpawn = 8;
     private int structureHigh = 0;
     private boolean isEnabled = true;
     private boolean isSpawningInWater = false;
@@ -80,11 +80,11 @@ public class StructConfig implements Cloneable {
             json = jelem.getAsJsonObject();
 
             // On lit l'objet que nous avons obtenu
-            if (json.get("distMaxSpawn") != null) {
-                distMaxSpawn = json.get("distMaxSpawn").getAsInt();
+            if (json.get("avgDistSpawn") != null) {
+                avgDistSpawn = json.get("avgDistSpawn").getAsInt();
             }
-            if (json.get("distMinSpawn") != null) {
-                distMinSpawn = json.get("distMinSpawn").getAsInt();
+            if (json.get("minDistSpawn") != null) {
+                minDistSpawn = json.get("minDistSpawn").getAsInt();
             }
             if (json.get("isEnabled") != null) {
                 isEnabled = json.get("isEnabled").getAsBoolean();
@@ -111,8 +111,8 @@ public class StructConfig implements Cloneable {
 
             // Error checking
 
-            if (distMaxSpawn < distMinSpawn) {
-                throw new IncoherentConfigurationError("distMaxSpawn is lower than distMinSpawn");
+            if (avgDistSpawn < minDistSpawn) {
+                throw new IncoherentConfigurationError("avgDistSpawn is lower than minDistSpawn");
             }
 
             if (structureHigh < 0) {
@@ -132,12 +132,12 @@ public class StructConfig implements Cloneable {
         return struct_name;
     }
 
-    public int getDistMaxSpawn() {
-        return distMaxSpawn;
+    public int getAvgDistSpawn() {
+        return avgDistSpawn;
     }
 
-    public int getDistMinSpawn() {
-        return distMinSpawn;
+    public int getMinDistSpawn() {
+        return minDistSpawn;
     }
 
     public boolean isEnabled() { return isEnabled; }
@@ -163,18 +163,18 @@ public class StructConfig implements Cloneable {
 
     // COMMANDES
 
-    public void setDistMaxSpawn(int distMaxSpawn) {
-        if(distMaxSpawn < getDistMinSpawn()) {
-            throw new AssertionError("Value is lower than distMinSpawn!");
+    public void setAvgDistSpawn(int avgDistSpawn) {
+        if(avgDistSpawn < getMinDistSpawn()) {
+            throw new AssertionError("Value is lower than minDistSpawn!");
         }
-        this.distMaxSpawn = distMaxSpawn;
+        this.avgDistSpawn = avgDistSpawn;
     }
 
-    public void setDistMinSpawn(int distMinSpawn) {
-        if(getDistMaxSpawn() < distMinSpawn) {
-            throw new AssertionError("Value is higher than distMaxSpawn!");
+    public void setMinDistSpawn(int minDistSpawn) {
+        if(getAvgDistSpawn() < minDistSpawn) {
+            throw new AssertionError("Value is higher than avgDistSpawn!");
         }
-        this.distMinSpawn = distMinSpawn;
+        this.minDistSpawn = minDistSpawn;
     }
 
     public void setEnabled(boolean isEnabled) {
@@ -220,13 +220,13 @@ public class StructConfig implements Cloneable {
 
         // Max distance between two of these structures
         builder.append(attributToJson(
-                "The maximum distance between two of these structures in chunks",
-                "distMaxSpawn", distMaxSpawn));
+                "The average distance between two of these structures in chunks",
+                "avgDistSpawn", avgDistSpawn));
 
         // Min distance between two of these structures
         builder.append(attributToJson(
                 "The minimum distance between two of these structures in chunks",
-                "distMinSpawn", distMinSpawn));
+                "minDistSpawn", minDistSpawn));
 
         // Generating structure ?
         builder.append(attributToJson(

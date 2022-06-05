@@ -46,7 +46,7 @@ public class ModStructures {
         for(int i = 0; i < providerList.size(); i++) {
             SiwStructureProvider p = providerList.get(i);
             setupMapSpacingAndLand(SIW_STRUCTURES_LIST.get(i).get(),
-                    new StructureSeparationSettings(p.maxDist(), p.minDist(), p.randseed()),
+                    new StructureSeparationSettings(p.avgDist(), p.minDist(), p.randseed()),
                     p.structureHigh() == 0);
         }
     }

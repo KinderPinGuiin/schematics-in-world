@@ -61,13 +61,13 @@ public class SiwStructureProvider {
     }
 
     // Distance max entre structure.
-    public int maxDist(){
-        return config.getDistMaxSpawn();
+    public int avgDist(){
+        return config.getAvgDistSpawn();
     }
 
     // Distance min entre structure.
     public int minDist(){
-        return config.getDistMinSpawn();
+        return config.getMinDistSpawn();
     }
 
     public int structureHigh() { return config.getStructureHigh(); }
