@@ -26,7 +26,9 @@ Move the produced .jar file into the .minecraft/mods folder. You also need to mo
 # How it works ?
 Place your schematics in the .minecraft/Schematics folder, you can create it if it's not already the case. Then run minecraft a first time, it'll create a .minecraft/mods/resources folder containing your structures data, you finally need to run the build_utils/recompile.(sh|bat) and restart minecraft.
 
-Now if you create a world, your schematics will randomly spawn.
+Now if you create a world, your schematics will randomly spawn. By default, some schematics are in the mod like the following :
+
+![Huge tower image](https://raw.githubusercontent.com/KinderPinGuiin/schematics-in-world/master/tower.png)
 
 # Configuration
 In the .minecraft/config/siwstructures you can find a JSON config file for each structures.
