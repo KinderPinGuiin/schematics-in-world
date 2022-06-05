@@ -28,7 +28,7 @@ Place your schematics in the .minecraft/Schematics folder, you can create it if 
 
 Now if you create a world, your schematics will randomly spawn. By default, some schematics are in the mod like the following :
 
-![Huge tower image](https://raw.githubusercontent.com/KinderPinGuiin/schematics-in-world/master/tower.png)
+![Huge tower image](tower.png)
 
 # Configuration
 In the .minecraft/config/siwstructures you can find a JSON config file for each structures.
