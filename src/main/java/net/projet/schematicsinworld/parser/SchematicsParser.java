@@ -1,5 +1,9 @@
 package net.projet.schematicsinworld.parser;
 
+import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ResourceLocationException;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.projet.schematicsinworld.parser.tags.*;
 import net.projet.schematicsinworld.parser.utils.BlockData;
 import net.projet.schematicsinworld.parser.utils.ParserException;
@@ -26,6 +30,7 @@ public class SchematicsParser {
     public final static String WIDTH = "Width";
     public final static String BLOCKDATA = "BlockData";
     public final static String BLOCKENTITIES = "BlockEntities";
+    public final static String MISSING_BLOCK = "minecraft:structure_void";
 
     /*
      * ATTRIBUTS
@@ -227,6 +232,20 @@ public class SchematicsParser {
             ArrayList<Tag> compoundVal = new ArrayList<>();
             TagString compoundValName = new TagString();
             compoundValName.setKey("Name");
+
+            // Testing if the block exist and if he doesn't, we replace it by
+            // the block "missing_texture_block"
+            ResourceLocation r = new ResourceLocation(key_prop[0]);
+            ResourceLocation r2 = new ResourceLocation("minecraft:air");
+            Block b = ForgeRegistries.BLOCKS.getValue(r);
+            String s = b.toString();
+            Block b2 = ForgeRegistries.BLOCKS.getValue(r2);
+            String s2 = b2.toString();
+            if (s.equals(s2)) {
+                if ((!key_prop[0].equals("minecraft:air"))) {
+                    key_prop[0] = MISSING_BLOCK;
+                }
+            }
             compoundValName.setValue(key_prop[0]);
             compoundVal.add(compoundValName);
 
