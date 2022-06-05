@@ -33,7 +33,9 @@ import java.util.stream.Stream;
 @Mod(SchematicsInWorld.MOD_ID)
 public class SchematicsInWorld {
     public static final String MOD_ID = "siw";
-    public static final String SIW_DIR = ".." + File.separator + "src" + File.separator + "main" + File.separator
+//    public static final String SIW_DIR = ".." + File.separator + "src" + File.separator + "main" + File.separator
+//            + "resources" + File.separator + "data" + File.separator + MOD_ID;
+    public static final String SIW_DIR = "mods" + File.separator
             + "resources" + File.separator + "data" + File.separator + MOD_ID;
 
     // Directly reference a log4j logger.
@@ -47,7 +49,7 @@ public class SchematicsInWorld {
         File schemDir = new File("Schematics");
         if (!schemDir.exists()) {
             LOGGER.info("Schematics folder not found : creating now.\n");
-            schemDir.mkdir();
+            schemDir.mkdirs();
         } else {
             LOGGER.info("Schematics folder found.\n");
         }
@@ -70,7 +72,7 @@ public class SchematicsInWorld {
             // Ne devrait jamais arriver
             File destFolder = new File(dest);
             if (!destFolder.exists()) {
-                destFolder.mkdir();
+                destFolder.mkdirs();
             }
 
             SchematicsParser s;
@@ -83,7 +85,7 @@ public class SchematicsInWorld {
                     // Dossier de la structure au format NBT
                     File nbtDir = new File(dest + File.separator + name);
                     if (!nbtDir.exists()) {
-                        nbtDir.mkdir();
+                        nbtDir.mkdirs();
                     }
                     s.saveToNBT(dest + File.separator + name + File.separator + name);
                 } catch (ParserException e) {

@@ -29,7 +29,7 @@ public abstract class ConfigHandler {
 
         // Si le sous-dossier n'a pas été créé
         if (!CONFIG_DIRECTORY.exists()) {
-            CONFIG_DIRECTORY.mkdir();
+            CONFIG_DIRECTORY.mkdirs();
         }
 
         String start = SchematicsInWorld.SIW_DIR + File.separator + "structures";
